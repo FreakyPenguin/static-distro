@@ -138,9 +138,12 @@ static int parse_opts(int argc, char *argv[])
                 p->version = ver + 1;
                 p->next = packages;
                 packages = p;
-                printf("Add package: %s version %s\n", p->name, p->version);
                 break;
             case 'u':
+                if (getuid() != 0) {
+                    fprintf(stderr, "Cannot overwrite UID as non-root\n");
+                    return -1;
+                }
                 env_uid = strtol(optarg, &end, 10);
                 if (*end != 0) {
                     fprintf(stderr, "User option expects a UID integer\n");
@@ -148,6 +151,10 @@ static int parse_opts(int argc, char *argv[])
                 }
                 break;
             case 'g':
+                if (getuid() != 0) {
+                    fprintf(stderr, "Cannot overwrite GID as non-root\n");
+                    return -1;
+                }
                 env_gid = strtol(optarg, &end, 10);
                 if (*end != 0) {
                     fprintf(stderr, "Group option expects a GID integer\n");
