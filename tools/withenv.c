@@ -209,10 +209,8 @@ int run_child(void)
 
     /* mount bind dev, proc, and sys into new root */
     const char *host_dev[] = { "/dev", NULL };
-    const char *host_proc[] = { "/proc", NULL };
     const char *host_sys[] = { "/sys", NULL };
     if (mountbind_parts(host_dev, root_dev) ||
-            mountbind_parts(host_proc, root_proc) ||
             mountbind_parts(host_sys, root_sys))
     {
         perror("mounting subdirs failed");
@@ -272,6 +270,13 @@ int run_child(void)
      */
     pid = fork();
     if (pid == 0) {
+        /* need to mount procfs here so we get a private one */
+        if (mount("proc", "/proc", "proc", 0, "") != 0) {
+            perror("mounting /proc failed");
+            goto error_execv;
+        }
+
+        /* actually run command now */
         if (execvp(cmd_args[0], cmd_args) != 0) {
             fprintf(stderr, "exec failed\n");
             goto error_execv;
