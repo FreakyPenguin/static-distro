@@ -261,16 +261,6 @@ int run_child(void)
         goto error_execv;
     }
 
-    /* change uid and gid */
-    if (setgid(env_gid) != 0) {
-        perror("setgid failed");
-        goto error_execv;
-    }
-    if (setuid(env_uid) != 0) {
-        perror("setuid failed");
-        goto error_execv;
-    }
-
     /* Now let's launch the command in the new environment.
      * Note: while we don't need the parent process, we fork here so the created
      * process gets PID 1.
@@ -280,6 +270,16 @@ int run_child(void)
         /* need to mount procfs here so we get a private one */
         if (mount("proc", "/proc", "proc", 0, "") != 0) {
             perror("mounting /proc failed");
+            goto error_execv;
+        }
+
+        /* change uid and gid */
+        if (setgid(env_gid) != 0) {
+            perror("setgid failed");
+            goto error_execv;
+        }
+        if (setuid(env_uid) != 0) {
+            perror("setuid failed");
             goto error_execv;
         }
 
