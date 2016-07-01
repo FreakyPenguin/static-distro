@@ -494,7 +494,7 @@ static int link_tree(int src_fd, char *src_path, size_t len, int dst_fd)
                         " but is not directory\n", src_path);
                 ret = -1;
                 goto exit;
-            } else if (x != 0 && mkdirat(dst_fd, de->d_name, 755) != 0) {
+            } else if (x != 0 && mkdirat(dst_fd, de->d_name, 0755) != 0) {
                 perror("mkdirat failed");
                 fprintf(stderr, "link_tree: creating destination dir for %s "
                         "failed\n", src_path);
