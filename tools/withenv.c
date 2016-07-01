@@ -29,6 +29,10 @@ static const char *workdir = NULL;
 static const char *packagedir = "/packages";
 /* List of packages to be added to environment */
 static struct package *packages = NULL;
+/* User id to use */
+static int env_uid;
+/* Group id to use */
+static int env_gid;
 
 static int parse_opts(int argc, char *argv[]);
 static int run_child(void);
@@ -46,6 +50,8 @@ int main(int argc, char *argv[])
     char templ[] = "/tmp/nstest_XXXXXX";
     pid_t pid;
 
+    env_uid = getuid();
+    env_gid = getgid();
     if (parse_opts(argc, argv) != 0) {
         fprintf(stderr, "Usage: withenv [OPTIONS] CMD...\n");
         fprintf(stderr, "Options:\n");
@@ -107,9 +113,9 @@ static int parse_opts(int argc, char *argv[])
 {
     int c;
     struct package *p;
-    char *ver;
+    char *ver, *end;
 
-    while ((c = getopt(argc, argv, "d:w:p:")) != -1) {
+    while ((c = getopt(argc, argv, "d:w:p:u:g:")) != -1) {
         switch (c) {
             case 'd':
                 packagedir = optarg;
@@ -133,6 +139,20 @@ static int parse_opts(int argc, char *argv[])
                 p->next = packages;
                 packages = p;
                 printf("Add package: %s version %s\n", p->name, p->version);
+                break;
+            case 'u':
+                env_uid = strtol(optarg, &end, 10);
+                if (*end != 0) {
+                    fprintf(stderr, "User option expects a UID integer\n");
+                    return -1;
+                }
+                break;
+            case 'g':
+                env_gid = strtol(optarg, &end, 10);
+                if (*end != 0) {
+                    fprintf(stderr, "Group option expects a GID integer\n");
+                    return -1;
+                }
                 break;
             case '?':
                 fprintf(stderr, "Unknown option: %c\n", optopt);
@@ -230,6 +250,16 @@ int run_child(void)
 
     /* link packages */
     if (link_packages() != 0) {
+        goto error_execv;
+    }
+
+    /* change uid and gid */
+    if (setgid(env_gid) != 0) {
+        perror("setgid failed");
+        goto error_execv;
+    }
+    if (setuid(env_uid) != 0) {
+        perror("setuid failed");
         goto error_execv;
     }
 
