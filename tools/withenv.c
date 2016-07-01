@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
     pid = fork();
     if (pid == 0) {
         /* in child  */
-        if (unshare(CLONE_NEWIPC | CLONE_NEWNS) != 0) {
+        if (unshare(CLONE_NEWIPC | CLONE_NEWNS | CLONE_NEWPID) != 0) {
             perror("unshare failed\n");
             return EXIT_FAILURE;
         }
@@ -176,6 +176,9 @@ static int parse_opts(int argc, char *argv[])
 /* Main functionality in forked child (runs in unshared namespaces) */
 int run_child(void)
 {
+    pid_t pid;
+    int ret;
+
     /* make sure our mounts don't propagate outside our namespace */
     if (mount("", "/", "dontcare", MS_SLAVE | MS_REC, "") != 0) {
         perror("mount rshared root failed");
@@ -263,13 +266,24 @@ int run_child(void)
         goto error_execv;
     }
 
-    /* Now let's launch the command in the new environment */
-    if (execvp(cmd_args[0], cmd_args) != 0) {
-        fprintf(stderr, "exec failed\n");
-        goto error_execv;
+    /* Now let's launch the command in the new environment.
+     * Note: while we don't need the parent process, we fork here so the created
+     * process gets PID 1.
+     */
+    pid = fork();
+    if (pid == 0) {
+        if (execvp(cmd_args[0], cmd_args) != 0) {
+            fprintf(stderr, "exec failed\n");
+            goto error_execv;
+        }
+    } else {
+        if ((pid = waitpid(pid, &ret, 0)) == -1) {
+            perror("waitpid for env command failed");
+            goto error_execv;
+        }
     }
 
-    return EXIT_SUCCESS;
+    return ret;
 
 error_execv:
     /* here we're in the chroot */
