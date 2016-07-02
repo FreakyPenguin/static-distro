@@ -10,7 +10,7 @@ repodir="`pwd`/../packages/src"
 packagedir="`pwd`/packages"
 
 steps="binutils gcc_1 musl gcc_2 gmp mpfr mpc"
-packages="binutils gcc musl sbase mksh make"
+packages="binutils gcc musl sbase mksh make sed grep awk"
 repo_binutils="$repodir/binutils-gdb"
 repo_gcc="$repodir/gcc"
 repo_musl="$repodir/musl"
@@ -20,6 +20,9 @@ repo_mpc="$repodir/mpc"
 repo_sbase="$repodir/sbase"
 repo_mksh="$repodir/mksh"
 repo_make="$repodir/make"
+repo_sed="$repodir/sed"
+repo_grep="$repodir/grep"
+repo_awk="$repodir/awk"
 
 build_bs_binutils() {
     git clone $repo_binutils src
@@ -199,7 +202,8 @@ build_pkg_sbase() {
     git checkout static-bootstrap
     make -j8
     make install DESTDIR=$rootdir
-    rm $rootdir/$prefix/bin/strings
+    rm $rootdir/$prefix/bin/strings $rootdir/$prefix/bin/grep \
+        $rootdir/$prefix/bin/sed
 }
 
 build_pkg_mksh() {
@@ -208,13 +212,13 @@ build_pkg_mksh() {
     cd src
     git checkout static-bootstrap
     CC=$arch_target-gcc LDSTATIC=-static HAVE_STRLCPY=0 sh Build.sh -r -c lto
-    mkdir -p $rootdir/packages/mksh/bootstrap/bin
-    mkdir -p $rootdir/packages/mksh/bootstrap/doc/examples
-    mkdir -p $rootdir/packages/mksh/bootstrap/man/man1
-    cp mksh $rootdir/packages/mksh/bootstrap/bin/
-    ln -s mksh $rootdir/packages/mksh/bootstrap/bin/sh
-    cp dot.mkshrc $rootdir/packages/mksh/bootstrap/doc/examples/
-    cp mksh.1 $rootdir/packages/mksh/bootstrap/man/man1/
+    mkdir -p $rootdir/$prefix/bin
+    mkdir -p $rootdir/$prefix/doc/examples
+    mkdir -p $rootdir/$prefix/man/man1
+    cp mksh $rootdir/$prefix/bin/
+    ln -s mksh $rootdir/$prefix/bin/sh
+    cp dot.mkshrc $rootdir/$prefix/doc/examples/
+    cp mksh.1 $rootdir/$prefix/man/man1/
 }
 
 build_pkg_make() {
@@ -235,6 +239,64 @@ build_pkg_make() {
     make -j8
     make install DESTDIR=$rootdir
 }
+
+build_pkg_sed() {
+    git clone $repo_sed src
+    cd src
+    git checkout static-bootstrap
+    cd ..
+
+    mkdir build
+    cd build
+    ../src/configure --prefix="$prefix" \
+        --oldincludedir=$prefix/include --infodir=$prefix/info \
+        --localedir=$prefix/locale --mandir=$prefix/man --docdir=$prefix/doc \
+        --build=$arch_build --target=$arch_target --host=$arch_target \
+        LDFLAGS=-static
+    make -j8
+    make install DESTDIR=$rootdir
+    rm -rf $rootdir/$prefix/lib $rootdir/$prefix/info/dir
+}
+
+build_pkg_grep() {
+    git clone $repo_grep src
+    cd src
+    git checkout static-bootstrap
+    # otherwise it tries to regenerate a bunch of things
+    touch configure.ac aclocal.m4 configure Makefile.am Makefile.in
+    cd ..
+
+    mkdir build
+    cd build
+    ../src/configure --prefix="$prefix" \
+        --oldincludedir=$prefix/include --infodir=$prefix/info \
+        --localedir=$prefix/locale --mandir=$prefix/man --docdir=$prefix/doc \
+        --build=$arch_build --target=$arch_target --host=$arch_target \
+        LDFLAGS=-static
+    make -j8
+    make install DESTDIR=$rootdir
+    rm -rf $rootdir/$prefix/lib $rootdir/$prefix/info/dir
+}
+
+build_pkg_awk() {
+    git clone $repo_awk src
+    cd src
+    git checkout static-bootstrap
+    cd ..
+
+    mkdir build
+    cd build
+    ../src/configure --prefix="$prefix" \
+        --oldincludedir=$prefix/include --infodir=$prefix/info \
+        --localedir=$prefix/locale --mandir=$prefix/man --docdir=$prefix/doc \
+        --build=$arch_build --target=$arch_target --host=$arch_target \
+        LDFLAGS=-static
+    make -j8
+    make install DESTDIR=$rootdir
+    rm -f $rootdir/$prefix/info/dir
+}
+
+export PATH="$bs_prefix/bin:$PATH"
 
 # prepare prefix dir
 mkdir -p $bs_prefix
@@ -274,7 +336,7 @@ done
 
 for pkg in $packages; do
     dir=$workdir/build-pkt_${pkg}
-    prefix="/packages/$pkg/bootstrap"
+    prefix="/packages/$pkg/stage1"
     rootdir="$dir/root"
 
     if [ -f $dir/.done ] ; then
@@ -292,10 +354,8 @@ for pkg in $packages; do
 
     "build_pkg_$pkg" >build.log 2>&1
 
-    # archive package
-    cd $rootdir
-    rm -f $packagedir/${pkg}-bootstrap.tar.bz2
-    tar cjf $packagedir/${pkg}-bootstrap.tar.bz2 packages/${pkg}/bootstrap
+    # install package
+    cp -r $rootdir/packages/${pkg} $packagedir/
 
     touch $dir/.done
     cd $workdir

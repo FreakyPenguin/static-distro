@@ -1,1 +1,1 @@
-rm -rf build*/ prefix bs_prefix
+rm -rf build*/ prefix bs_prefix packages
