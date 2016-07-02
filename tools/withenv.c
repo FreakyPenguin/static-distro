@@ -186,6 +186,9 @@ int run_child(void)
     pid_t pid;
     int ret;
 
+    /* make sure no permissions are masked */
+    umask(0);
+
     /* make sure our mounts don't propagate outside our namespace */
     if (mount("", "/", "dontcare", MS_SLAVE | MS_REC, "") != 0) {
         perror("mount rshared root failed");
@@ -272,6 +275,9 @@ int run_child(void)
             perror("mounting /proc failed");
             goto error_execv;
         }
+
+        /* reset umask */
+        umask(0022);
 
         /* change uid and gid */
         if (setgid(env_gid) != 0) {
