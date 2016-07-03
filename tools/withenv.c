@@ -39,6 +39,7 @@ static int run_child(void);
 static int bind_packages(void);
 static int link_packages(void);
 static int link_package_tree(struct package *p, const char *tree, int dst_fd);
+static int create_usr_links(void);
 static int link_tree(int src_fd, char *src_path, size_t len, int dst_fd);
 static char *path_parts(const char **parts);
 static int mkdir_parts(const char **parts, mode_t m);
@@ -282,6 +283,12 @@ int run_child(void)
             goto error_execv;
         }
 
+        /* create usr links */
+        if (create_usr_links() != 0) {
+            fprintf(stderr, "creating /usr links failed\n");
+            goto error_execv;
+        }
+
         /* reset umask */
         umask(0022);
 
@@ -434,6 +441,25 @@ static int link_package_tree(struct package *p, const char *tree, int dst_fd)
     close(pkt_fd);
     free(path);
     return ret;
+}
+
+/* create /usr, and link subdirs bin, lib, include to / */
+static int create_usr_links(void)
+{
+    if (mkdir("/usr", 0755) != 0) {
+        perror("mkdir failed");
+        return -1;
+    }
+
+    if (symlink("/bin", "/usr/bin") != 0 ||
+            symlink("/lib", "/usr/lib") != 0 ||
+            symlink("/include", "/usr/include") != 0)
+    {
+        perror("symlink failed");
+        return -1;
+    }
+
+    return 0;
 }
 
 /* traverse src directory (both path and fd, need to match) and add symlinks for
