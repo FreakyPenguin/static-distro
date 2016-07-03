@@ -1,0 +1,20 @@
+commit 3c00e50254ad8cc6fc7e536b3cdec2919436a819
+Author: Antoine Kaufmann <antoinek@cs.washington.edu>
+Date:   Fri Jul 1 14:08:32 2016 -0700
+
+    Add musl to config.sub
+
+diff --git a/build-aux/config.sub b/build-aux/config.sub
+index 6205f84..ce752c3 100755
+--- a/build-aux/config.sub
++++ b/build-aux/config.sub
+@@ -1368,7 +1368,8 @@ case $os in
+ 	      | -os2* | -vos* | -palmos* | -uclinux* | -nucleus* \
+ 	      | -morphos* | -superux* | -rtmk* | -rtmk-nova* | -windiss* \
+ 	      | -powermax* | -dnix* | -nx6 | -nx7 | -sei* | -dragonfly* \
+-	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* | -es*)
++	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* | -es* \
++	      | -musl*)
+ 	# Remember, each alternative MUST END IN *, to match a version number.
+ 		;;
+ 	-qnx*)
