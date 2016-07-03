@@ -105,8 +105,6 @@ int main(int argc, char *argv[])
         ret = EXIT_FAILURE;
     }
 
-    printf("Done\n");
-
     return ret;
 
 error_fork:
