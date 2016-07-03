@@ -92,6 +92,12 @@ int main(int argc, char *argv[])
         ret = EXIT_FAILURE;
     }
 
+    if (WIFEXITED(ret)) {
+        ret = WEXITSTATUS(ret);
+    } else {
+        ret = -1;
+    }
+
     /* remove temporary root directory */
     if (rmdir(root_path) != 0) {
         perror("removing temporary root directory failed");
@@ -298,6 +304,12 @@ int run_child(void)
         if ((pid = waitpid(pid, &ret, 0)) == -1) {
             perror("waitpid for env command failed");
             goto error_execv;
+        }
+
+        if (WIFEXITED(ret)) {
+            ret = WEXITSTATUS(ret);
+        } else {
+            ret = -1;
         }
     }
 
