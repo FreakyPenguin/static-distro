@@ -155,7 +155,9 @@ int solve_run(struct solve_problem *p)
     }
 
     for (pkg = p->packages_first; pkg != NULL; pkg = pkg->next) {
-        if (p->params.get_pkt(p, pkg->name, p->params.opaque) != 0) {
+        if (p->params.get_pkt != NULL &&
+                p->params.get_pkt(p, pkg->name, p->params.opaque) != 0)
+        {
             goto out_error;
         }
 
