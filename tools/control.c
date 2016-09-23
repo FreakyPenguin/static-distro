@@ -107,14 +107,14 @@ int control_parsefd(int fd, struct control **ctrl)
             } else if (has_prefix(l, "Depends-Build:")) {
                 l += strlen("Depends-Build:");
                 state = STATE_IN_DEPS_BUILD;
-                if (c->run_depend != NULL) {
+                if (c->build_depend != NULL) {
                     msg = "Build dependencies field already set";
                     goto error_parse;
                 }
             } else if (has_prefix(l, "Sources:")) {
-                l += strlen("Depends-Build:");
+                l += strlen("Sources:");
                 state = STATE_IN_SOURCES;
-                if (c->run_depend != NULL) {
+                if (c->sources != NULL) {
                     msg = "Build dependencies field already set";
                     goto error_parse;
                 }
