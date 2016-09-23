@@ -174,7 +174,6 @@ static int get_pkt(struct solve_problem *p, const char *name, void *opaque)
         for (cd = c->run_depend; cd != NULL; cd = cd->next) {
             deps[num_deps++] = cd->package;
         }
-        control_destroy(c);
 
         /* add version */
         if (solve_package_version_add(p, name, de->d_name, num_deps, deps)
@@ -183,9 +182,11 @@ static int get_pkt(struct solve_problem *p, const char *name, void *opaque)
             fprintf(stderr, "get_pkt: solve_package_version_add failed (%s,%s)"
                     "\n", name, de->d_name);
             ret = -1;
+            control_destroy(c);
             free(deps);
             goto out;
         }
+        control_destroy(c);
         free(deps);
     }
 
