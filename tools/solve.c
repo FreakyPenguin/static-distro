@@ -203,6 +203,7 @@ int solve_result_package(struct solve_problem *p, unsigned n,
             break;
         }
         pkg = pkg->next;
+        i++;
     }
 
     if (pkg == NULL) {
