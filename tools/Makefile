@@ -1,10 +1,10 @@
 CFLAGS= -O2 -Wall -Wextra
 
-all: withenv
+all: withenv pkgcontrol
 clean:
-	rm -f withenv.o withenv
+	rm -f *.o withenv pkgcontrol
 
 withenv: withenv.o
-
+pkgcontrol: pkgcontrol.o control.o
 
 .PHONY: all clean
