@@ -183,8 +183,10 @@ static int get_pkt(struct solve_problem *p, const char *name, void *opaque)
             fprintf(stderr, "get_pkt: solve_package_version_add failed (%s,%s)"
                     "\n", name, de->d_name);
             ret = -1;
+            free(deps);
             goto out;
         }
+        free(deps);
     }
 
 out:
