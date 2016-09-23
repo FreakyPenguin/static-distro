@@ -20,4 +20,5 @@ struct control_source {
 };
 
 int control_parse(const char *path, struct control **ctrl);
+int control_parsefd(int fd, struct control **ctrl);
 void control_destroy(struct control *ctrl);

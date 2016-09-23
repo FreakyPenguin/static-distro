@@ -4,6 +4,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 enum parse_state {
     STATE_NONE,
@@ -17,6 +19,20 @@ static inline int has_prefix(const char *string, const char *prefix);
 
 int control_parse(const char *path, struct control **ctrl)
 {
+    int fd, ret;
+
+    if ((fd = open(path, O_RDONLY)) < 0) {
+        perror("control_parse: open failed");
+        return -1;
+    }
+
+    ret = control_parsefd(fd, ctrl);
+    close(fd);
+    return ret;
+}
+
+int control_parsefd(int fd, struct control **ctrl)
+{
     FILE *f;
     unsigned line = 0;
     char *linebuf, *l;
@@ -29,20 +45,20 @@ int control_parse(const char *path, struct control **ctrl)
     struct control_source *cs, *css;
 
 
-    if ((f = fopen(path, "r")) == NULL) {
-        perror("control_parse: fopen failed");
+    if ((f = fdopen(fd, "r")) == NULL) {
+        perror("control_parsefd: fopen failed");
         return -1;
     }
 
     if ((c = calloc(1, sizeof(*c))) == NULL) {
-        perror("control_parse: malloc failed");
+        perror("control_parsefd: malloc failed");
         goto error_malloc;
     }
     *ctrl = c;
 
     lb_size = 128;
     if ((linebuf = malloc(lb_size)) == NULL) {
-        perror("control_parse: malloc failed");
+        perror("control_parsefd: malloc failed");
         goto error_linebufalloc;
     }
 
@@ -180,7 +196,7 @@ int control_parse(const char *path, struct control **ctrl)
     }
 
     if (ferror(f)) {
-        perror("control_parse: reading line failed");
+        perror("control_parsefd: reading line failed");
         goto error_parse;
     }
 
@@ -207,7 +223,7 @@ int control_parse(const char *path, struct control **ctrl)
 
 error_parse:
     if (msg != NULL) {
-        fprintf(stderr, "%s:%u %s\n", path, line, msg);
+        fprintf(stderr, "Line %u %s\n", line, msg);
     }
     free(linebuf);
 error_linebufalloc:
