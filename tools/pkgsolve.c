@@ -1,21 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <dirent.h>
 
 #include "control.h"
 #include "solve.h"
+#include "repo.h"
 
 /* Path to packages dir */
 static const char *packagedir = "/packages";
 /* Separator for package name and version */
 static const char *nameversep = ",";
 
-static int pkgdir_fd;
+static struct repo *repo = NULL;
 
 static int parse_params(int argc, char *argv[]);
-static int get_pkt(struct solve_problem *p, const char *name, void *opaque);
+static int get_pkg(struct solve_problem *p, const char *name, void *opaque);
 
 
 int main(int argc, char *argv[])
@@ -24,7 +23,7 @@ int main(int argc, char *argv[])
     unsigned i;
     struct solve_problem *p;
     struct solve_params params = {
-            .get_pkt = get_pkt,
+            .get_pkt = get_pkg,
             .opaque = NULL,
         };
     const char *pkg_name, *pkg_version;
@@ -39,14 +38,14 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    if ((pkgdir_fd = open(packagedir, O_RDONLY | O_DIRECTORY)) == -1) {
-        perror("opening package dir failed");
+    if ((repo = repo_init(packagedir)) == NULL) {
+        perror("opening repo failed");
         return EXIT_FAILURE;
     }
 
     if (solve_init(&params, &p) != 0) {
         fprintf(stderr, "Initializing solver failed\n");
-        close(pkgdir_fd);
+        repo_destroy(repo);
         return EXIT_FAILURE;
     }
 
@@ -70,7 +69,7 @@ int main(int argc, char *argv[])
 
 out:
     solve_destroy(p);
-    close(pkgdir_fd);
+    repo_destroy(repo);
     return ret;
 }
 
@@ -99,99 +98,50 @@ static int parse_params(int argc, char *argv[])
     return optind;
 }
 
-static int get_pkt(struct solve_problem *p, const char *name, void *opaque)
+static int get_pkg(struct solve_problem *p, const char *name, void *opaque)
 {
-    int dfd, vfd, cfd, r, ret = 0;
-    DIR *pkg_d;
-    struct dirent *de;
+    struct repo_package *pkg;
+    struct repo_version *ver;
+    int ret;
     unsigned num_deps = 0;
     const char **deps = NULL;
-    struct control *c;
     struct control_dependency *cd;
 
     (void) opaque;
 
-    if ((dfd = openat(pkgdir_fd, name, O_RDONLY | O_DIRECTORY)) == -1) {
-        fprintf(stderr, "Opening package dir for '%s' failed\n", name);
+    if ((pkg = repo_package_get(repo, name)) == NULL) {
+        fprintf(stderr, "get_pkg: repo_package_get(%s) failed\n", name);
         return -1;
     }
 
-    if ((pkg_d = fdopendir(dfd)) == NULL) {
-        close(dfd);
-        perror("fdopendir failed");
-        fprintf(stderr, "fdopendir for package dir failed: '%s'\n", name);
-        return -1;
-    }
-
-    while ((de = readdir(pkg_d)) != NULL) {
-        if (de->d_name[0] == '.') {
-            continue;
-        }
-
-        /* open version directory */
-        if ((vfd = openat(dfd, de->d_name, O_RDONLY | O_DIRECTORY | O_NOFOLLOW))
-                == -1)
-        {
-            fprintf(stderr, "get_pkt: openat failed (%s,%s), skipping "
-                    "version\n", name, de->d_name);
-            continue;
-        }
-
-        /* open control file */
-        if ((cfd = openat(vfd, "control", O_RDONLY)) == -1) {
-            fprintf(stderr, "get_pkt: openat control failed (%s,%s), skipping "
-                    "version\n", name, de->d_name);
-            close(vfd);
-            continue;
-        }
-        close(vfd);
-
-        /* parse control file */
-        r = control_parsefd(cfd, &c);
-        close(cfd);
-        if (r != 0) {
-            fprintf(stderr, "get_pkt: parsing control failed (%s,%s), skipping "
-                    "version\n", name, de->d_name);
-            continue;
-        }
-
+    for (ver = pkg->versions; pkg != NULL; pkg = pkg->next) {
         /* generate dependency array */
         num_deps = 0;
-        for (cd = c->run_depend; cd != NULL; cd = cd->next) {
+        for (cd = ver->control->run_depend; cd != NULL; cd = cd->next) {
             num_deps++;
         }
 
         if (num_deps != 0 && (deps = malloc(sizeof(*deps) * num_deps))
                 == NULL)
         {
-            fprintf(stderr, "get_pkt: allocating deps array failed\n");
-            control_destroy(c);
-            ret = -1;
-            goto out;
+            fprintf(stderr, "get_pkg: allocating deps array failed\n");
+            return -1;
         }
 
         num_deps = 0;
-        for (cd = c->run_depend; cd != NULL; cd = cd->next) {
+        for (cd = ver->control->run_depend; cd != NULL; cd = cd->next) {
             deps[num_deps++] = cd->package;
         }
 
         /* add version */
-        if (solve_package_version_add(p, name, de->d_name, num_deps, deps)
-                != 0)
-        {
-            fprintf(stderr, "get_pkt: solve_package_version_add failed (%s,%s)"
-                    "\n", name, de->d_name);
-            ret = -1;
-            control_destroy(c);
-            free(deps);
-            goto out;
-        }
-        control_destroy(c);
+        ret = solve_package_version_add(p, name, ver->version, num_deps, deps);
         free(deps);
+        if (ret != 0) {
+            fprintf(stderr, "get_pkg: solve_package_version_add failed (%s,%s)"
+                    "\n", name, ver->version);
+            return -1;
+        }
     }
 
-out:
-    closedir(pkg_d);
-    close(dfd);
-    return ret;
+    return 0;
 }
