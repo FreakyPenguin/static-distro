@@ -1,3 +1,5 @@
+#ifndef VERSION_H_
+#define VERSION_H_
 enum vercmp_result {
     VER_LT = -1,
     VER_EQ = 0,
@@ -7,3 +9,5 @@ enum vercmp_result {
 
 int version_validate(const char *v);
 enum vercmp_result version_cmp(const char *v1, const char *v2);
+
+#endif /* ndef VERSION_H_ */

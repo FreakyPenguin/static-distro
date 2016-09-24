@@ -1,3 +1,6 @@
+#ifndef CONTROL_H_
+#define CONTROL_H_
+
 struct control_dependency;
 struct control_source;
 
@@ -22,3 +25,5 @@ struct control_source {
 int control_parse(const char *path, struct control **ctrl);
 int control_parsefd(int fd, struct control **ctrl);
 void control_destroy(struct control *ctrl);
+
+#endif /* ndef CONTROL_H_ */

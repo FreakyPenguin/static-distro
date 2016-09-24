@@ -1,3 +1,6 @@
+#ifndef SOLVE_H_
+#define SOLVE_H_
+
 struct solve_problem;
 
 struct solve_params {
@@ -18,3 +21,5 @@ int solve_package_version_add(struct solve_problem *p, const char *name,
 int solve_run(struct solve_problem *p);
 int solve_result_package(struct solve_problem *p, unsigned n,
         const char **pkg_name, const char **pkg_version);
+
+#endif /* ndef SOLVE_H_ */
