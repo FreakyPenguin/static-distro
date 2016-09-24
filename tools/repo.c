@@ -165,6 +165,7 @@ static void package_destroy(struct repo_package *pkg)
 
     for (ver = pkg->versions; ver != NULL; ver = ver_next) {
         ver_next = ver->next;
+        control_destroy(ver->control);
         free(ver->version);
         free(ver);
     }
