@@ -5,4 +5,5 @@ enum vercmp_result {
     VER_FAILED = 2,
 };
 
+int version_validate(const char *v);
 enum vercmp_result version_cmp(const char *v1, const char *v2);

@@ -18,6 +18,15 @@ static inline int cmp_dig(const char *s1, size_t s1_len, const char *s2,
         size_t s2_len);
 static inline int cmp_verchar(char c1, char c2);
 
+int version_validate(const char *v)
+{
+    unsigned e;
+    const char *us, *rev;
+    size_t usl, revl;
+
+    return parse_coarse(v, &e, &us, &usl, &rev, &revl);
+}
+
 enum vercmp_result version_cmp(const char *v1, const char *v2)
 {
     unsigned e1, e2;
