@@ -1,8 +1,9 @@
-#include "solve.h"
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
+#include "solve.h"
+#include "version.h"
 
 struct solve_problem {
     struct solve_params params;
@@ -89,8 +90,9 @@ int solve_package_version_add(struct solve_problem *p, const char *name,
         const char *version, unsigned n_deps, const char **deps)
 {
     struct package *pkg;
-    struct version *ver;
+    struct version *ver, *v, *ver_prev;
     struct dependency *dep, *dep_next;
+    enum vercmp_result cmpres;
     unsigned i;
 
     if ((pkg = pkg_add(p, name)) == NULL) {
@@ -127,8 +129,33 @@ int solve_package_version_add(struct solve_problem *p, const char *name,
     }
 
     /* add version to package */
-    ver->next = pkg->available;
-    pkg->available = ver;
+    ver_prev = NULL;
+    v = pkg->available;
+    while (v != NULL) {
+        cmpres = version_cmp(version, v->version);
+        if (cmpres == VER_FAILED) {
+            fprintf(stderr, "solve_package_version_add: comparing version "
+                    "numbers failed: '%s' vs '%s'\n", version, v->version);
+            goto out_deps;
+        } else if (cmpres == VER_EQ) {
+            fprintf(stderr, "solve_package_version_add: comparing version "
+                    "numbers yielded unexpected equal '%s' vs '%s'\n", version,
+                    v->version);
+            abort();
+        } else if (cmpres == VER_GT) {
+            break;
+        }
+
+        ver_prev = v;
+        v = v->next;
+    }
+    if (ver_prev == NULL) {
+        ver->next = pkg->available;
+        pkg->available = ver;
+    } else {
+        ver->next = ver_prev->next;
+        ver_prev->next = ver;
+    }
     return 0;
 
 out_deps:

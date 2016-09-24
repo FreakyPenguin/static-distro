@@ -6,7 +6,7 @@ clean:
 
 withenv: withenv.o
 pkgcontrol: pkgcontrol.o control.o
-pkgsolve: pkgsolve.o solve.o control.o
+pkgsolve: pkgsolve.o solve.o control.o version.o
 pkgvercmp: pkgvercmp.o version.o
 
 .PHONY: all clean
