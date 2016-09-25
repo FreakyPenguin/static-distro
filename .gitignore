@@ -4,5 +4,7 @@ bootstrap/stage0_build
 bootstrap/stage1_packages
 bootstrap/stage1_build
 tools/withenv
+tools/withpkgs
 tools/pkgcontrol
 tools/pkgsolve
+tools/pkgvercmp
