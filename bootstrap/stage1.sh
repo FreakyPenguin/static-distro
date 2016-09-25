@@ -5,12 +5,13 @@ set -e
 s0_prefix="`pwd`/stage0_prefix"
 distfiles="`pwd`/../distfiles"
 packages="`pwd`/../packages"
+toolsdir="`pwd`/../tools"
 outdir="`pwd`/stage1_packages"
 buildparentdir="`pwd`/stage1_build"
 
 export ARCH_BUILD="`gcc -dumpmachine`"
 export ARCH_TARGET=x86_64-linux-musl
-export PATH="$s0_prefix/bin:$PATH"
+export PATH="$s0_prefix/bin:$toolsdir:$PATH"
 
 # prepare directories
 mkdir -p $outdir $buildparentdir
@@ -26,7 +27,8 @@ build_s1_pkg() {
     fi
 
     # figure out version
-    phys_path="`cd ${packages}/${pkg}/stage1 && pwd -P`"
+    phys_path="`cd ${packages}/${pkg}/*-\~\~stage1 && pwd -P`"
+    control="$phys_path/control"
     ver="`basename $phys_path`"
 
     echo "stage1: Building $pkg"
@@ -37,13 +39,13 @@ build_s1_pkg() {
     cd "$build_dir"
 
     # get distfiles
-    while read f ; do
+    for f in `pkgcontrol -s $control` ; do
         cp "${distfiles}/${f}" .
-    done < srcs
+    done
 
     export PKG_NAME="$pkg"
     export PKG_VERSION="$ver"
-    export PKG_DIR="/packages/${pkg}/stage1"
+    export PKG_DIR="/packages/${pkg}/$ver"
     export PKG_INSTDIR="${build_dir}/root"
 
     mkdir -p ${PKG_INSTDIR}
@@ -52,7 +54,10 @@ build_s1_pkg() {
     ./unpack.sh >build.log 2>&1
 
     # build pass
-    ./build_stage1.sh >>build.log 2>&1
+    ./build.sh >>build.log 2>&1
+
+    # copy over control file
+    cp "$control" "${build_dir}/root/packages/${pkg}/${ver}/control"
 
     cp -r "${build_dir}/root/packages/${pkg}" "$outdir/"
     cd "${buildparentdir}"

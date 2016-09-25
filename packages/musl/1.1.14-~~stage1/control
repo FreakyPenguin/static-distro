@@ -1,0 +1,8 @@
+Package: musl
+Version: 1.1.14-~~stage1
+Depends-Build:
+	sbase
+	mksh
+	gcc
+Sources:
+	musl-1.1.14.tar.gz

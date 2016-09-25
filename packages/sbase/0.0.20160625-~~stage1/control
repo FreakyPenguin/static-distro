@@ -1,0 +1,14 @@
+Package: sbase
+Version: 0.0.20160625-~~stage1
+Depends-Build:
+	mksh
+	sbase
+	grep
+	sed
+	awk
+	musl
+	gcc
+	binutils
+	make
+Sources:
+	sbase-0.0.20160625.tar.gz

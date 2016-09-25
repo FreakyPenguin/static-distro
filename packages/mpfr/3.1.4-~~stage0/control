@@ -1,0 +1,15 @@
+Package: mpfr
+Version: 3.1.4-~~stage0
+Depends-Build:
+	mksh
+	sbase
+	grep
+	sed
+	awk
+	musl
+	gcc
+	binutils
+	make
+	gmp
+Sources:
+	mpfr-3.1.4.tar.gz

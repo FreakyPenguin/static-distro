@@ -5,11 +5,12 @@ set -e
 s0_prefix="`pwd`/stage0_prefix"
 distfiles="`pwd`/../distfiles"
 packages="`pwd`/../packages"
+toolsdir="`pwd`/../tools"
 buildparentdir="`pwd`/stage0_build"
 
 export ARCH_BUILD="`gcc -dumpmachine`"
 export ARCH_TARGET=x86_64-linux-musl
-export PATH="$s0_prefix/bin:$PATH"
+export PATH="$s0_prefix/bin:$toolsdir:$PATH"
 
 # prepare prefix dir
 mkdir -p $s0_prefix
@@ -36,7 +37,8 @@ build_s0_pkg() {
     fi
 
     # figure out version
-    phys_path="`cd ${packages}/${pkg}/stage0 && pwd -P`"
+    phys_path="`cd ${packages}/${pkg}/*-\~\~${pass} && pwd -P`"
+    control="$phys_path/control"
     ver="`basename $phys_path`"
 
     echo "stage0: Building $pkg pass $pass"
@@ -47,9 +49,9 @@ build_s0_pkg() {
     cd "$build_dir"
 
     # get distfiles
-    while read f ; do
+    for f in `pkgcontrol -s $control` ; do
         cp "${distfiles}/${f}" .
-    done < srcs
+    done
 
     export PKG_NAME="$pkg"
     export PKG_VERSION="$ver"
@@ -60,7 +62,7 @@ build_s0_pkg() {
     ./unpack.sh >build.log 2>&1
 
     # build pass
-    ./build_${pass}.sh >>build.log 2>&1
+    ./build.sh >>build.log 2>&1
 
     touch "${build_dir}/.done"
     cd "${buildparentdir}"

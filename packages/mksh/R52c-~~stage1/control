@@ -1,0 +1,14 @@
+Package: mksh
+Version: R52c-~~stage1
+Depends-Build:
+	mksh
+	sbase
+	grep
+	sed
+	awk
+	musl
+	gcc
+	binutils
+	make
+Sources:
+	mksh-R52c.tar.gz

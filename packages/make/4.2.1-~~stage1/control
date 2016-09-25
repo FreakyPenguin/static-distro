@@ -1,0 +1,14 @@
+Package: make
+Version: 4.2.1-~~stage1
+Depends-Build:
+	mksh
+	sbase
+	grep
+	sed
+	awk
+	musl
+	gcc
+	binutils
+	make
+Sources:
+	make-4.2.1.tar.gz

@@ -1,0 +1,14 @@
+Package: sed
+Version: 4.2.2-~~stage1
+Depends-Build:
+	mksh
+	sbase
+	grep
+	sed
+	awk
+	musl
+	gcc
+	binutils
+	make
+Sources:
+	sed-4.2.2.tar.gz
