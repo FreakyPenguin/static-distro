@@ -2,6 +2,9 @@ sudo: required
 language: c
 compiler:
     - gcc
+before_install:
+    - sudo apt-get update -qq
+    - sudo apt-get install -qq libgmp-dev libmpc-dev libmpfr-dev
 script:
     - make -C tools
     - make -C tools setuid
