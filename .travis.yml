@@ -1,5 +1,8 @@
+sudo: required
 language: c
 compiler:
     - gcc
 script:
     - make -C tools
+    - make -C setuid
+    - cd bootstrap && ./stage0.sh
