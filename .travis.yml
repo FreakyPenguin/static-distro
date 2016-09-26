@@ -5,4 +5,5 @@ compiler:
 script:
     - make -C tools
     - make -C tools setuid
-    - cd bootstrap && ./stage0.sh
+    - cd distfiles && ./fetch.sh stage0
+    - cd bootstrap && ./stage0.sh ; cd ..
