@@ -4,5 +4,5 @@ compiler:
     - gcc
 script:
     - make -C tools
-    - make -C setuid
+    - make -C tools setuid
     - cd bootstrap && ./stage0.sh
