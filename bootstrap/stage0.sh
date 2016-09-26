@@ -59,10 +59,12 @@ build_s0_pkg() {
     export PKG_INSTDIR="/"
 
     # unpack
-    ./unpack.sh >build.log 2>&1
+    #./unpack.sh >build.log 2>&1
+    ./unpack.sh 2>&1 | tee build.log
 
     # build pass
-    ./build.sh >>build.log 2>&1
+    #./build.sh >>build.log 2>&1
+    ./build.sh 2>&1 | tee -a build.log
 
     touch "${build_dir}/.done"
     cd "${buildparentdir}"
