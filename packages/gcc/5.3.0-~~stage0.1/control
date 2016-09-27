@@ -1,5 +1,5 @@
 Package: gcc
-Version: 5.3.0-~~stage0
+Version: 5.3.0-~~stage0.1
 Depends-Build:
 	sbase
 	mksh

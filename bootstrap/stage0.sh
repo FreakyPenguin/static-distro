@@ -79,9 +79,9 @@ build_s0_pkg() {
 }
 
 build_s0_pkg binutils stage0
-build_s0_pkg gcc stage0_1
+build_s0_pkg gcc stage0.1
 build_s0_pkg musl stage0
-build_s0_pkg gcc stage0_2
+build_s0_pkg gcc stage0.2
 build_s0_pkg gmp stage0
 build_s0_pkg mpfr stage0
 build_s0_pkg mpc stage0
