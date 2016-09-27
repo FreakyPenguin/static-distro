@@ -1,0 +1,15 @@
+Package: bison
+Version: 3.0.4
+Depends-Build:
+	sbase
+	mksh
+	awk
+	grep
+	sed
+	make
+	gcc
+	musl
+	m4
+	perl
+Sources:
+	bison-3.0.4.tar.gz

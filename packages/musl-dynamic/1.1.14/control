@@ -1,0 +1,10 @@
+Package: musl-dynamic
+Version: 1.1.14
+Depends-Build:
+	sbase
+	mksh
+	gcc
+	sed
+	make
+Sources:
+	musl-1.1.14.tar.gz

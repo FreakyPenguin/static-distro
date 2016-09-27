@@ -1,0 +1,16 @@
+Package: texinfo
+Version: 6.1
+Depends-Build:
+	sbase
+	mksh
+	musl
+	sed
+	grep
+	awk
+	make
+	gcc
+	perl
+Depends-Run:
+	perl
+Sources:
+	texinfo-6.1.tar.gz

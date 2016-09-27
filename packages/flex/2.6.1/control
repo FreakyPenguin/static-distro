@@ -1,0 +1,15 @@
+Package: flex
+Version: 2.6.1
+Depends-Build:
+	sbase
+	mksh
+	awk
+	grep
+	sed
+	make
+	gcc
+	musl
+	m4
+	bison
+Sources:
+	flex-2.6.1.tar.gz

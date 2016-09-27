@@ -1,0 +1,13 @@
+Package: binutils
+Version: 2.26.1
+Depends-Build:
+	sbase
+	mksh
+	awk
+	grep
+	sed
+	make
+	gcc
+	musl
+Sources:
+	binutils-2.26.1.tar.gz

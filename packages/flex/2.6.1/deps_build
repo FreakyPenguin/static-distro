@@ -1,0 +1,11 @@
+mksh
+sbase
+grep
+sed
+awk
+musl
+gcc
+binutils
+make
+m4
+bison

@@ -1,0 +1,14 @@
+Package: m4
+Version: 1.4.17
+Depends-Build:
+	mksh
+	sbase
+	grep
+	sed
+	awk
+	musl
+	gcc
+	binutils
+	make
+Sources:
+	m4-1.4.17.tar.gz

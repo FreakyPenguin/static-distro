@@ -1,0 +1,13 @@
+Package: tar
+Version: 1.29
+Depends-Build:
+	mksh
+	sbase
+	awk
+	sed
+	grep
+	musl
+	gcc
+	make
+Sources:
+	tar-1.29.tar.gz
