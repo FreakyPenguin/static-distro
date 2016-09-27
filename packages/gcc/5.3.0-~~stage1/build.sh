@@ -6,8 +6,8 @@ mkdir build && cd build
     --localedir=${PKG_DIR}/locale --mandir=${PKG_DIR}/man --docdir=${PKG_DIR}/doc \
     --build=$ARCH_BUILD --target=$ARCH_TARGET --host=$ARCH_TARGET \
     --enable-languages=c,c++ --disable-nls --disable-libmudflap \
-    --disable-libsanitizer --disable-werror \
-    --disable-shared --disable-host-shared --enable-static \
+    --disable-libsanitizer --disable-werror --enable-static \
+    --disable-shared --disable-host-shared \
     LDFLAGS=-static
 make -j8
 make install DESTDIR="${PKG_INSTDIR}"

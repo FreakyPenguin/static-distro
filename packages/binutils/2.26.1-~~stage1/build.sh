@@ -7,7 +7,7 @@ mkdir build && cd build
     --build=$ARCH_BUILD --target=$ARCH_TARGET --host=$ARCH_TARGET \
     --disable-werror --disable-nls --disable-gdb --disable-libdecnumber \
     --disable-readline --disable-sim
-make configure-host
-make -j8 LDFLAGS=-all-static
+make configure-host LIB_PATH=/lib
+make -j8 LDFLAGS=-all-static LIB_PATH=/lib
 make install DESTDIR="${PKG_INSTDIR}"
 rm -f ${PKG_INSTDIR}/${PKG_DIR}/info/dir ${PKG_INSTDIR}/${PKG_DIR}/lib/charset.alias
