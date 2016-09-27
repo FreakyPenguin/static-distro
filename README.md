@@ -1,5 +1,20 @@
 # static-distro
 
+This is an experiment: building a linux distribution of statically linked
+packages. The main focus is building lightweight containers.
+
+Packages are installed under `/packages/$NAME/$VERSION`. The core utility
+at this point is `withpkgs` which runs a command in an isolated chroot
+containing a subset of packages. For example:
+
+    $ withpkgs -d bootstrap/stage2_packages -p mksh sbase -p musl -p gcc \
+        -w my_working_directory /bin/sh
+
+This runs a container with a shell, basic utilities and gcc, mounts the
+directory `my_working_directory` under `/work` in the container and then runs
+`/bin/sh` in the container. `withpkgs` does dependency resolution, so the
+container will also include binutils for instance.
+
 ## Bootstrap
 static-distro can be bootstrapped from any Linux distribution. For Ubuntu/Debian
 the following packages need to be installed:
@@ -29,19 +44,19 @@ Bootstrapping is divided into 3 stages:
     # Actually run bootstrapping steps (this will take a while)
     $ cd bootstrap && ./stage0.sh && ./stage1.sh && ./stage1.sh && cd ..
 
-The result of this is the repository of packets in bootstrap/stage2_packages
+The result of this is the repository of packages in `bootstrap/stage2_packages`.
 
 
 
 ## Tools
 ### Main tools
- * `withenv`: mechanism for running a command in an environment consisting of
-   particular packet versions.
- * `withpkgs`: running a command in an environment including particular packages,
-   with (or without) version constraints. (uses `withenv`)
+ * `withpkgs`: running a command in an environment including particular
+   packages, with (or without) version constraints. (uses `withenv`)
  * `pkgbuild`: build a source package. (uses `withpkgs`)
+ * `withenv`: mechanism for running a command in an environment consisting of
+   particular package versions.
 
 ### Scripting tools
- * `pkgcontrol`: extract information from packet control files.
- * `pkgsolve`: solve packet constraints and yield a list of packet versions.
- * `pkgvercmp`: compare packet version numbers
+ * `pkgcontrol`: extract information from package control files.
+ * `pkgsolve`: solve package constraints and yield a list of package versions.
+ * `pkgvercmp`: compare package version numbers
