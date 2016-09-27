@@ -1,8 +1,11 @@
 *.o
+distfiles/*.tar.*
 bootstrap/stage0_prefix
 bootstrap/stage0_build
 bootstrap/stage1_packages
 bootstrap/stage1_build
+bootstrap/stage2_packages
+bootstrap/stage2_build
 tools/withenv
 tools/withpkgs
 tools/pkgcontrol
