@@ -1,5 +1,5 @@
 #!/bin/sh
-set -x
+#set -x
 set -e
 
 s0_prefix="`pwd`/stage0_prefix"
@@ -68,10 +68,10 @@ build_s0_pkg() {
     export PKG_DIR="$s0_prefix"
     export PKG_INSTDIR="/"
 
-    # unpack
+    echo "stage0:     Unpacking"
     ./unpack.sh >build.log 2>&1 || failed unpacked
 
-    # build pass
+    echo "stage0:     Building"
     ./build.sh >>build.log 2>&1 || failed build
 
     touch "${build_dir}/.done"

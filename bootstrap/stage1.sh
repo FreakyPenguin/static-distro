@@ -1,5 +1,5 @@
 #!/bin/sh
-set -x
+#set -x
 set -e
 
 s0_prefix="`pwd`/stage0_prefix"
@@ -16,6 +16,16 @@ export PATH="$s0_prefix/bin:$toolsdir:$PATH"
 # prepare directories
 mkdir -p $outdir $buildparentdir
 
+failed() {
+    echo "---------------------------------------------------------------------"
+    echo "$1 $(pwd) failed"
+    head -n 2000 build.log
+    echo "---------------------------------------------------------------------"
+    tail -n 2000 build.log
+    echo "---------------------------------------------------------------------"
+    exit 1
+}
+
 build_s1_pkg() {
     pkg="$1"
     build_dir="${buildparentdir}/build-${pkg}"
@@ -31,7 +41,7 @@ build_s1_pkg() {
     control="$phys_path/control"
     ver="`basename $phys_path`"
 
-    echo "stage1: Building $pkg"
+    echo "stage1: Building $pkg $ver"
 
     # prepare build directory
     rm -rf "$build_dir"
@@ -50,11 +60,11 @@ build_s1_pkg() {
 
     mkdir -p ${PKG_INSTDIR}
 
-    # unpack
-    ./unpack.sh >build.log 2>&1
+    echo "stage1:     Unpacking"
+    ./unpack.sh >build.log 2>&1 || failed unpack
 
-    # build pass
-    ./build.sh >>build.log 2>&1
+    echo "stage1:     Building"
+    ./build.sh >>build.log 2>&1 || failed build
 
     # copy over control file
     cp "$control" "${build_dir}/root/packages/${pkg}/${ver}/control"
@@ -65,6 +75,5 @@ build_s1_pkg() {
 
 stage1_packages="binutils gcc musl sbase mksh make sed grep awk"
 for p in $stage1_packages ; do
-    echo $p
     build_s1_pkg $p
 done

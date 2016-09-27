@@ -1,5 +1,5 @@
 #!/bin/sh
-set -x
+#set -x
 set -e
 
 s1_pkgs="`pwd`/stage1_packages"
@@ -21,6 +21,16 @@ fi
 
 # prepare directories
 mkdir -p $buildparentdir
+
+failed() {
+    echo "---------------------------------------------------------------------"
+    echo "$1 $(pwd) failed"
+    head -n 2000 build.log
+    echo "---------------------------------------------------------------------"
+    tail -n 2000 build.log
+    echo "---------------------------------------------------------------------"
+    exit 1
+}
 
 build_s2_pkg() {
     pkg="$1"
@@ -63,16 +73,13 @@ build_s2_pkg() {
     export PKG_DIR="/packages/${pkg}/$ver"
     export PKG_INSTDIR="${build_dir}/root"
 
-    # unpack
-    ./unpack.sh >build.log 2>&1
-    #./unpack.sh
+    echo "stage2:     Unpacking"
+    ./unpack.sh >build.log 2>&1 || failed unpack
 
-    # build pass
+    echo "stage2:     Building"
     export PKG_INSTDIR="/work/root"
-    #withpkgs -d $outdir $deps -w . -- /bin/sh -c 'cd /work && ./build.sh' \
-    #    >build.log 2>&1
     withpkgs -d $outdir $deps -w . -- /bin/sh -c 'cd /work && ./build.sh' \
-        2>&1 | tee build.log
+        >build.log 2>&1 || failed build
 
     # copy over control file
     cp "$control" "${build_dir}/root/packages/${pkg}/${ver}/control"
@@ -84,6 +91,5 @@ build_s2_pkg() {
 stage2_packages="tar binutils m4 gmp mpfr mpc musl-dynamic perl texinfo bison flex \
     binutils gcc"
 for p in $stage2_packages ; do
-    echo $p
     build_s2_pkg $p
 done
