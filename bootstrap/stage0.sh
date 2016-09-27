@@ -25,6 +25,16 @@ fi
 
 mkdir -p $buildparentdir
 
+failed() {
+    echo "---------------------------------------------------------------------"
+    echo "$1 $(pwd) failed"
+    head -n 2000 build.log
+    echo "---------------------------------------------------------------------"
+    tail -n 2000 build.log
+    echo "---------------------------------------------------------------------"
+    exit 1
+}
+
 build_s0_pkg() {
     pkg="$1"
     pass="$2"
@@ -59,12 +69,10 @@ build_s0_pkg() {
     export PKG_INSTDIR="/"
 
     # unpack
-    #./unpack.sh >build.log 2>&1
-    ./unpack.sh 2>&1 | tee build.log
+    ./unpack.sh >build.log 2>&1 || failed unpacked
 
     # build pass
-    #./build.sh >>build.log 2>&1
-    ./build.sh 2>&1 | tee -a build.log
+    ./build.sh >>build.log 2>&1 || failed build
 
     touch "${build_dir}/.done"
     cd "${buildparentdir}"
