@@ -10,5 +10,5 @@ track_status() {
 echo "Testing Stage0 build"
 track_status &
 cd bootstrap/
-./stage0.sh || exit 0
-exit 1
+./stage0.sh || exit 1
+exit 0
