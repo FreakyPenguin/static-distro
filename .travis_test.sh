@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 track_status() {
     while true ; do
         date
@@ -16,7 +18,7 @@ make -C tools
 make -C tools setuid
 track_status &
 
-if [ "$TEST_OPTION" == "stage0" ] ; then
+if [ "$TEST_OPTION" = "stage0" ] ; then
     echo "Fetching stage0 files"
     cd distfiles && ./fetch.sh stage0 && cd ..
     echo "Testing Stage0 build"
