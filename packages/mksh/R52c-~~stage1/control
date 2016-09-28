@@ -11,4 +11,4 @@ Depends-Build:
 	binutils
 	make
 Sources:
-	mksh-R52c.tar.gz
+	mksh-R52c.tgz
