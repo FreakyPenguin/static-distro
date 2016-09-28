@@ -43,7 +43,7 @@ static int create_usr_links(void);
 static int link_tree(int src_fd, char *src_path, size_t len, int dst_fd);
 static char *path_parts(const char **parts);
 static int mkdir_parts(const char **parts, mode_t m);
-static int mountbind_parts(const char **src, const char **target);
+static int mountbind_parts(const char **src, const char **target, int ro);
 
 int main(int argc, char *argv[])
 {
@@ -225,8 +225,8 @@ int run_child(void)
     /* mount bind dev, proc, and sys into new root */
     const char *host_dev[] = { "/dev", NULL };
     const char *host_sys[] = { "/sys", NULL };
-    if (mountbind_parts(host_dev, root_dev) ||
-            mountbind_parts(host_sys, root_sys))
+    if (mountbind_parts(host_dev, root_dev, 0) ||
+            mountbind_parts(host_sys, root_sys, 0))
     {
         perror("mounting subdirs failed");
         goto error_rootmkdir;
@@ -241,7 +241,7 @@ int run_child(void)
         }
 
         const char *host_work[] = { workdir, NULL };
-        if (mountbind_parts(host_work, root_work) != 0) {
+        if (mountbind_parts(host_work, root_work, 0) != 0) {
             perror("mounting work dir failed");
             goto error_rootmkdir;
         }
@@ -358,7 +358,7 @@ static int bind_packages(void)
             return -1;
         }
 
-        if (mountbind_parts(host_parts, parts) != 0) {
+        if (mountbind_parts(host_parts, parts, 1) != 0) {
             perror("mount failed");
             fprintf(stderr, "Mount package dir %s/%s failed\n", p->name,
                     p->version);
@@ -662,7 +662,7 @@ static int mkdir_parts(const char **parts, mode_t m)
 
 /* Assemble parts of both paths by concatenating them with /, then use the paths
  * for bind mounting from src to target. */
-static int mountbind_parts(const char **src, const char **target)
+static int mountbind_parts(const char **src, const char **target, int ro)
 {
     char *src_path, *target_path;
     int ret;
@@ -675,6 +675,11 @@ static int mountbind_parts(const char **src, const char **target)
     }
 
     ret = mount(src_path, target_path, "", MS_BIND | MS_SLAVE, "");
+
+    /* remount read-only if needed */
+    if (ro != 0 && ret == 0) {
+        ret = mount("", target_path, "", MS_REMOUNT | MS_BIND | MS_RDONLY, "");
+    }
 
     free(target_path);
     free(src_path);
