@@ -1,2 +1,2 @@
 #!/bin/sh
-tar xf ${PKG_NAME}-*.tar.*
+tar xf ${PKG_NAME}-*.tgz
