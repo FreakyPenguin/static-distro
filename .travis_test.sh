@@ -16,11 +16,13 @@ make -C tools
 make -C tools setuid
 track_status &
 
-echo "Fetching stage0 files"
-cd distfiles && ./fetch.sh stage0 && cd ..
-echo "Testing Stage0 build"
-cd bootstrap/
-./stage0.sh || exit 1
+if [ "$TEST_OPTION" == "stage0" ] ; then
+    echo "Fetching stage0 files"
+    cd distfiles && ./fetch.sh stage0 && cd ..
+    echo "Testing Stage0 build"
+    cd bootstrap/
+    ./stage0.sh || exit 1
 
-tar czf travis_stage0_prefix.tar.gz stage0_prefix
-scp stage0_prefix.tar.gz famkaufmann.info:public_html/
+    tar czf travis_stage0_prefix.tar.gz stage0_prefix
+    scp stage0_prefix.tar.gz famkaufmann.info:public_html/
+fi
