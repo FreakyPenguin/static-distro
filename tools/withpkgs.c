@@ -84,18 +84,18 @@ int main(int argc, char *argv[])
 /* Parse command line options into global variables */
 static int parse_opts(int *argc, char *argv[])
 {
-    int i, j;
+    int i, j, done = 0;
     struct package *p;
 
     for (i = 1, j = 1; i < *argc; i++) {
-        if (strcmp(argv[i], "-d") == 0) {
+        if (!done && strcmp(argv[i], "-d") == 0) {
             if (*argc <= i + 1) {
                 return -1;
             }
 
             packagedir = argv[i + 1];
             i++;
-        } else if (strcmp(argv[i], "-p") == 0) {
+        } else if (!done && strcmp(argv[i], "-p") == 0) {
             if (*argc <= i + 1) {
                 return -1;
             }
@@ -110,6 +110,10 @@ static int parse_opts(int *argc, char *argv[])
 
             i++;
         } else {
+            /* don't parse options past -- */
+            if (strcmp(argv[i], "--") == 0) {
+                done = 1;
+            }
             argv[j++] = argv[i];
         }
     }
