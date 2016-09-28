@@ -13,6 +13,7 @@ track_status() {
 mkdir -p ~/.ssh/
 mv .travis_id_rsa.pub ~/.ssh/id_rsa.pub
 mv .travis_id_rsa ~/.ssh/id_rsa
+chmod 600 ~/.ssh/id_rsa
 
 make -C tools
 make -C tools setuid
