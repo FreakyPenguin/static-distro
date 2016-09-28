@@ -10,7 +10,7 @@ track_status() {
 }
 
 
-mkdir ~/.ssh/
+mkdir -p ~/.ssh/
 mv .travis_id_rsa.pub ~/.ssh/id_rsa.pub
 mv .travis_id_rsa ~/.ssh/id_rsa
 
