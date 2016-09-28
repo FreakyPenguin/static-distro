@@ -11,5 +11,7 @@ Depends-Build:
 	musl
 	m4
 	perl
+Depends-Run:
+	m4
 Sources:
 	bison-3.0.4.tar.gz
