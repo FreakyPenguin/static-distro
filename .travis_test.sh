@@ -1,7 +1,6 @@
 #!/bin/sh
 
 set -e
-set -x
 
 track_status() {
     while true ; do
@@ -10,6 +9,10 @@ track_status() {
     done
 }
 
+die() {
+    echo "$2"
+    exit $1
+}
 
 mkdir -p ~/.ssh/
 mv .travis_id_rsa.pub ~/.ssh/id_rsa.pub
@@ -21,11 +24,9 @@ make -C tools setuid
 track_status &
 
 if [ "$TEST_OPTION" = "stage0" ] ; then
-    git show | grep '\[test stage0\]' >/dev/null
-    if [ $? -ne 0 ] ; then
-        echo "Skipping stage 0 test"
-        exit 0
-    fi
+    git show | grep '\[test stage0\]' >/dev/null || \
+        die 0 "Skipping stage 0 test"
+
     echo "Fetching stage0 files"
     cd distfiles && ./fetch.sh stage0 && cd ..
     echo "Testing Stage0 build"
@@ -38,11 +39,9 @@ if [ "$TEST_OPTION" = "stage0" ] ; then
     ssh staticdistro@famkaufmann.info \
         "cd public_html && mv travis_stage0_prefix.tar.gz.tmp travis_stage0_prefix.tar.gz"
 elif [ "$TEST_OPTION" = "stage1" ] ; then
-    git show | grep '\[test stage1\]' >/dev/null
-    if [ $? -ne 0 ] ; then
-        echo "Skipping stage 1 test"
-        exit 0
-    fi
+    git show | grep '\[test stage1\]' >/dev/null || \
+        die 0 "Skipping stage 1 test"
+
     echo "Fetching stage1 files"
     cd distfiles && ./fetch.sh stage1 && cd ..
     echo "Testing Stage1 build"
@@ -58,5 +57,4 @@ elif [ "$TEST_OPTION" = "stage1" ] ; then
         staticdistro@famkaufmann.info:public_html/travis_stage1_packages.tar.gz.tmp
     ssh staticdistro@famkaufmann.info \
         "cd public_html && mv travis_stage1_packages.tar.gz.tmp travis_stage1_packages.tar.gz"
-
 fi
