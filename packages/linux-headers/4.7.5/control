@@ -1,0 +1,13 @@
+Package: linux
+Version: 4.7.5
+Depends-Build:
+	mksh
+	sbase
+	sed
+	awk
+	grep
+	make
+	gcc
+	musl
+Sources:
+	linux-4.7.5.tar.xz

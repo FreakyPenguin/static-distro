@@ -1,0 +1,14 @@
+Package: libressl
+Version: 2.5.0
+Depends-Build:
+	mksh
+	sbase
+	awk
+	sed
+	grep
+	musl
+	gcc
+	make
+	linux-headers
+Sources:
+	libressl-2.5.0.tar.gz

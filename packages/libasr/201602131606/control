@@ -1,0 +1,14 @@
+Package: libasr
+Version: 201602131606
+Depends-Build:
+	mksh
+	sbase
+	awk
+	sed
+	grep
+	musl
+	gcc
+	make
+	libressl
+Sources:
+	libasr-201602131606.tar.gz

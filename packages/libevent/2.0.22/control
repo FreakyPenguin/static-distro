@@ -1,0 +1,13 @@
+Package: libevent
+Version: 2.0.22
+Depends-Build:
+	mksh
+	sbase
+	awk
+	sed
+	grep
+	musl
+	gcc
+	make
+Sources:
+	libevent-2.0.22-stable.tar.gz

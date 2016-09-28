@@ -1,0 +1,11 @@
+Package: zlib
+Version: 1.2.8
+Depends-Build:
+	mksh
+	sbase
+	sed
+	musl
+	gcc
+	make
+Sources:
+	zlib-1.2.8.tar.gz

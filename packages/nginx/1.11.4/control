@@ -1,0 +1,15 @@
+Package: nginx
+Version: 1.11.4
+Depends-Build:
+	mksh
+	sbase
+	sed
+	grep
+	musl
+	gcc
+	make
+	libressl
+	pcre
+	zlib
+Sources:
+	nginx-1.11.4.tar.gz

@@ -1,0 +1,13 @@
+Package: pcre
+Version: 8.39
+Depends-Build:
+	mksh
+	sbase
+	awk
+	sed
+	grep
+	musl
+	gcc
+	make
+Sources:
+	pcre-8.39.tar.gz

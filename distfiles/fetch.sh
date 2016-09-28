@@ -24,6 +24,13 @@ ${GET} "https://ftp.gnu.org/gnu/mpc/mpc-1.0.3.tar.gz"
 #${GET} "https://ftp.gnu.org/gnu/texinfo/texinfo-6.1.tar.gz"
 #${GET} "https://ftp.gnu.org/gnu/bison/bison-3.0.4.tar.gz"
 #${GET} "https://github.com/westes/flex/releases/download/v2.6.1/flex-2.6.1.tar.gz"
+#${GET} "http://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.39.tar.gz"
+#${GET} "http://zlib.net/zlib-1.2.8.tar.gz"
+#${GET} "http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.5.0.tar.gz"
+#${GET} "https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.7.5.tar.xz"
+#${GET} "https://nginx.org/download/nginx-1.11.4.tar.gz"
+#${GET} "https://www.opensmtpd.org/archives/opensmtpd-6.0.0p1.tar.gz"
+#${GET} "https://github.com/libevent/libevent/releases/download/release-2.0.22-stable/libevent-2.0.22-stable.tar.gz"
 #
 ##beyond:
 #${GET} "https://ftp.gnu.org/gnu/gzip/gzip-1.8.tar.gz"

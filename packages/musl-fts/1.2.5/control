@@ -1,0 +1,13 @@
+Package: musl-fts
+Version: 1.2.5
+Depends-Build:
+	mksh
+	sbase
+	awk
+	sed
+	grep
+	musl
+	gcc
+	make
+Sources:
+	musl-fts-1.2.5.tar.gz

@@ -1,0 +1,11 @@
+diff -ur opensmtpd-6.0.0p1.orig/smtpd/smtpd.c opensmtpd-6.0.0p1/smtpd/smtpd.c
+--- opensmtpd-6.0.0p1.orig/smtpd/smtpd.c	2016-09-27 16:55:39.479777016 -0700
++++ opensmtpd-6.0.0p1/smtpd/smtpd.c	2016-09-27 16:58:13.250877989 -0700
+@@ -86,6 +86,7 @@
+ 
+ extern char *__progname;
+ 
++#define WAIT_MYPGRP 0
+ #define SMTPD_MAXARG 32
+ 
+ static void parent_imsg(struct mproc *, struct imsg *);

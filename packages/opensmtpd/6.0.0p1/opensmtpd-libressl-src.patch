@@ -1,0 +1,132 @@
+diff -u opensmtpd-6.0.0p1.orig/configure opensmtpd-6.0.0p1/configure
+--- opensmtpd-6.0.0p1.orig/configure	2016-09-27 16:55:39.471777271 -0700
++++ opensmtpd-6.0.0p1/configure	2016-09-27 17:33:29.248435909 -0700
+@@ -642,6 +642,8 @@
+ HAVE_SSL_CTX_SET_DH_AUTO_TRUE
+ HAVE_SSL_CTX_SET_ECDH_AUTO_FALSE
+ HAVE_SSL_CTX_SET_ECDH_AUTO_TRUE
++HAVE_SSL_CTX_USE_CERTIFICATE_CHAIN_MEM_FALSE
++HAVE_SSL_CTX_USE_CERTIFICATE_CHAIN_MEM_TRUE
+ HAVE_TLSEXT_SERVERNAME_FALSE
+ HAVE_TLSEXT_SERVERNAME_TRUE
+ HAVE_GCM_CRYPTO_FALSE
+@@ -18641,6 +18655,49 @@
+ ##gilles
+ 
+ ##gilles
++OPENSSL_SUPPORTS_USE_CERTIFICATE_CHAIN_MEM=no
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if programs using SSL_CTX_use_certificate_chain_mem will link" >&5
++$as_echo_n "checking if programs using SSL_CTX_use_certificate_chain_mem will link... " >&6; }
++cat confdefs.h - <<_ACEOF >conftest.$ac_ext
++/* end confdefs.h.  */
++ #include <openssl/ssl.h>
++int
++main ()
++{
++ SSL_CTX_use_certificate_chain_mem(NULL, NULL, 1);
++  ;
++  return 0;
++}
++_ACEOF
++if ac_fn_c_try_link "$LINENO"; then :
++
++		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
++$as_echo "yes" >&6; }
++
++$as_echo "#define HAVE_SSL_CTX_USE_CERTIFICATE_CHAIN_MEM 1" >>confdefs.h
++
++		OPENSSL_SUPPORTS_USE_CERTIFICATE_CHAIN_MEM=yes
++
++else
++
++		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
++
++
++fi
++rm -f core conftest.err conftest.$ac_objext \
++    conftest$ac_exeext conftest.$ac_ext
++ if test $OPENSSL_SUPPORTS_USE_CERTIFICATE_CHAIN_MEM = yes; then
++  HAVE_SSL_CTX_USE_CERTIFICATE_CHAIN_MEM_TRUE=
++  HAVE_SSL_CTX_USE_CERTIFICATE_CHAIN_MEM_FALSE='#'
++else
++  HAVE_SSL_CTX_USE_CERTIFICATE_CHAIN_MEM_TRUE='#'
++  HAVE_SSL_CTX_USE_CERTIFICATE_CHAIN_MEM_FALSE=
++fi
++
++##gilles
++
++##gilles
+ OPENSSL_SUPPORTS_ECDH_AUTO=no
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking if programs using SSL_CTX_set_ecdh_auto will link" >&5
+ $as_echo_n "checking if programs using SSL_CTX_set_ecdh_auto will link... " >&6; }
+@@ -19252,6 +19309,10 @@
+   as_fn_error $? "conditional \"HAVE_TLSEXT_SERVERNAME\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
++if test -z "${HAVE_SSL_CTX_USE_CERTIFICATE_CHAIN_MEM_TRUE}" && test -z "${HAVE_SSL_CTX_USE_CERTIFICATE_CHAIN_MEM_FALSE}"; then
++  as_fn_error $? "conditional \"HAVE_SSL_CTX_USE_CERTIFICATE_CHAIN_MEM\" was never defined.
++Usually this means the macro was only invoked conditionally." "$LINENO" 5
++fi
+ if test -z "${HAVE_SSL_CTX_SET_ECDH_AUTO_TRUE}" && test -z "${HAVE_SSL_CTX_SET_ECDH_AUTO_FALSE}"; then
+   as_fn_error $? "conditional \"HAVE_SSL_CTX_SET_ECDH_AUTO\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+diff -u opensmtpd-6.0.0p1.orig/configure.ac opensmtpd-6.0.0p1/configure.ac
+--- opensmtpd-6.0.0p1.orig/configure.ac	2016-09-27 16:55:39.471777271 -0700
++++ opensmtpd-6.0.0p1/configure.ac	2016-09-27 17:32:08.718955748 -0700
+@@ -1881,6 +1881,25 @@
+ ##gilles
+ 
+ ##gilles
++OPENSSL_SUPPORTS_USE_CERTIFICATE_CHAIN_MEM=no
++AC_MSG_CHECKING([if programs using SSL_CTX_use_certificate_chain_mem will link])
++AC_LINK_IFELSE(
++	[AC_LANG_PROGRAM([[ #include <openssl/ssl.h> ]],
++	[[ SSL_CTX_use_certificate_chain_mem(NULL, NULL, 1); ]])],
++	[
++		AC_MSG_RESULT([yes])
++		AC_DEFINE([HAVE_SSL_CTX_USE_CERTIFICATE_CHAIN_MEM], [1],
++			[Define if SSL library support SSL_CTX_use_certificate_chain_mem])
++		OPENSSL_SUPPORTS_USE_CERTIFICATE_CHAIN_MEM=yes
++	],
++	[
++		AC_MSG_RESULT([no])
++	]
++)
++AM_CONDITIONAL([HAVE_SSL_CTX_USE_CERTIFICATE_CHAIN_MEM], [test $OPENSSL_SUPPORTS_USE_CERTIFICATE_CHAIN_MEM = yes])
++##gilles
++
++##gilles
+ OPENSSL_SUPPORTS_ECDH_AUTO=no
+ AC_MSG_CHECKING([if programs using SSL_CTX_set_ecdh_auto will link])
+ AC_LINK_IFELSE(
+--- opensmtpd-6.0.0p1.orig/smtpd/libressl.c	2016-09-27 16:55:39.475777143 -0700
++++ opensmtpd-6.0.0p1/smtpd/libressl.c	2016-09-27 17:28:17.602188293 -0700
+@@ -81,6 +81,7 @@
+ 
+ #define SSL_ECDH_CURVE          "prime256v1"
+ 
++#ifndef HAVE_SSL_CTX_USE_CERTIFICATE_CHAIN_MEM
+ /*
+  * Read a bio that contains our certificate in "PEM" format,
+  * possibly followed by a sequence of CA certificates that should be
+@@ -170,6 +171,7 @@
+ 	BIO_free(in);
+ 	return (ret);
+ }
++#endif
+ 
+ #ifndef HAVE_SSL_CTX_SET_ECDH_AUTO
+ void
+--- opensmtpd-6.0.0p1.orig/config.h.in	2016-09-27 17:24:50.376674476 -0700
++++ opensmtpd-6.0.0p1/config.h.in	2016-09-27 17:45:36.111886408 -0700
+@@ -377,6 +377,9 @@
+ /* Have PEERCRED socket option */
+ #undef HAVE_SO_PEERCRED
+ 
++/* Define if SSL library support SSL_CTX_use_certificate_chain_mem */
++#undef HAVE_SSL_CTX_USE_CERTIFICATE_CHAIN_MEM
++
+ /* Define if SSL library support SSL_CTX_set_dh_auto */
+ #undef HAVE_SSL_CTX_SET_DH_AUTO
+ 

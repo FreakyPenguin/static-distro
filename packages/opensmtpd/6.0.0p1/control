@@ -1,0 +1,19 @@
+Package: opensmtpd
+Version: 6.0.0p1
+Depends-Build:
+	mksh
+	sbase
+	awk
+	sed
+	grep
+	musl
+	gcc
+	make
+	musl-fts
+	libasr
+	libressl
+	libevent
+	zlib
+	bison
+Sources:
+	opensmtpd-6.0.0p1.tar.gz
