@@ -1,0 +1,14 @@
+Package: dovecot
+Version: 2.2.26.0
+Depends-Build:
+	mksh
+	sbase
+	awk
+	sed
+	grep
+	musl
+	gcc
+	make
+	libressl
+Sources:
+	dovecot-2.2.26.0.tar.gz

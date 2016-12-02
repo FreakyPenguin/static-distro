@@ -43,6 +43,7 @@ fi
 #${GET} "https://nginx.org/download/nginx-1.11.4.tar.gz"
 #${GET} "https://www.opensmtpd.org/archives/opensmtpd-6.0.0p1.tar.gz"
 #${GET} "https://github.com/libevent/libevent/releases/download/release-2.0.22-stable/libevent-2.0.22-stable.tar.gz"
+#${GET} "http://dovecot.org/releases/2.2/dovecot-2.2.26.0.tar.gz"
 #
 ##beyond:
 #${GET} "https://ftp.gnu.org/gnu/gzip/gzip-1.8.tar.gz"
