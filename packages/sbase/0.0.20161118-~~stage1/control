@@ -1,5 +1,5 @@
 Package: sbase
-Version: 0.0.20160625-~~stage1
+Version: 0.0.20161118-~~stage1
 Depends-Build:
 	mksh
 	sbase
@@ -11,4 +11,4 @@ Depends-Build:
 	binutils
 	make
 Sources:
-	sbase-0.0.20160625.tar.gz
+	sbase-0.0.20161118.tar.gz

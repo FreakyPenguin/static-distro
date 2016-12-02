@@ -17,7 +17,7 @@ if [ "$1" = "stage0" ] ; then
 fi
 
 #stage 1:
-${GET} "https://famkaufmann.info/~staticdistro/distfiles/sbase-0.0.20160625.tar.gz"
+${GET} "https://famkaufmann.info/~staticdistro/distfiles/sbase-0.0.20161118.tar.gz"
 ${GET} "https://www.mirbsd.org/MirOS/dist/mir/mksh/mksh-R52c.tgz" || \
     ${GET} "https://pub.allbsd.org/MirOS/dist/mir/mksh/mksh-R52c.tgz"
 ${GET} "https://ftp.gnu.org/gnu/make/make-4.2.1.tar.gz"
