@@ -1,0 +1,16 @@
+Package: s6
+Version: 2.4.0.0
+Depends-Build:
+	mksh
+	sbase
+	sed
+	grep
+	musl
+	gcc
+	make
+	skalibs
+	execline
+Depends-Run:
+	execline
+Sources:
+	s6-2.4.0.0.tar.gz

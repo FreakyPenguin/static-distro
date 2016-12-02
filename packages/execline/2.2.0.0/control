@@ -1,0 +1,13 @@
+Package: execline
+Version: 2.2.0.0
+Depends-Build:
+	mksh
+	sbase
+	sed
+	grep
+	musl
+	gcc
+	make
+	skalibs
+Sources:
+	execline-2.2.0.0.tar.gz

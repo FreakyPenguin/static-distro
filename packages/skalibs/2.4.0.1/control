@@ -1,0 +1,12 @@
+Package: skalibs
+Version: 2.4.0.1
+Depends-Build:
+	mksh
+	sbase
+	sed
+	grep
+	musl
+	gcc
+	make
+Sources:
+	skalibs-2.4.0.1.tar.gz

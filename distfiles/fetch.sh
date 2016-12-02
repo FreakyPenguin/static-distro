@@ -44,6 +44,10 @@ fi
 #${GET} "https://www.opensmtpd.org/archives/opensmtpd-6.0.0p1.tar.gz"
 #${GET} "https://github.com/libevent/libevent/releases/download/release-2.0.22-stable/libevent-2.0.22-stable.tar.gz"
 #${GET} "http://dovecot.org/releases/2.2/dovecot-2.2.26.0.tar.gz"
+#${GET} "http://skarnet.org/software/skalibs/skalibs-2.4.0.1.tar.gz"
+#${GET} "http://skarnet.org/software/execline/execline-2.2.0.0.tar.gz"
+#${GET} "http://skarnet.org/software/s6/s6-2.4.0.0.tar.gz"
+#${GET} "http://skarnet.org/software/s6-rc/s6-rc-0.1.0.0.tar.gz"
 #
 ##beyond:
 #${GET} "https://ftp.gnu.org/gnu/gzip/gzip-1.8.tar.gz"
