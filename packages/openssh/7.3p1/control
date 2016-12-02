@@ -1,0 +1,15 @@
+Package: openssh
+Version: 7.3p1
+Depends-Build:
+	mksh
+	sbase
+	awk
+	sed
+	grep
+	musl
+	gcc
+	make
+	libressl
+	zlib
+Sources:
+	openssh-7.3p1.tar.gz
