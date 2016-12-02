@@ -1,0 +1,14 @@
+Package: ubase
+Version: 0.0.20160925
+Depends-Build:
+	mksh
+	sbase
+	grep
+	sed
+	awk
+	musl
+	gcc
+	binutils
+	make
+Sources:
+	ubase-0.0.20160925.tar.gz
