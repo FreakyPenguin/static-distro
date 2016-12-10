@@ -29,10 +29,6 @@ static const char *workdir = NULL;
 static const char *packagedir = "/packages";
 /* List of packages to be added to environment */
 static struct package *packages = NULL;
-/* User id to use */
-static int env_uid;
-/* Group id to use */
-static int env_gid;
 
 static int parse_opts(int argc, char *argv[]);
 static int run_child(void);
@@ -47,12 +43,8 @@ static int mountbind_parts(const char **src, const char **target, int ro);
 
 int main(int argc, char *argv[])
 {
-    int ret = EXIT_SUCCESS;
     char templ[] = "/tmp/nstest_XXXXXX";
-    pid_t pid;
 
-    env_uid = getuid();
-    env_gid = getgid();
     if (parse_opts(argc, argv) != 0) {
         fprintf(stderr, "Usage: withenv [OPTIONS] CMD...\n");
         fprintf(stderr, "Options:\n");
@@ -68,49 +60,10 @@ int main(int argc, char *argv[])
     root_path = mkdtemp(templ);
     if (root_path == NULL) {
         perror("mkdtemp failed");
-        goto error_mkdtemp;
+        return EXIT_FAILURE;
     }
 
-    /* fork child and unshare namespaces */
-    pid = fork();
-    if (pid == 0) {
-        /* in child  */
-        if (unshare(CLONE_NEWIPC | CLONE_NEWNS | CLONE_NEWPID) != 0) {
-            perror("unshare failed\n");
-            return EXIT_FAILURE;
-        }
-
-        return run_child();
-    } else if (pid < 0) {
-        perror("fork failed");
-        goto error_fork;
-    }
-
-    /* wait for child */
-    pid = waitpid(pid, &ret, 0);
-    if (pid < 0) {
-        perror("waitpid failed");
-        ret = EXIT_FAILURE;
-    }
-
-    if (WIFEXITED(ret)) {
-        ret = WEXITSTATUS(ret);
-    } else {
-        ret = -1;
-    }
-
-    /* remove temporary root directory */
-    if (rmdir(root_path) != 0) {
-        perror("removing temporary root directory failed");
-        ret = EXIT_FAILURE;
-    }
-
-    return ret;
-
-error_fork:
-    rmdir(root_path);
-error_mkdtemp:
-    return EXIT_FAILURE;
+    return run_child();
 }
 
 /* Parse command line options into global variables */
@@ -118,9 +71,9 @@ static int parse_opts(int argc, char *argv[])
 {
     int c;
     struct package *p;
-    char *ver, *end;
+    char *ver;
 
-    while ((c = getopt(argc, argv, "d:w:p:u:g:")) != -1) {
+    while ((c = getopt(argc, argv, "+d:w:p:")) != -1) {
         switch (c) {
             case 'd':
                 packagedir = optarg;
@@ -144,28 +97,6 @@ static int parse_opts(int argc, char *argv[])
                 p->next = packages;
                 packages = p;
                 break;
-            case 'u':
-                if (getuid() != 0) {
-                    fprintf(stderr, "Cannot overwrite UID as non-root\n");
-                    return -1;
-                }
-                env_uid = strtol(optarg, &end, 10);
-                if (*end != 0) {
-                    fprintf(stderr, "User option expects a UID integer\n");
-                    return -1;
-                }
-                break;
-            case 'g':
-                if (getuid() != 0) {
-                    fprintf(stderr, "Cannot overwrite GID as non-root\n");
-                    return -1;
-                }
-                env_gid = strtol(optarg, &end, 10);
-                if (*end != 0) {
-                    fprintf(stderr, "Group option expects a GID integer\n");
-                    return -1;
-                }
-                break;
             case '?':
                 fprintf(stderr, "Unknown option: %c\n", optopt);
                 return -1;
@@ -188,17 +119,10 @@ static int parse_opts(int argc, char *argv[])
 /* Main functionality in forked child (runs in unshared namespaces) */
 int run_child(void)
 {
-    pid_t pid;
     int ret;
 
     /* make sure no permissions are masked */
     umask(0);
-
-    /* make sure our mounts don't propagate outside our namespace */
-    if (mount("", "/", "dontcare", MS_SLAVE | MS_REC, "") != 0) {
-        perror("mount rshared root failed");
-        goto error_mountroot;
-    }
 
     /* mount tmpfs as our root directory */
     if (mount("tmpfs", root_path, "tmpfs", MS_NOATIME, "") != 0) {
@@ -269,53 +193,25 @@ int run_child(void)
         goto error_execv;
     }
 
-    /* Now let's launch the command in the new environment.
-     * Note: while we don't need the parent process, we fork here so the created
-     * process gets PID 1.
-     */
-    pid = fork();
-    if (pid == 0) {
-        /* need to mount procfs here so we get a private one */
-        if (mount("proc", "/proc", "proc", 0, "") != 0) {
-            perror("mounting /proc failed");
-            goto error_execv;
-        }
+    /* need to mount procfs here so we get a private one */
+    if (mount("proc", "/proc", "proc", 0, "") != 0) {
+        perror("mounting /proc failed");
+        goto error_execv;
+    }
 
-        /* create usr links */
-        if (create_usr_links() != 0) {
-            fprintf(stderr, "creating /usr links failed\n");
-            goto error_execv;
-        }
+    /* create usr links */
+    if (create_usr_links() != 0) {
+        fprintf(stderr, "creating /usr links failed\n");
+        goto error_execv;
+    }
 
-        /* reset umask */
-        umask(0022);
+    /* reset umask */
+    umask(0022);
 
-        /* change uid and gid */
-        if (setgid(env_gid) != 0) {
-            perror("setgid failed");
-            goto error_execv;
-        }
-        if (setuid(env_uid) != 0) {
-            perror("setuid failed");
-            goto error_execv;
-        }
-
-        /* actually run command now */
-        if (execvp(cmd_args[0], cmd_args) != 0) {
-            fprintf(stderr, "exec failed\n");
-            goto error_execv;
-        }
-    } else {
-        if ((pid = waitpid(pid, &ret, 0)) == -1) {
-            perror("waitpid for env command failed");
-            goto error_execv;
-        }
-
-        if (WIFEXITED(ret)) {
-            ret = WEXITSTATUS(ret);
-        } else {
-            ret = -1;
-        }
+    /* actually run command now */
+    if (execvp(cmd_args[0], cmd_args) != 0) {
+        fprintf(stderr, "exec failed\n");
+        goto error_execv;
     }
 
     return ret;
@@ -674,8 +570,10 @@ static int mountbind_parts(const char **src, const char **target, int ro)
         return -1;
     }
 
-    ret = mount(src_path, target_path, "", MS_BIND | MS_SLAVE, "");
-
+    ret = mount(src_path, target_path, "", MS_BIND | MS_REC, "");
+    if (ret != 0) {
+      perror("mount failed");
+    }
     /* remount read-only if needed */
     if (ro != 0 && ret == 0) {
         ret = mount("", target_path, "", MS_REMOUNT | MS_BIND | MS_RDONLY, "");

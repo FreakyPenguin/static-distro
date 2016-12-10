@@ -12,4 +12,5 @@ tools/withpkgs
 tools/pkgcontrol
 tools/pkgsolve
 tools/pkgvercmp
+tools/newns
 packages/static-tools

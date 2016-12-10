@@ -78,7 +78,7 @@ build_s2_pkg() {
 
     echo "stage2:     Building"
     export PKG_INSTDIR="/work/root"
-    withpkgs -d $outdir $deps -w . -- /bin/sh -c 'cd /work && ./build.sh' \
+    newns withpkgs -d $outdir $deps -w . -- /bin/sh -c 'cd /work && ./build.sh' \
         >build.log 2>&1 || failed build
 
     # copy over control file
