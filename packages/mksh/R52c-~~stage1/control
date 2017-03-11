@@ -1,4 +1,4 @@
-Package: mksh
+Source: mksh
 Version: R52c-~~stage1
 Depends-Build:
 	mksh
@@ -12,3 +12,5 @@ Depends-Build:
 	make
 Sources:
 	mksh-R52c.tgz
+
+Package: mksh

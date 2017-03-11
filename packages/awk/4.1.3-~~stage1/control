@@ -1,4 +1,4 @@
-Package: awk
+Source: awk
 Version: 4.1.3-~~stage1
 Depends-Build:
 	mksh
@@ -12,3 +12,5 @@ Depends-Build:
 	make
 Sources:
 	gawk-4.1.3.tar.gz
+
+Package: awk

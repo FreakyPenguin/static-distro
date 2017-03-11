@@ -1,4 +1,4 @@
-Package: gcc
+Source: gcc
 Version: 5.3.0-~~stage1
 Depends-Build:
 	sbase
@@ -10,7 +10,9 @@ Depends-Build:
 	musl
 	binutils
 	make
-Depends-Run:
-	binutils
 Sources:
 	gcc-5.3.0.tar.gz
+
+Package: gcc
+Depends-Run:
+	binutils

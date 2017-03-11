@@ -49,7 +49,7 @@ build_s1_pkg() {
     cd "$build_dir"
 
     # get distfiles
-    for f in `pkgcontrol -s $control` ; do
+    for f in `srccontrol -s $control` ; do
         cp "${distfiles}/${f}" .
     done
 
@@ -67,7 +67,8 @@ build_s1_pkg() {
     ./build.sh >>build.log 2>&1 || failed build
 
     # copy over control file
-    cp "$control" "${build_dir}/root/packages/${pkg}/${ver}/control"
+    gencontrol "$control" "$pkg" >\
+      "${build_dir}/root/packages/${pkg}/${ver}/control"
 
     cp -r "${build_dir}/root/packages/${pkg}" "$outdir/"
     cd "${buildparentdir}"

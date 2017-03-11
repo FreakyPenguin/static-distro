@@ -1,4 +1,4 @@
-Package: sed
+Source: sed
 Version: 4.2.2-~~stage1
 Depends-Build:
 	mksh
@@ -12,3 +12,5 @@ Depends-Build:
 	make
 Sources:
 	sed-4.2.2.tar.gz
+
+Package: sed

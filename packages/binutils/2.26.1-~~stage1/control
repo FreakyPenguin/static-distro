@@ -1,4 +1,4 @@
-Package: binutils
+Source: binutils
 Version: 2.26.1-~~stage1
 Depends-Build:
 	sbase
@@ -10,3 +10,5 @@ Depends-Build:
 	musl
 Sources:
 	binutils-2.26.1.tar.gz
+
+Package: binutils

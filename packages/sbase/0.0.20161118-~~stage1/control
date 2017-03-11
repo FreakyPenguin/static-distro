@@ -1,4 +1,4 @@
-Package: sbase
+Source: sbase
 Version: 0.0.20161118-~~stage1
 Depends-Build:
 	mksh
@@ -12,3 +12,5 @@ Depends-Build:
 	make
 Sources:
 	sbase-0.0.20161118.tar.gz
+
+Package: sbase
