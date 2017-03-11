@@ -18,8 +18,8 @@ fi
 
 #stage 1:
 ${GET} "https://famkaufmann.info/~staticdistro/distfiles/sbase-0.0.20161118.tar.gz"
-${GET} "https://www.mirbsd.org/MirOS/dist/mir/mksh/mksh-R52c.tgz" || \
-    ${GET} "https://pub.allbsd.org/MirOS/dist/mir/mksh/mksh-R52c.tgz"
+${GET} "https://pub.allbsd.org/MirOS/dist/mir/mksh/mksh-R52c.tgz" || \
+    ${GET} "https://www.mirbsd.org/MirOS/dist/mir/mksh/mksh-R52c.tgz"
 ${GET} "https://ftp.gnu.org/gnu/make/make-4.2.1.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/sed/sed-4.2.2.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/grep/grep-2.25.tar.xz"
