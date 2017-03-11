@@ -8,12 +8,11 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-enum parse_state {
-    STATE_NONE,
-    STATE_IN_DEPS_RUN,
-    STATE_IN_DEPS_BUILD,
-    STATE_IN_SOURCES,
-};
+static int parse_deplist(struct controlparse_field *pf,
+        struct control_dependency **pcd);
+static int parse_sourcelist(struct controlparse_field *pf,
+        struct control_source **pcs);
+static int parse_singleline(struct controlparse_field *pf, char **ps);
 
 int control_parse(const char *path, struct control **ctrl)
 {
@@ -33,12 +32,10 @@ int control_parsefd(int fd, struct control **ctrl)
 {
     int dep_run, dep_build;
     struct control *c;
-    struct control_dependency *cd, *cdd, **first_cd;
-    struct control_source *cs, *css;
+    struct control_dependency **first_cd;
     struct controlparse cp;
     struct controlparse_para *pp;
     struct controlparse_field *pf;
-    struct controlparse_line *pl;
 
     if (controlparse_init(&cp))
         return -1;
@@ -64,93 +61,17 @@ int control_parsefd(int fd, struct control **ctrl)
         if (dep_run || dep_build) {
             /* parse run-time and build-time dependencies */
             first_cd = (dep_run ? &c->run_depend : &c->build_depend);
-            if (*first_cd != NULL) {
-                fprintf(stderr, "control_parsefd: %s set repeatedly\n",
-                        pf->name);
+            if (parse_deplist(pf, first_cd) != 0)
                 goto out_malloc;
-            }
-            for (pl = pf->line_first; pl != NULL; pl = pl->next) {
-                if (!*pl->line)
-                    continue;
-
-                /* allocate dependency struct */
-                if ((cd = malloc(sizeof(*cd))) == NULL ||
-                    (cd->package = strdup(pl->line)) == NULL)
-                {
-                    free(cd);
-                    perror("control_parsefd: malloc source failed");
-                    goto out_malloc;
-                }
-
-                /* add to deps linked list */
-                cd->next = NULL;
-                if (*first_cd == NULL) {
-                    *first_cd = cd;
-                } else {
-                    for (cdd = *first_cd; cdd->next != NULL; cdd = cdd->next);
-                    cdd->next = cd;
-                }
-            }
         } else if (!strcmp(pf->name, "Sources")) {
-            /* parse list of source files */
-            if (c->sources != NULL) {
-                fprintf(stderr, "control_parsefd: Sources set repeatedly\n");
+            if (parse_sourcelist(pf, &c->sources) != 0)
                 goto out_malloc;
-            }
-            for (pl = pf->line_first; pl != NULL; pl = pl->next) {
-                if (!*pl->line)
-                    continue;
-
-                /* allocate source struct */
-                if ((cs = malloc(sizeof(*cs))) == NULL ||
-                    (cs->source = strdup(pl->line)) == NULL)
-                {
-                    free(cs);
-                    perror("control_parsefd: malloc source failed");
-                    goto out_malloc;
-                }
-
-                /* add to sources linked list */
-                cs->next = NULL;
-                if (c->sources == NULL) {
-                    c->sources = cs;
-                } else {
-                    for (css = c->sources; css->next != NULL; css = css->next);
-                    css->next = cs;
-                }
-            }
         } else if (!strcmp(pf->name, "Package")) {
-            if (c->package != NULL) {
-                fprintf(stderr, "control_parsefd: Package already set\n");
+            if (parse_singleline(pf, &c->package) != 0)
                 goto out_malloc;
-            }
-            if (pf->line_first == NULL || pf->line_first->next != NULL ||
-                    !*pf->line_first->line)
-            {
-                fprintf(stderr, "control_parsefd: Package needs to be "
-                        "non-empty single line\n");
-                goto out_malloc;
-            }
-            if ((c->package = strdup(pf->line_first->line)) == NULL) {
-                perror("control_parsefd: strdup failed");
-                goto out_malloc;
-            }
         } else if (!strcmp(pf->name, "Version")) {
-            if (c->version != NULL) {
-                fprintf(stderr, "control_parsefd: Version already set\n");
+            if (parse_singleline(pf, &c->version) != 0)
                 goto out_malloc;
-            }
-            if (pf->line_first == NULL || pf->line_first->next != NULL ||
-                    !*pf->line_first->line)
-            {
-                fprintf(stderr, "control_parsefd: Version needs to be "
-                        "non-empty single line\n");
-                goto out_malloc;
-            }
-            if ((c->version = strdup(pf->line_first->line)) == NULL) {
-                perror("control_parsefd: strdup failed");
-                goto out_malloc;
-            }
         }
     }
 
@@ -191,4 +112,101 @@ void control_destroy(struct control *ctrl)
     free(ctrl->package);
     free(ctrl->version);
     free(ctrl);
+}
+
+static int parse_deplist(struct controlparse_field *pf,
+        struct control_dependency **pcd)
+{
+    struct control_dependency *cd, *cdd;
+    struct controlparse_line *pl;
+
+    if (*pcd != NULL) {
+        fprintf(stderr, "parse_deplist: %s set repeatedly\n", pf->name);
+        return -1;
+    }
+
+    /* parse run-time and build-time dependencies */
+    for (pl = pf->line_first; pl != NULL; pl = pl->next) {
+        if (!*pl->line)
+            continue;
+
+        /* allocate dependency struct */
+        if ((cd = malloc(sizeof(*cd))) == NULL ||
+            (cd->package = strdup(pl->line)) == NULL)
+        {
+            free(cd);
+            perror("parse_deplist: malloc source failed");
+            return -1;
+        }
+
+        /* add to deps linked list */
+        cd->next = NULL;
+        if (*pcd == NULL) {
+            *pcd = cd;
+        } else {
+            for (cdd = *pcd; cdd->next != NULL; cdd = cdd->next);
+            cdd->next = cd;
+        }
+    }
+
+    return 0;
+}
+
+static int parse_sourcelist(struct controlparse_field *pf,
+        struct control_source **pcs)
+{
+    struct control_source *cs, *css;
+    struct controlparse_line *pl;
+
+    if (*pcs != NULL) {
+        fprintf(stderr, "parse_sourcelist: %s set repeatedly\n", pf->name);
+        return -1;
+    }
+
+    for (pl = pf->line_first; pl != NULL; pl = pl->next) {
+        if (!*pl->line)
+            continue;
+
+        /* allocate source struct */
+        if ((cs = malloc(sizeof(*cs))) == NULL ||
+            (cs->source = strdup(pl->line)) == NULL)
+        {
+            free(cs);
+            perror("parse_sourcelist: malloc source failed");
+            return -1;
+        }
+
+        /* add to sources linked list */
+        cs->next = NULL;
+        if (*pcs == NULL) {
+            *pcs = cs;
+        } else {
+            for (css = *pcs; css->next != NULL; css = css->next);
+            css->next = cs;
+        }
+    }
+
+    return 0;
+}
+
+static int parse_singleline(struct controlparse_field *pf, char **ps)
+{
+    if (*ps != NULL) {
+        fprintf(stderr, "parse_singleline: %s has already been set\n",
+                pf->name);
+        return -1;
+    }
+    if (pf->line_first == NULL || pf->line_first->next != NULL ||
+            !*pf->line_first->line)
+    {
+        fprintf(stderr, "parse_singleline: %s needs to be "
+                "non-empty single line\n", pf->name);
+        return -1;
+    }
+    if ((*ps = strdup(pf->line_first->line)) == NULL) {
+        perror("parse_singleline: strdup failed");
+        return -1;
+    }
+
+    return 0;
 }
