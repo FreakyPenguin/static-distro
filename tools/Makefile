@@ -9,9 +9,9 @@ clean:
 
 newns: newns.o
 withenv: withenv.o
-withpkgs: withpkgs.o solve.o control.o version.o repo.o
-pkgcontrol: pkgcontrol.o control.o
-pkgsolve: pkgsolve.o solve.o control.o version.o repo.o
+withpkgs: withpkgs.o solve.o control.o controlparse.o version.o repo.o
+pkgcontrol: pkgcontrol.o control.o controlparse.o
+pkgsolve: pkgsolve.o solve.o control.o controlparse.o version.o repo.o
 pkgvercmp: pkgvercmp.o version.o
 
 .PHONY: all clean

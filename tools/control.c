@@ -1,4 +1,5 @@
 #include "control.h"
+#include "controlparse.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -13,9 +14,6 @@ enum parse_state {
     STATE_IN_DEPS_BUILD,
     STATE_IN_SOURCES,
 };
-
-static char *trim(char *buf);
-static inline int has_prefix(const char *string, const char *prefix);
 
 int control_parse(const char *path, struct control **ctrl)
 {
@@ -33,203 +31,136 @@ int control_parse(const char *path, struct control **ctrl)
 
 int control_parsefd(int fd, struct control **ctrl)
 {
-    FILE *f;
-    unsigned line = 0;
-    char *linebuf, *l;
-    size_t lb_size;
-    ssize_t bs;
-    enum parse_state state = STATE_NONE;
+    int dep_run, dep_build;
     struct control *c;
-    const char *msg = NULL;
-    struct control_dependency *cd, *cdd;
+    struct control_dependency *cd, *cdd, **first_cd;
     struct control_source *cs, *css;
+    struct controlparse cp;
+    struct controlparse_para *pp;
+    struct controlparse_field *pf;
+    struct controlparse_line *pl;
 
-
-    if ((f = fdopen(fd, "r")) == NULL) {
-        perror("control_parsefd: fopen failed");
+    if (controlparse_init(&cp))
         return -1;
-    }
+    if (controlparse_parsefd(&cp, fd))
+        goto out_err;
 
     if ((c = calloc(1, sizeof(*c))) == NULL) {
         perror("control_parsefd: malloc failed");
-        goto error_malloc;
+        goto out_err;
     }
     *ctrl = c;
 
-    lb_size = 128;
-    if ((linebuf = malloc(lb_size)) == NULL) {
-        perror("control_parsefd: malloc failed");
-        goto error_linebufalloc;
+    pp = cp.para_first;
+    if (pp == NULL || pp->next != NULL) {
+        fprintf(stderr, "control_parsefd: file must have exactly one "
+                "paragraph\n");
+        goto out_malloc;
     }
 
-    while ((bs = getline(&linebuf, &lb_size, f)) != -1) {
-        line++;
-        l = linebuf;
-
-        if (state == STATE_NONE || !isspace(l[0])) {
-            /* not currently parsing a field or no whitespace at beginnning */
-            state = STATE_NONE;
-
-            /* skip over empty lines */
-            if (l[0] == '\n' && l[1] == 0) {
-                continue;
+    for (pf = pp->field_first; pf != NULL; pf = pf->next) {
+        dep_run = !strcmp(pf->name, "Depends-Run");
+        dep_build = !strcmp(pf->name, "Depends-Build");
+        if (dep_run || dep_build) {
+            /* parse run-time and build-time dependencies */
+            first_cd = (dep_run ? &c->run_depend : &c->build_depend);
+            if (*first_cd != NULL) {
+                fprintf(stderr, "control_parsefd: %s set repeatedly\n",
+                        pf->name);
+                goto out_malloc;
             }
+            for (pl = pf->line_first; pl != NULL; pl = pl->next) {
+                if (!*pl->line)
+                    continue;
 
-            if (has_prefix(l, "Package:")) {
-                l = trim(l + strlen("Package:"));
-                if (c->package != NULL) {
-                    msg = "Package field already set";
-                    goto error_parse;
+                /* allocate dependency struct */
+                if ((cd = malloc(sizeof(*cd))) == NULL ||
+                    (cd->package = strdup(pl->line)) == NULL)
+                {
+                    free(cd);
+                    perror("control_parsefd: malloc source failed");
+                    goto out_malloc;
                 }
-                if ((c->package = strdup(l)) == NULL) {
-                    msg = "strdup failed";
-                    goto error_parse;
-                }
-                continue;
-            } else if (has_prefix(l, "Version:")) {
-                l = trim(l + strlen("Version:"));
-                if (c->version != NULL) {
-                    msg = "Version field already set";
-                    goto error_parse;
-                }
-                if ((c->version = strdup(l)) == NULL) {
-                    msg = "strdup failed";
-                    goto error_parse;
-                }
-                continue;
-            } else if (has_prefix(l, "Depends-Run:")) {
-                l += strlen("Depends-Run:");
-                state = STATE_IN_DEPS_RUN;
-                if (c->run_depend != NULL) {
-                    msg = "Runtime dependencies field already set";
-                    goto error_parse;
-                }
-            } else if (has_prefix(l, "Depends-Build:")) {
-                l += strlen("Depends-Build:");
-                state = STATE_IN_DEPS_BUILD;
-                if (c->build_depend != NULL) {
-                    msg = "Build dependencies field already set";
-                    goto error_parse;
-                }
-            } else if (has_prefix(l, "Sources:")) {
-                l += strlen("Sources:");
-                state = STATE_IN_SOURCES;
-                if (c->sources != NULL) {
-                    msg = "Build dependencies field already set";
-                    goto error_parse;
-                }
-            } else {
-                msg = "Unknown field specified";
-                goto error_parse;
-            }
-        }
-        if (state == STATE_IN_DEPS_RUN) {
-            l = trim(l);
-            if (l[0] == 0) {
-                continue;
-            }
 
-            if ((cd = malloc(sizeof(*cd))) == NULL) {
-                msg = "malloc failed";
-                goto error_parse;
+                /* add to deps linked list */
+                cd->next = NULL;
+                if (*first_cd == NULL) {
+                    *first_cd = cd;
+                } else {
+                    for (cdd = *first_cd; cdd->next != NULL; cdd = cdd->next);
+                    cdd->next = cd;
+                }
             }
-            if ((cd->package = strdup(l)) == NULL) {
-                msg = "strdup failed";
-                goto error_parse;
+        } else if (!strcmp(pf->name, "Sources")) {
+            /* parse list of source files */
+            if (c->sources != NULL) {
+                fprintf(stderr, "control_parsefd: Sources set repeatedly\n");
+                goto out_malloc;
             }
+            for (pl = pf->line_first; pl != NULL; pl = pl->next) {
+                if (!*pl->line)
+                    continue;
 
-            /* add to linked list of dependencies */
-            cd->next = NULL;
-            if (c->run_depend == NULL) {
-                c->run_depend = cd;
-            } else {
-                for (cdd = c->run_depend; cdd->next != NULL; cdd = cdd->next);
-                cdd->next = cd;
-            }
-        } else if (state == STATE_IN_DEPS_BUILD) {
-            l = trim(l);
-            if (l[0] == 0) {
-                continue;
-            }
+                /* allocate source struct */
+                if ((cs = malloc(sizeof(*cs))) == NULL ||
+                    (cs->source = strdup(pl->line)) == NULL)
+                {
+                    free(cs);
+                    perror("control_parsefd: malloc source failed");
+                    goto out_malloc;
+                }
 
-            if ((cd = malloc(sizeof(*cd))) == NULL) {
-                msg = "malloc failed";
-                goto error_parse;
+                /* add to sources linked list */
+                cs->next = NULL;
+                if (c->sources == NULL) {
+                    c->sources = cs;
+                } else {
+                    for (css = c->sources; css->next != NULL; css = css->next);
+                    css->next = cs;
+                }
             }
-            if ((cd->package = strdup(l)) == NULL) {
-                msg = "strdup failed";
-                goto error_parse;
+        } else if (!strcmp(pf->name, "Package")) {
+            if (c->package != NULL) {
+                fprintf(stderr, "control_parsefd: Package already set\n");
+                goto out_malloc;
             }
-
-            /* add to linked list of dependencies */
-            cd->next = NULL;
-            if (c->build_depend == NULL) {
-                c->build_depend = cd;
-            } else {
-                for (cdd = c->build_depend; cdd->next != NULL; cdd = cdd->next);
-                cdd->next = cd;
+            if (pf->line_first == NULL || pf->line_first->next != NULL ||
+                    !*pf->line_first->line)
+            {
+                fprintf(stderr, "control_parsefd: Package needs to be "
+                        "non-empty single line\n");
+                goto out_malloc;
             }
-        } else if (state == STATE_IN_SOURCES) {
-            l = trim(l);
-            if (l[0] == 0) {
-                continue;
+            if ((c->package = strdup(pf->line_first->line)) == NULL) {
+                perror("control_parsefd: strdup failed");
+                goto out_malloc;
             }
-
-            if ((cs = malloc(sizeof(*cs))) == NULL) {
-                msg = "malloc failed";
-                goto error_parse;
+        } else if (!strcmp(pf->name, "Version")) {
+            if (c->version != NULL) {
+                fprintf(stderr, "control_parsefd: Version already set\n");
+                goto out_malloc;
             }
-            if ((cs->source = strdup(l)) == NULL) {
-                msg = "strdup failed";
-                goto error_parse;
+            if (pf->line_first == NULL || pf->line_first->next != NULL ||
+                    !*pf->line_first->line)
+            {
+                fprintf(stderr, "control_parsefd: Version needs to be "
+                        "non-empty single line\n");
+                goto out_malloc;
             }
-
-            /* add to linked list of dependencies */
-            cs->next = NULL;
-            if (c->sources == NULL) {
-                c->sources = cs;
-            } else {
-                for (css = c->sources; css->next != NULL; css = css->next);
-                css->next = cs;
+            if ((c->version = strdup(pf->line_first->line)) == NULL) {
+                perror("control_parsefd: strdup failed");
+                goto out_malloc;
             }
         }
     }
 
-    if (ferror(f)) {
-        perror("control_parsefd: reading line failed");
-        goto error_parse;
-    }
-
-    if (c->package == NULL) {
-        msg = "No package name provided";
-        goto error_parse;
-    }
-
-    if (c->version == NULL) {
-        msg = "No package version provided";
-        goto error_parse;
-    }
-
-    if (c->sources == NULL) {
-        msg = "No package sources provided";
-        goto error_parse;
-    }
-
-
-    free(linebuf);
-    fclose(f);
+    controlparse_destroy(&cp);
     return 0;
 
-
-error_parse:
-    if (msg != NULL) {
-        fprintf(stderr, "Line %u %s\n", line, msg);
-    }
-    free(linebuf);
-error_linebufalloc:
+out_malloc:
     control_destroy(c);
-error_malloc:
-    fclose(f);
+out_err:
+    controlparse_destroy(&cp);
     return -1;
 }
 
@@ -260,35 +191,4 @@ void control_destroy(struct control *ctrl)
     free(ctrl->package);
     free(ctrl->version);
     free(ctrl);
-}
-
-/* Trims all space characters from begining and end of the string.
- * Modifies the * string in place and returns pointer to new beginning.
- */
-static char *trim(char *buf)
-{
-    size_t len;
-    char *end;
-
-    /* skip space at the beginning */
-    for (; *buf != 0 && isspace(*buf); buf++);
-
-    /* empty string now */
-    len = strlen(buf);
-    if (len == 0) {
-        return buf;
-    }
-
-    /* skip space at the end */
-    end = buf + len - 1;
-    while (end >= buf && isspace(*end)) {
-        *end = 0;
-        end--;
-    }
-    return buf;
-}
-
-static inline int has_prefix(const char *string, const char *prefix)
-{
-    return strncmp(string, prefix, strlen(prefix)) == 0;
 }
