@@ -72,6 +72,10 @@ int control_parsefd(int fd, struct control **ctrl)
         } else if (!strcmp(pf->name, "Version")) {
             if (parse_singleline(pf, &c->version) != 0)
                 goto out_malloc;
+        } else {
+            fprintf(stderr, "control_parsefd: Unexpected field: '%s'\n",
+                pf->name);
+            goto out_malloc;
         }
     }
 
@@ -112,6 +116,159 @@ void control_destroy(struct control *ctrl)
     free(ctrl->package);
     free(ctrl->version);
     free(ctrl);
+}
+
+int source_control_parsefd(int fd, struct source_control **sc)
+{
+    struct source_control *c;
+    struct source_control_bin *cb, *cbb;
+    struct control_dependency *run_deps = NULL, *rd, *cd, *cdd;
+    struct controlparse cp;
+    struct controlparse_para *pp;
+    struct controlparse_field *pf;
+
+    if (controlparse_init(&cp))
+        return -1;
+    if (controlparse_parsefd(&cp, fd))
+        goto out_err;
+
+    if ((c = calloc(1, sizeof(*c))) == NULL) {
+        perror("source_control_parsefd: malloc failed");
+        goto out_err;
+    }
+    *sc = c;
+
+    pp = cp.para_first;
+    if (pp == NULL) {
+        fprintf(stderr, "source_control_parsefd: file must have at least "
+                "one paragraph\n");
+        goto out_malloc;
+    }
+
+    /* parse first paragraph */
+    for (pf = pp->field_first; pf != NULL; pf = pf->next) {
+        if (!strcmp(pf->name, "Depends-Build")) {
+            if (parse_deplist(pf, &c->build_depend) != 0)
+                goto out_malloc;
+        } else if (!strcmp(pf->name, "Depends-Run")) {
+            if (parse_deplist(pf, &run_deps) != 0)
+                goto out_malloc;
+        } else if (!strcmp(pf->name, "Sources")) {
+            if (parse_sourcelist(pf, &c->sources) != 0)
+                goto out_malloc;
+        } else if (!strcmp(pf->name, "Source")) {
+            if (parse_singleline(pf, &c->source) != 0)
+                goto out_malloc;
+        } else if (!strcmp(pf->name, "Version")) {
+            if (parse_singleline(pf, &c->version) != 0)
+                goto out_malloc;
+        } else {
+            fprintf(stderr, "source_control_parsefd: Unexpected field: '%s'\n",
+                pf->name);
+            goto out_malloc;
+        }
+    }
+
+    /* parse additional binary packet paragraph */
+    for (pp = pp->next; pp != NULL; pp = pp->next) {
+        /* add source control bin struct to list */
+        if ((cb = calloc(1, sizeof(*cb))) == NULL) {
+            perror("source_control_parsefd: malloc failed");
+            goto out_malloc;
+        }
+        if (c->bins == NULL) {
+            c->bins = cb;
+        } else {
+            for (cbb = c->bins; cbb->next != NULL; cbb = cbb->next);
+            cbb->next = cb;
+        }
+
+        for (pf = pp->field_first; pf != NULL; pf = pf->next) {
+            if (!strcmp(pf->name, "Depends-Run")) {
+                if (parse_deplist(pf, &cb->run_depend) != 0)
+                    goto out_malloc;
+            } else if (!strcmp(pf->name, "Package")) {
+                if (parse_singleline(pf, &cb->package) != 0)
+                    goto out_malloc;
+            } else {
+                fprintf(stderr, "source_control_parsefd: Unexpected field: "
+                    "'%s'\n", pf->name);
+                goto out_malloc;
+            }
+        }
+
+        /* copy global run dependencies */
+        for (cdd = cb->run_depend; cdd != NULL && cdd->next != NULL;
+            cdd = cdd->next);
+        for (rd = run_deps; rd != NULL; rd = rd->next) {
+            if ((cd = calloc(1, sizeof(*cd))) == NULL ||
+                (cd->package = strdup(rd->package)) == NULL)
+            {
+                free(cd);
+                perror("source_control_parsefd: malloc failed");
+                goto out_malloc;
+            }
+
+            /* append to list of already existing dependencies */
+            if (cdd == NULL) {
+                cb->run_depend = cd;
+                cdd = cd;
+            } else {
+                cdd->next = cd;
+                cdd = cd;
+            }
+        }
+    }
+
+    controlparse_destroy(&cp);
+    return 0;
+
+out_malloc:
+    source_control_destroy(c);
+out_err:
+    controlparse_destroy(&cp);
+    return -1;
+
+
+    return -1;
+}
+
+void source_control_destroy(struct source_control *sc)
+{
+    struct control_dependency *cd, *cdd;
+    struct control_source *cs, *css;
+    struct source_control_bin *sb, *sbb;
+
+    for (cd = sc->build_depend; cd != NULL; ) {
+        cdd = cd;
+        cd = cd->next;
+        free(cdd->package);
+        free(cdd);
+    }
+    for (cs = sc->sources; cs != NULL; ) {
+        css = cs;
+        cs = cs->next;
+        free(css->source);
+        free(css);
+    }
+    for (sb = sc->bins; sb != NULL; ) {
+        sbb = sb;
+        sb = sb->next;
+
+        for (cd = sbb->run_depend; cd != NULL; ) {
+            cdd = cd;
+            cd = cd->next;
+            free(cdd->package);
+            free(cdd);
+        }
+
+        free(sbb->package);
+        free(sbb);
+    }
+
+    free(sc->source);
+    free(sc->version);
+    free(sc);
 }
 
 static int parse_deplist(struct controlparse_field *pf,
