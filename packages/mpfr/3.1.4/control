@@ -1,4 +1,4 @@
-Package: mpfr
+Source: mpfr
 Version: 3.1.4
 Depends-Build:
 	mksh
@@ -12,3 +12,5 @@ Depends-Build:
 	gmp
 Sources:
 	mpfr-3.1.4.tar.gz
+
+Package: mpfr

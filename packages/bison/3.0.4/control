@@ -1,4 +1,4 @@
-Package: bison
+Source: bison
 Version: 3.0.4
 Depends-Build:
 	sbase
@@ -15,3 +15,5 @@ Depends-Run:
 	m4
 Sources:
 	bison-3.0.4.tar.gz
+
+Package: bison

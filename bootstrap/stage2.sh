@@ -56,13 +56,13 @@ build_s2_pkg() {
     cd "$build_dir"
 
     # get distfiles
-    for f in `pkgcontrol -s $control` ; do
+    for f in `srccontrol -s $control` ; do
         cp "${distfiles}/${f}" .
     done
 
     # get build dependencies
     deps="-p mksh "
-    for d in `pkgcontrol -b $control` ; do
+    for d in `srccontrol -b $control` ; do
         deps="$deps -p $d"
     done
 
@@ -82,7 +82,8 @@ build_s2_pkg() {
         >build.log 2>&1 || failed build
 
     # copy over control file
-    cp "$control" "${build_dir}/root/packages/${pkg}/${ver}/control"
+    gencontrol "$control" "$pkg" >\
+      "${build_dir}/root/packages/${pkg}/${ver}/control"
 
     cp -r "${build_dir}/root/packages/${pkg}" "$outdir/"
     cd "${buildparentdir}"

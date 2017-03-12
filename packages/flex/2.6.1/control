@@ -1,4 +1,4 @@
-Package: flex
+Source: flex
 Version: 2.6.1
 Depends-Build:
 	sbase
@@ -13,3 +13,5 @@ Depends-Build:
 	bison
 Sources:
 	flex-2.6.1.tar.gz
+
+Package: flex

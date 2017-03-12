@@ -1,4 +1,4 @@
-Package: perl
+Source: perl
 Version: 5.24.0
 Depends-Build:
 	mksh
@@ -11,3 +11,5 @@ Depends-Build:
 	make
 Sources:
 	perl-5.24.0.tar.gz
+
+Package: perl

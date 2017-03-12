@@ -1,4 +1,4 @@
-Package: tar
+Source: tar
 Version: 1.29
 Depends-Build:
 	mksh
@@ -11,3 +11,5 @@ Depends-Build:
 	make
 Sources:
 	tar-1.29.tar.gz
+
+Package: tar

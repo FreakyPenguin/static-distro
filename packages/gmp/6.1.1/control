@@ -1,4 +1,4 @@
-Package: gmp
+Source: gmp
 Version: 6.1.1
 Depends-Build:
 	mksh
@@ -13,3 +13,5 @@ Depends-Build:
 	m4
 Sources:
 	gmp-6.1.1.tar.lz
+
+Package: gmp

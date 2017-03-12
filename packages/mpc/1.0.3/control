@@ -1,4 +1,4 @@
-Package: mpc
+Source: mpc
 Version: 1.0.3
 Depends-Build:
 	mksh
@@ -13,3 +13,5 @@ Depends-Build:
 	mpfr
 Sources:
 	mpc-1.0.3.tar.gz
+
+Package: mpc

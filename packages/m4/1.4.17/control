@@ -1,4 +1,4 @@
-Package: m4
+Source: m4
 Version: 1.4.17
 Depends-Build:
 	mksh
@@ -12,3 +12,5 @@ Depends-Build:
 	make
 Sources:
 	m4-1.4.17.tar.gz
+
+Package: m4

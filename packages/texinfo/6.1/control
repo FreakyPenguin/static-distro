@@ -1,4 +1,4 @@
-Package: texinfo
+Source: texinfo
 Version: 6.1
 Depends-Build:
 	sbase
@@ -14,3 +14,5 @@ Depends-Run:
 	perl
 Sources:
 	texinfo-6.1.tar.gz
+
+Package: texinfo
