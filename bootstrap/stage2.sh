@@ -90,7 +90,7 @@ build_s2_pkg() {
 }
 
 stage2_packages="tar binutils m4 gmp mpfr mpc musl-dynamic perl texinfo bison flex \
-    binutils gcc"
+    gcc"
 for p in $stage2_packages ; do
     build_s2_pkg $p
 done
