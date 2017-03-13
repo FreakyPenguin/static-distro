@@ -43,7 +43,7 @@ build_s2_pkg() {
     control="$phys_path/control"
     #
     # make sure it's not completed yet
-    if [ -d "${outdir}/${pkg}/${ver}" ] ; then
+    if [ -d "${outdir}/${pkg}/${ver}~~stage2" ] ; then
         echo "stage2: Skipping $pkg/${ver}"
         return
     fi
@@ -70,7 +70,7 @@ build_s2_pkg() {
 
     export PKG_NAME="$pkg"
     export PKG_VERSION="$ver"
-    export PKG_DIR="/packages/${pkg}/$ver"
+    export PKG_DIR="/packages/${pkg}/${ver}~~stage2"
     export PKG_INSTDIR="${build_dir}/root"
 
     echo "stage2:     Unpacking"
@@ -82,8 +82,8 @@ build_s2_pkg() {
         >build.log 2>&1 || failed build
 
     # copy over control file
-    gencontrol "$control" "$pkg" >\
-      "${build_dir}/root/packages/${pkg}/${ver}/control"
+    gencontrol -V '~~stage2' "$control" "$pkg" >\
+      "${build_dir}/root/$PKG_DIR/control"
 
     cp -r "${build_dir}/root/packages/${pkg}" "$outdir/"
     cd "${buildparentdir}"
