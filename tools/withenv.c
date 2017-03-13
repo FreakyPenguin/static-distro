@@ -27,6 +27,8 @@ static char **cmd_args;
 static const char *workdir = NULL;
 /* Path to packages dir on host */
 static const char *packagedir = "/packages";
+/* Working directory to chdir to before running command */
+static const char *new_cwdir = NULL;
 /* List of packages to be added to environment */
 static struct package *packages = NULL;
 
@@ -52,6 +54,7 @@ int main(int argc, char *argv[])
                 "\n");
         fprintf(stderr, "    -w DIR: Host work directory (mounted under /work)"
                 "\n");
+        fprintf(stderr, "    -c DIR: Chdir to DIR before running CMD\n");
         fprintf(stderr, "    -p PKT,VER: Add version of package to env\n");
         return EXIT_FAILURE;
     }
@@ -73,13 +76,16 @@ static int parse_opts(int argc, char *argv[])
     struct package *p;
     char *ver;
 
-    while ((c = getopt(argc, argv, "+d:w:p:")) != -1) {
+    while ((c = getopt(argc, argv, "+d:w:p:c:")) != -1) {
         switch (c) {
             case 'd':
                 packagedir = optarg;
                 break;
             case 'w':
                 workdir = optarg;
+                break;
+            case 'c':
+                new_cwdir = optarg;
                 break;
             case 'p':
                 if ((ver = strchr(optarg, ',')) == NULL) {
@@ -207,6 +213,12 @@ int run_child(void)
 
     /* reset umask */
     umask(0022);
+
+    /* change work directory if required */
+    if (new_cwdir != NULL && chdir(new_cwdir) != 0) {
+        perror("chdir failed");
+        goto error_execv;
+    }
 
     /* actually run command now */
     if (execvp(cmd_args[0], cmd_args) != 0) {
