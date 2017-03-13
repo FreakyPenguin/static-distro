@@ -80,7 +80,7 @@ build_sdtools_pkg() {
     cp -r "$phys_path" "$build_dir"
     mkdir -p "$root_dir"
 
-    pkgbuild -w "$build_dir" -o "$root_dir" -d "$distfiles" -v "$ver" \
+    pkgbuild -w "$build_dir" -o root -d "$distfiles" -v "$ver" \
       "$control" >"$build_dir/build.log" 2>&1 || failed build
 
     cp -r "${build_dir}/root/packages/${pkg}" "$outdir/"
