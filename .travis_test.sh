@@ -14,19 +14,7 @@ die() {
     exit $1
 }
 
-mkdir -p ~/.ssh/
-mv .travis_id_rsa.pub ~/.ssh/id_rsa.pub
-mv .travis_id_rsa ~/.ssh/id_rsa
-chmod 600 ~/.ssh/id_rsa
-
-make -C tools
-make -C tools
-track_status &
-
-if [ "$TEST_OPTION" = "stage0" ] ; then
-    git show | grep '\[test stage0\]' >/dev/null || \
-        die 0 "Skipping stage 0 test"
-
+build_stage0() {
     echo "Fetching stage0 files"
     cd distfiles && ./fetch.sh stage0 && cd ..
     echo "Testing Stage0 build"
@@ -38,10 +26,9 @@ if [ "$TEST_OPTION" = "stage0" ] ; then
         staticdistro@famkaufmann.info:public_html/travis_stage0_prefix.tar.gz.tmp
     ssh staticdistro@famkaufmann.info \
         "cd public_html && mv travis_stage0_prefix.tar.gz.tmp travis_stage0_prefix.tar.gz"
-elif [ "$TEST_OPTION" = "stage1" ] ; then
-    git show | grep '\[test stage1\]' >/dev/null || \
-        die 0 "Skipping stage 1 test"
+}
 
+build_stage1() {
     echo "Fetching stage1 files"
     cd distfiles && ./fetch.sh stage1 && cd ..
     echo "Testing Stage1 build"
@@ -57,4 +44,32 @@ elif [ "$TEST_OPTION" = "stage1" ] ; then
         staticdistro@famkaufmann.info:public_html/travis_stage1_packages.tar.gz.tmp
     ssh staticdistro@famkaufmann.info \
         "cd public_html && mv travis_stage1_packages.tar.gz.tmp travis_stage1_packages.tar.gz"
-fi
+}
+
+mkdir -p ~/.ssh/
+mv .travis_id_rsa.pub ~/.ssh/id_rsa.pub
+mv .travis_id_rsa ~/.ssh/id_rsa
+chmod 600 ~/.ssh/id_rsa
+
+make -C tools
+make -C tools
+track_status &
+
+# run specified tests
+git show -s | grep -e '\[test.*\]' | \
+    sed 's/\s\s*\[test  *\([^] ]*\) *\]/\1/' | \
+    while read l ; do
+      echo $l
+        case $l in
+            stage0)
+                build_stage0
+                ;;
+            stage1)
+                build_stage1
+                ;;
+            *)
+                >&2 echo "Unknown test: $l"
+                exit 1
+                ;;
+        esac
+    done

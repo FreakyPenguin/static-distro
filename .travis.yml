@@ -6,9 +6,9 @@ compiler:
 addons:
   ssh_known_hosts:
   - famkaufmann.info
+  - sv0.famkaufmann.info
 env:
 - TEST_OPTION=stage0
-- TEST_OPTION=stage1
 before_install:
 - openssl aes-256-cbc -K $encrypted_4cc4252d6764_key -iv $encrypted_4cc4252d6764_iv
   -in .travis_id_rsa.enc -out .travis_id_rsa -d
