@@ -1,9 +1,12 @@
 Source: staticdistro-tools
 Version: 0.0
+Depends-Unpack:
+	mksh
 Depends-Build:
 	sbase
 	mksh
 	gcc
+	musl
 	make
 Sources:
 
