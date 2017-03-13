@@ -1,0 +1,13 @@
+Source: lzip
+Version: 1.18
+Depends-Build:
+	mksh
+	sbase
+	sed
+	musl
+	gcc
+	make
+Sources:
+	lzip-1.18.tar.gz
+
+Package: lzip

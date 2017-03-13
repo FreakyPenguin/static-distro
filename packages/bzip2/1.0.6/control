@@ -1,0 +1,12 @@
+Source: bzip2
+Version: 1.0.6
+Depends-Build:
+	mksh
+	sbase
+	musl
+	gcc
+	make
+Sources:
+	bzip2-1.0.6.tar.gz
+
+Package: bzip2

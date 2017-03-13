@@ -50,6 +50,7 @@ ${GET} "http://skarnet.org/software/s6/s6-2.4.0.0.tar.gz"
 ${GET} "http://skarnet.org/software/s6-rc/s6-rc-0.1.0.0.tar.gz"
 ${GET} "https://famkaufmann.info/~staticdistro/distfiles/ubase-0.0.20160925.tar.gz"
 ${GET} "http://mirrors.sonic.net/pub/OpenBSD/OpenSSH/portable/openssh-7.3p1.tar.gz"
+${GET} "https://ftp.gnu.org/gnu/patch/patch-2.7.5.tar.gz"
 
 #beyond:
 ${GET} "https://ftp.gnu.org/gnu/gzip/gzip-1.8.tar.gz"

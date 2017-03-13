@@ -1,0 +1,15 @@
+Source: xz
+Version: 5.2.2
+Depends-Build:
+	mksh
+	sbase
+	sed
+	grep
+	awk
+	musl
+	gcc
+	make
+Sources:
+	xz-5.2.2.tar.gz
+
+Package: xz

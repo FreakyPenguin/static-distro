@@ -1,0 +1,15 @@
+Source: gzip
+Version: 1.8
+Depends-Build:
+	mksh
+	sbase
+	sed
+	grep
+	awk
+	musl
+	gcc
+	make
+Sources:
+	gzip-1.8.tar.gz
+
+Package: gzip
