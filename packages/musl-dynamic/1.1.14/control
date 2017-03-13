@@ -1,5 +1,9 @@
 Source: musl-dynamic
 Version: 1.1.14
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	sbase
 	mksh

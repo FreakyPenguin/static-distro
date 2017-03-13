@@ -1,5 +1,9 @@
 Source: mpc
 Version: 1.0.3
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	mksh
 	sbase

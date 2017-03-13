@@ -1,5 +1,9 @@
 Source: binutils
 Version: 2.26.1
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	sbase
 	mksh

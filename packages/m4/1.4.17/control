@@ -1,5 +1,9 @@
 Source: m4
 Version: 1.4.17
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	mksh
 	sbase

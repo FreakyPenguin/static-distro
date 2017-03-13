@@ -1,5 +1,9 @@
 Source: texinfo
 Version: 6.1
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	sbase
 	mksh

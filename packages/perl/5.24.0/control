@@ -1,5 +1,9 @@
 Source: perl
 Version: 5.24.0
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	mksh
 	sbase

@@ -1,5 +1,9 @@
 Source: flex
 Version: 2.6.1
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	sbase
 	mksh
