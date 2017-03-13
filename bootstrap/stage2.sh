@@ -25,9 +25,9 @@ mkdir -p $buildparentdir
 failed() {
     echo "---------------------------------------------------------------------"
     echo "$1 $(pwd) failed"
-    head -n 2000 build.log
+    head -n 2000 "$build_dir/build.log"
     echo "---------------------------------------------------------------------"
-    tail -n 2000 build.log
+    tail -n 2000 "$build_dir/build.log"
     echo "---------------------------------------------------------------------"
     exit 1
 }
@@ -35,6 +35,7 @@ failed() {
 build_s2_pkg() {
     pkg="$1"
     build_dir="${buildparentdir}/build-${pkg}"
+    out_dir="${build_dir}/root"
 
     # figure out version
     versions="`cd ${packages}/${pkg}/ && ls -1`"
@@ -53,37 +54,22 @@ build_s2_pkg() {
     # prepare build directory
     rm -rf "$build_dir"
     cp -r "$phys_path" "$build_dir"
-    cd "$build_dir"
-
-    # get distfiles
-    for f in `srccontrol -s $control` ; do
-        cp "${distfiles}/${f}" .
-    done
+    mkdir -p "$out_dir"
 
     # get build dependencies
-    deps="-p mksh "
+    deps="-p staticdistro-tools"
     for d in `srccontrol -b $control` ; do
         deps="$deps -p $d"
     done
 
-    mkdir -p root
+    # Unpack package
+    pkgbuild -B -C -w "$build_dir" -d "$distfiles" "$control" -V '~~stage2' \
+      >"$build_dir/build.log" 2>&1 || failed unpack
 
-    export PKG_NAME="$pkg"
-    export PKG_VERSION="$ver"
-    export PKG_DIR="/packages/${pkg}/${ver}~~stage2"
-    export PKG_INSTDIR="${build_dir}/root"
-
-    echo "stage2:     Unpacking"
-    ./unpack.sh >build.log 2>&1 || failed unpack
-
-    echo "stage2:     Building"
-    export PKG_INSTDIR="/work/root"
-    newns withpkgs -d $outdir $deps -w . -- /bin/sh -c 'cd /work && ./build.sh' \
-        >build.log 2>&1 || failed build
-
-    # copy over control file
-    gencontrol -V '~~stage2' "$control" "$pkg" >\
-      "${build_dir}/root/$PKG_DIR/control"
+    # Build package
+    newns withpkgs -d "$outdir" $deps -w "$build_dir" -- \
+      pkgbuild -U -w "/work" -o "/work/root" -V '~~stage2' "/work/control" \
+      >>"$build_dir/build.log" 2>&1 || failed build
 
     cp -r "${build_dir}/root/packages/${pkg}" "$outdir/"
     cd "${buildparentdir}"
