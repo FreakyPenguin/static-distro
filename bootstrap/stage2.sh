@@ -56,19 +56,12 @@ build_s2_pkg() {
     cp -r "$phys_path" "$build_dir"
     mkdir -p "$out_dir"
 
-    # get build dependencies
-    deps="-p staticdistro-tools"
-    for d in `srccontrol -b $control` ; do
-        deps="$deps -p $d"
-    done
-
     # Unpack package
-    pkgbuild -B -C -w "$build_dir" -d "$distfiles" "$control" -V '~~stage2' \
+    pkgbuild -B -C -w "$build_dir" -d "$distfiles" -V '~~stage2' "$control" \
       >"$build_dir/build.log" 2>&1 || failed unpack
 
     # Build package
-    newns withpkgs -d "$outdir" $deps -w "$build_dir" -- \
-      pkgbuild -U -w "/work" -o root -V '~~stage2' "/work/control" \
+    pkgbuild -U -p "$outdir" -w "$build_dir" -o root -V '~~stage2' "$control" \
       >>"$build_dir/build.log" 2>&1 || failed build
 
     cp -r "${build_dir}/root/packages/${pkg}" "$outdir/"
