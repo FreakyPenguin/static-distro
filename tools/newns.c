@@ -46,26 +46,34 @@ int main(int argc, char *argv[])
     /* fork child and unshare namespaces */
     pid = fork();
     if (pid == 0) {
-        if (unshare(CLONE_NEWUSER | CLONE_NEWIPC | CLONE_NEWNS |
-              CLONE_NEWPID) != 0)
-        {
-          perror("unshare user namespace failed");
-          return EXIT_FAILURE;
-        }
+        if (env_uid != 0) {
+            /* only if we're not running as root do we create a new user ns */
+            if (unshare(CLONE_NEWUSER | CLONE_NEWIPC | CLONE_NEWNS |
+                  CLONE_NEWPID) != 0)
+            {
+              perror("unshare user namespace failed");
+              return EXIT_FAILURE;
+            }
 
-        if (setgroups_deny() != 0) {
-          perror("setgroups deny failed");
-          return EXIT_FAILURE;
-        }
+            if (setgroups_deny() != 0) {
+              perror("setgroups deny failed");
+              return EXIT_FAILURE;
+            }
 
-        if (set_idmap("/proc/self/uid_map", new_uid, env_uid) != 0) {
-          perror("map uid failed");
-          return EXIT_FAILURE;
-        }
+            if (set_idmap("/proc/self/uid_map", new_uid, env_uid) != 0) {
+              perror("map uid failed");
+              return EXIT_FAILURE;
+            }
 
-        if (set_idmap("/proc/self/gid_map", new_gid, env_gid) != 0) {
-          perror("map gid failed");
-          return EXIT_FAILURE;
+            if (set_idmap("/proc/self/gid_map", new_gid, env_gid) != 0) {
+              perror("map gid failed");
+              return EXIT_FAILURE;
+            }
+        } else {
+            if (unshare(CLONE_NEWIPC | CLONE_NEWNS | CLONE_NEWPID) != 0) {
+              perror("unshare namespace failed");
+              return EXIT_FAILURE;
+            }
         }
 
         return run_child();
