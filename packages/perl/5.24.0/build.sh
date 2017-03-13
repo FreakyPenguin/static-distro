@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-cd ${PKG_NAME}-${PKG_VERSION}
+cd ${PKG_NAME}-*/
 sh Configure \
     -Duselargefiles \
     -Uuse64bitint \

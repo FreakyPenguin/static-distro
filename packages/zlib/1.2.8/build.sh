@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-cd ${PKG_NAME}-${PKG_VERSION}
+cd ${PKG_NAME}-*/
 ./configure --prefix="${PKG_DIR}" --static
 make -j8
 make install DESTDIR="${PKG_INSTDIR}"
