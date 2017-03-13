@@ -7,6 +7,8 @@ bootstrap/stage1_packages
 bootstrap/stage1_build
 bootstrap/stage2_packages
 bootstrap/stage2_build
+bootstrap/stage3_packages
+bootstrap/stage3_build
 tools/withenv
 tools/withpkgs
 tools/pkgbuild
