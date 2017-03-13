@@ -150,6 +150,9 @@ int source_control_parsefd(int fd, struct source_control **sc)
         if (!strcmp(pf->name, "Depends-Build")) {
             if (parse_deplist(pf, &c->build_depend) != 0)
                 goto out_malloc;
+        } else if (!strcmp(pf->name, "Depends-Unpack")) {
+            if (parse_deplist(pf, &c->unpack_depend) != 0)
+                goto out_malloc;
         } else if (!strcmp(pf->name, "Depends-Run")) {
             if (parse_deplist(pf, &run_deps) != 0)
                 goto out_malloc;

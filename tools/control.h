@@ -16,6 +16,7 @@ struct control {
 struct source_control {
     char *source;
     char *version;
+    struct control_dependency *unpack_depend;
     struct control_dependency *build_depend;
     struct control_source *sources;
     struct source_control_bin *bins;

@@ -12,6 +12,7 @@ enum field {
     FIELD_NAME,
     FIELD_VERSION,
     FIELD_DEP_BUILD,
+    FIELD_DEP_UNPACK,
     FIELD_SRCS,
     FIELD_PKGS,
 };
@@ -32,6 +33,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "    -n: Dump source name\n");
         fprintf(stderr, "    -v: Dump source version\n");
         fprintf(stderr, "    -b: Dump build dependencies\n");
+        fprintf(stderr, "    -u: Dump unpack dependencies\n");
         fprintf(stderr, "    -s: Dump package sources\n");
         fprintf(stderr, "    -p: Dump built binary packages\n");
         return EXIT_FAILURE;
@@ -61,6 +63,11 @@ int main(int argc, char *argv[])
                     puts(cd->package);
                 }
                 break;
+            case FIELD_DEP_UNPACK:
+                for (cd = c->unpack_depend; cd != NULL; cd = cd->next) {
+                    puts(cd->package);
+                }
+                break;
             case FIELD_SRCS:
                 for (cs = c->sources; cs != NULL; cs = cs->next) {
                     puts(cs->source);
@@ -83,7 +90,7 @@ int main(int argc, char *argv[])
 static int parse_params(int argc, char *argv[])
 {
     int c;
-    while ((c = getopt(argc, argv, "nvbsp")) != -1) {
+    while ((c = getopt(argc, argv, "nvbusp")) != -1) {
         switch (c) {
             case 'n':
                 field = FIELD_NAME;
@@ -93,6 +100,9 @@ static int parse_params(int argc, char *argv[])
                 break;
             case 'b':
                 field = FIELD_DEP_BUILD;
+                break;
+            case 'u':
+                field = FIELD_DEP_UNPACK;
                 break;
             case 's':
                 field = FIELD_SRCS;
