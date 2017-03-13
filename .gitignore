@@ -9,11 +9,11 @@ bootstrap/stage2_packages
 bootstrap/stage2_build
 tools/withenv
 tools/withpkgs
+tools/pkgbuild
 tools/pkgcontrol
 tools/pkgsolve
 tools/pkgvercmp
 tools/newns
 tools/gencontrol
 tools/srccontrol
-tools/control
 packages/static-tools
