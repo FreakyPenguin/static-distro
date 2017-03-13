@@ -1,0 +1,10 @@
+Source: staticdistro-tools
+Version: 0.0
+Depends-Build:
+	sbase
+	mksh
+	gcc
+	make
+Sources:
+
+Package: staticdistro-tools
