@@ -50,7 +50,7 @@ build_s1_pkg() {
     cp -r "$phys_path" "$build_dir"
     mkdir -p "$root_dir"
 
-    pkgbuild -w "$build_dir" -o "$root_dir" -d "$distfiles" "$control" \
+    pkgbuild -w "$build_dir" -o root -d "$distfiles" "$control" \
       >"$build_dir/build.log" 2>&1 || failed build
 
     cp -r "${build_dir}/root/packages/${pkg}" "$outdir/"

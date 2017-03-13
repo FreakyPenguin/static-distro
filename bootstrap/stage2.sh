@@ -68,7 +68,7 @@ build_s2_pkg() {
 
     # Build package
     newns withpkgs -d "$outdir" $deps -w "$build_dir" -- \
-      pkgbuild -U -w "/work" -o "/work/root" -V '~~stage2' "/work/control" \
+      pkgbuild -U -w "/work" -o root -V '~~stage2' "/work/control" \
       >>"$build_dir/build.log" 2>&1 || failed build
 
     cp -r "${build_dir}/root/packages/${pkg}" "$outdir/"

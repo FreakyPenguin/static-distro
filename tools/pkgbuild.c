@@ -123,11 +123,7 @@ static int parse_params(int argc, char *argv[])
                 do_gencontrol = 0;
                 break;
             case 'o':
-                if ((out_dir = realpath(optarg, NULL)) == NULL) {
-                    fprintf(stderr, "realpath(%s) failed: %s\n", optarg,
-                            strerror(errno));
-                    return -1;
-                }
+                out_dir = optarg;
                 break;
             case 'w':
                 if ((work_dir = realpath(optarg, NULL)) == NULL) {
@@ -225,6 +221,8 @@ error_close_dist:
 
 static int build(struct source_control *c)
 {
+    int ret;
+    char *outdir;
     char *build_argv[] = { "./build.sh", NULL };
 
     (void) c;
@@ -234,7 +232,13 @@ static int build(struct source_control *c)
         return -1;
     }
 
-    if (setenv("PKG_INSTDIR", out_dir, 1) != 0) {
+    if (asprintf(&outdir, "%s/%s", work_dir, out_dir) == -1) {
+        perror("build: asprintf failed");
+        return -1;
+    }
+    ret = setenv("PKG_INSTDIR", outdir, 1);
+    free(outdir);
+    if (ret != 0) {
         perror("build: setting PKG_INSTDIR failed");
         return -1;
     }
@@ -260,8 +264,8 @@ static int gencontrol(struct source_control *c)
     }
 
     for (sb = c->bins; sb != NULL; sb = sb->next) {
-        if (asprintf(&out_control, "%s/packages/%s/%s/control", out_dir,
-                    sb->package, version) == -1)
+        if (asprintf(&out_control, "%s/%s/packages/%s/%s/control", work_dir,
+                    out_dir, sb->package, version) == -1)
         {
             perror("gencontrol: asprintf failed");
             return -1;
