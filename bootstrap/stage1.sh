@@ -19,9 +19,9 @@ mkdir -p $outdir $buildparentdir
 failed() {
     echo "---------------------------------------------------------------------"
     echo "$1 $(pwd) failed"
-    head -n 2000 build.log
+    head -n 2000 "$build_dir/build.log"
     echo "---------------------------------------------------------------------"
-    tail -n 2000 build.log
+    tail -n 2000 "$build_dir/build.log"
     echo "---------------------------------------------------------------------"
     exit 1
 }
@@ -29,6 +29,8 @@ failed() {
 build_s1_pkg() {
     pkg="$1"
     build_dir="${buildparentdir}/build-${pkg}"
+    root_dir="${build_dir}/root"
+
 
     # make sure it's not completed yet
     if [ -d "${outdir}/${pkg}" ] ; then
@@ -46,29 +48,10 @@ build_s1_pkg() {
     # prepare build directory
     rm -rf "$build_dir"
     cp -r "$phys_path" "$build_dir"
-    cd "$build_dir"
+    mkdir -p "$root_dir"
 
-    # get distfiles
-    for f in `srccontrol -s $control` ; do
-        cp "${distfiles}/${f}" .
-    done
-
-    export PKG_NAME="$pkg"
-    export PKG_VERSION="$ver"
-    export PKG_DIR="/packages/${pkg}/$ver"
-    export PKG_INSTDIR="${build_dir}/root"
-
-    mkdir -p ${PKG_INSTDIR}
-
-    echo "stage1:     Unpacking"
-    ./unpack.sh >build.log 2>&1 || failed unpack
-
-    echo "stage1:     Building"
-    ./build.sh >>build.log 2>&1 || failed build
-
-    # copy over control file
-    gencontrol "$control" "$pkg" >\
-      "${build_dir}/root/packages/${pkg}/${ver}/control"
+    pkgbuild -w "$build_dir" -o "$root_dir" -d "$distfiles" "$control" \
+      >"$build_dir/build.log" 2>&1 || failed build
 
     cp -r "${build_dir}/root/packages/${pkg}" "$outdir/"
     cd "${buildparentdir}"
