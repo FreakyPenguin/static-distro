@@ -22,6 +22,7 @@ static int gencontrol(struct source_control *c);
 static int copy_file(int srcd_fd, const char *src, int dstd_fd,
         const char *dst);
 static int run_exec(char *script[]);
+static int run_exec_env(char *script[], struct control_dependency *cd);
 
 static int do_build = 1;
 static int do_unpack = 1;
@@ -29,6 +30,7 @@ static int do_gencontrol = 1;
 static char *work_dir = NULL;
 static char *dist_dir = NULL;
 static char *out_dir = NULL;
+static char *pkg_dir = NULL;
 static char *ver_param = NULL;
 static char *version;
 static char *control_path = NULL;
@@ -51,6 +53,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "    -d DDIR  Directory for distfiles\n");
         fprintf(stderr, "    -v VER   Set binary package version\n");
         fprintf(stderr, "    -V AVER  Append AVER to binary package version\n");
+        fprintf(stderr, "    -p PDIR  Package directory, if withpkg to be used\n");
         return EXIT_FAILURE;
     }
 
@@ -111,7 +114,7 @@ int main(int argc, char *argv[])
 static int parse_params(int argc, char *argv[])
 {
     int c;
-    while ((c = getopt(argc, argv, "BUCo:w:d:v:V:")) != -1) {
+    while ((c = getopt(argc, argv, "BUCo:w:d:v:V:p:")) != -1) {
         switch (c) {
             case 'U':
                 do_unpack = 0;
@@ -134,6 +137,13 @@ static int parse_params(int argc, char *argv[])
                 break;
             case 'd':
                 if ((dist_dir = realpath(optarg, NULL)) == NULL) {
+                    fprintf(stderr, "realpath(%s) failed: %s\n", optarg,
+                            strerror(errno));
+                    return -1;
+                }
+                break;
+            case 'p':
+                if ((pkg_dir = realpath(optarg, NULL)) == NULL) {
                     fprintf(stderr, "realpath(%s) failed: %s\n", optarg,
                             strerror(errno));
                     return -1;
@@ -177,7 +187,7 @@ static int unpack(struct source_control *c)
 {
     struct control_source *cs;
     int distd_fd, workd_fd;
-    int ret = 0;
+    int ret = 0, r;
     char *unpack_argv[] = { "./unpack.sh", NULL };
 
     if (dist_dir == NULL) {
@@ -207,8 +217,14 @@ static int unpack(struct source_control *c)
     }
 
     /* run unpack script */
-    if (run_exec(unpack_argv) != 0) {
+    if (pkg_dir == NULL) {
+        r = run_exec(unpack_argv);
+    } else {
+        r = run_exec_env(unpack_argv, c->unpack_depend);
+    }
+    if (r != 0) {
         fprintf(stderr, "unpack: running unpack script failed\n");
+        ret = -1;
         goto error_close_work;
     }
 
@@ -232,19 +248,36 @@ static int build(struct source_control *c)
         return -1;
     }
 
-    if (asprintf(&outdir, "%s/%s", work_dir, out_dir) == -1) {
-        perror("build: asprintf failed");
-        return -1;
-    }
-    ret = setenv("PKG_INSTDIR", outdir, 1);
-    free(outdir);
-    if (ret != 0) {
-        perror("build: setting PKG_INSTDIR failed");
-        return -1;
+    /* run build script */
+    if (pkg_dir == NULL) {
+        if (asprintf(&outdir, "%s/%s", work_dir, out_dir) == -1) {
+            perror("build: asprintf failed");
+            return -1;
+        }
+        ret = setenv("PKG_INSTDIR", outdir, 1);
+        free(outdir);
+        if (ret != 0) {
+            perror("build: setting PKG_INSTDIR failed");
+            return -1;
+        }
+
+        ret = run_exec(build_argv);
+    } else {
+        if (asprintf(&outdir, "/work/%s", out_dir) == -1) {
+            perror("build: asprintf failed");
+            return -1;
+        }
+        ret = setenv("PKG_INSTDIR", outdir, 1);
+        free(outdir);
+        if (ret != 0) {
+            perror("build: setting PKG_INSTDIR failed");
+            return -1;
+        }
+
+        ret = run_exec_env(build_argv, c->build_depend);
     }
 
-    /* run build script */
-    if (run_exec(build_argv) != 0) {
+    if (ret != 0) {
         fprintf(stderr, "build: running build script failed\n");
         return -1;
     }
@@ -332,4 +365,50 @@ static int run_exec(char *argv[])
     }
 
     return 0;
+}
+
+static int run_exec_env(char *script[], struct control_dependency *deps)
+{
+    struct control_dependency *cd;
+    int n, k, r;
+    char **argv;
+
+    /* count args */
+    for (k = 0; script[k] != NULL; k++);
+
+    /* counting dependencies */
+    for (n = 0, cd = deps; cd != NULL; cd = cd->next, n++);
+
+    /* newns withpkgs + -d DIR + n * (-d PKG) + -w WORK -c /work
+     * -- k + NULL */
+    if ((argv = calloc(2 + 2 + 2 * n + 2 + 5 + k + 1, sizeof(*argv)))
+           == NULL)
+    {
+        perror("run_exec_env: malloc failed");
+        return -1;
+    }
+
+    n = 0;
+    argv[n++] = "newns";
+    argv[n++] = "withpkgs";
+    argv[n++] = "-d";
+    argv[n++] = pkg_dir;
+    for (cd = deps; cd != NULL; cd = cd->next) {
+        argv[n++] = "-p";
+        argv[n++] = cd->package;
+    }
+    argv[n++] = "-w";
+    argv[n++] = work_dir;
+    argv[n++] = "-c";
+    argv[n++] = "/work";
+
+    for (k = 0; script[k] != NULL; k++)
+        argv[n++] = script[k];
+
+    argv[n++] = NULL;
+
+    r = run_exec(argv);
+    free(argv);
+
+    return r;
 }
