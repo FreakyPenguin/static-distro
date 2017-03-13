@@ -67,8 +67,15 @@ int main(int argc, char *argv[])
     }
 
     /* figure out version */
-    /* TODO */
     version = c->version;
+    if (ver_mode == VERSION_OVERRIDE) {
+        version = ver_param;
+    } else if (ver_mode == VERSION_APPEND) {
+        if (asprintf(&version, "%s%s", c->version, ver_param) == -1) {
+          perror("asprintf version failed");
+          return EXIT_FAILURE;
+        }
+    }
 
     /* setup environment */
     if (asprintf(&pkgdir, "/packages/%s/%s", c->source, version) == -1) {
@@ -76,6 +83,7 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
     if (setenv("PKG_NAME", c->source, 1) != 0 ||
+            setenv("PKG_SRCVERSION", c->version, 1) != 0 ||
             setenv("PKG_VERSION", version, 1) != 0 ||
             setenv("PKG_DIR", pkgdir, 1) != 0)
     {
