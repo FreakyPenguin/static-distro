@@ -1,2 +1,2 @@
 #!/bin/sh
-tar xf musl-*.tar.*
+tar xof musl-*.tar.*
