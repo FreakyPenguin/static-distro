@@ -4,6 +4,15 @@ set -e
 
 GET="wget -nc"
 
+if [ "$1" = "stage2" ] ; then
+    ${GET} "https://ftp.gnu.org/gnu/tar/tar-1.29.tar.gz"
+    ${GET} "https://ftp.gnu.org/gnu/gzip/gzip-1.8.tar.gz"
+    ${GET} "http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz"
+    ${GET} "http://download.savannah.gnu.org/releases/lzip/lzip-1.18.tar.gz"
+    ${GET} "http://tukaani.org/xz/xz-5.2.2.tar.gz"
+    exit 0
+fi
+
 #stage 0:
 ${GET} "https://ftp.gnu.org/gnu/binutils/binutils-2.26.1.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/gcc/gcc-5.3.0/gcc-5.3.0.tar.gz"
@@ -29,8 +38,7 @@ if [ "$1" = "stage1" ] ; then
     exit 0
 fi
 
-##stage 2:
-${GET} "https://ftp.gnu.org/gnu/tar/tar-1.29.tar.gz"
+#stage 3:
 ${GET} "https://ftp.gnu.org/gnu/m4/m4-1.4.17.tar.gz"
 ${GET} "http://www.cpan.org/src/5.0/perl-5.24.0.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/texinfo/texinfo-6.1.tar.gz"
@@ -51,10 +59,4 @@ ${GET} "http://skarnet.org/software/s6-rc/s6-rc-0.1.0.0.tar.gz"
 ${GET} "https://famkaufmann.info/~staticdistro/distfiles/ubase-0.0.20160925.tar.gz"
 ${GET} "http://mirrors.sonic.net/pub/OpenBSD/OpenSSH/portable/openssh-7.3p1.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/patch/patch-2.7.5.tar.gz"
-
-#beyond:
-${GET} "https://ftp.gnu.org/gnu/gzip/gzip-1.8.tar.gz"
-${GET} "http://tukaani.org/xz/xz-5.2.2.tar.gz"
-${GET} "http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz"
-${GET} "http://download.savannah.gnu.org/releases/lzip/lzip-1.18.tar.gz"
 ${GET} "http://dist.schmorp.de/libev/libev-4.24.tar.gz"
