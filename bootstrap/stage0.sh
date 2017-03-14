@@ -55,11 +55,11 @@ build_s0_pkg() {
 
     # prepare build directory
     rm -rf "$build_dir"
-    cp -r "$phys_path" "$build_dir"
+    cp -Lr "$phys_path/" "$build_dir"
     cd "$build_dir"
 
     # get distfiles
-    for f in `pkgcontrol -s $control` ; do
+    for f in `srccontrol -s $control` ; do
         cp "${distfiles}/${f}" .
     done
 
@@ -69,10 +69,10 @@ build_s0_pkg() {
     export PKG_INSTDIR="/"
 
     echo "stage0:     Unpacking"
-    ./unpack.sh >build.log 2>&1 || failed unpacked
+    ./unpack_${pass}.sh >build.log 2>&1 || failed unpacked
 
     echo "stage0:     Building"
-    ./build.sh >>build.log 2>&1 || failed build
+    ./build_${pass}.sh >>build.log 2>&1 || failed build
 
     touch "${build_dir}/.done"
     cd "${buildparentdir}"
