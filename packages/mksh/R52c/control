@@ -1,5 +1,5 @@
-Source: grep
-Version: 2.25-~~stage1
+Source: mksh
+Version: R52c
 Depends-Build:
 	mksh
 	sbase
@@ -11,6 +11,6 @@ Depends-Build:
 	binutils
 	make
 Sources:
-	grep-2.25.tar.xz
+	mksh-R52c.tgz
 
-Package: grep
+Package: mksh

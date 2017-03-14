@@ -47,10 +47,10 @@ build_s1_pkg() {
 
     # prepare build directory
     rm -rf "$build_dir"
-    cp -r "$phys_path" "$build_dir"
+    cp -Lr "$phys_path/" "$build_dir"
     mkdir -p "$root_dir"
 
-    pkgbuild -w "$build_dir" -o root -d "$distfiles" "$control" \
+    pkgbuild -w "$build_dir" -o root -d "$distfiles" "$control" -V '~~stage1' \
       >"$build_dir/build.log" 2>&1 || failed build
 
     cp -r "${build_dir}/root/packages/${pkg}" "$outdir/"

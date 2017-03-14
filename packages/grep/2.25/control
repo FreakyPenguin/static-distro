@@ -1,5 +1,5 @@
-Source: awk
-Version: 4.1.3-~~stage1
+Source: grep
+Version: 2.25
 Depends-Build:
 	mksh
 	sbase
@@ -11,6 +11,6 @@ Depends-Build:
 	binutils
 	make
 Sources:
-	gawk-4.1.3.tar.gz
+	grep-2.25.tar.xz
 
-Package: awk
+Package: grep

@@ -1,5 +1,5 @@
-Source: mksh
-Version: R52c-~~stage1
+Source: awk
+Version: 4.1.3
 Depends-Build:
 	mksh
 	sbase
@@ -11,6 +11,6 @@ Depends-Build:
 	binutils
 	make
 Sources:
-	mksh-R52c.tgz
+	gawk-4.1.3.tar.gz
 
-Package: mksh
+Package: awk

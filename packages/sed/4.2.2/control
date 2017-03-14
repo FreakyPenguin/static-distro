@@ -1,5 +1,5 @@
-Source: make
-Version: 4.2.1-~~stage1
+Source: sed
+Version: 4.2.2
 Depends-Build:
 	mksh
 	sbase
@@ -11,6 +11,6 @@ Depends-Build:
 	binutils
 	make
 Sources:
-	make-4.2.1.tar.gz
+	sed-4.2.2.tar.gz
 
-Package: make
+Package: sed

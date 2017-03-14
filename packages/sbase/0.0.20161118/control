@@ -1,5 +1,5 @@
 Source: sbase
-Version: 0.0.20161118-~~stage1
+Version: 0.0.20161118
 Depends-Build:
 	mksh
 	sbase
