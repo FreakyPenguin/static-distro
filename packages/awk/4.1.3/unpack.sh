@@ -1,2 +1,2 @@
 #!/bin/sh
-tar xf gawk-*.tar.*
+tar xof gawk-*.tar.*

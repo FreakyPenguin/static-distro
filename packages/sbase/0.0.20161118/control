@@ -1,5 +1,9 @@
 Source: sbase
 Version: 0.0.20161118
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	mksh
 	sbase
@@ -8,7 +12,6 @@ Depends-Build:
 	awk
 	musl
 	gcc
-	binutils
 	make
 Sources:
 	sbase-0.0.20161118.tar.gz

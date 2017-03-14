@@ -1,5 +1,9 @@
 Source: gzip
 Version: 1.8
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	mksh
 	sbase

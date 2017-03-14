@@ -1,5 +1,9 @@
 Source: tar
 Version: 1.29
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	mksh
 	sbase

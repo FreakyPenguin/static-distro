@@ -1,5 +1,9 @@
 Source: lzip
 Version: 1.18
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	mksh
 	sbase

@@ -1,5 +1,9 @@
 Source: make
 Version: 4.2.1
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	mksh
 	sbase

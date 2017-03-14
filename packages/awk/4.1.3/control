@@ -1,5 +1,9 @@
 Source: awk
 Version: 4.1.3
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	mksh
 	sbase

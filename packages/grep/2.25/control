@@ -1,5 +1,9 @@
 Source: grep
 Version: 2.25
+Depends-Unpack:
+	mksh
+	tar
+	xz
 Depends-Build:
 	mksh
 	sbase

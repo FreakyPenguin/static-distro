@@ -1,5 +1,10 @@
 Source: sed
 Version: 4.2.2
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+	patch
 Depends-Build:
 	mksh
 	sbase

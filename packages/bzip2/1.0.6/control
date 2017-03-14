@@ -1,5 +1,10 @@
 Source: bzip2
 Version: 1.0.6
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+	patch
 Depends-Build:
 	mksh
 	sbase
