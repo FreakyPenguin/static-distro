@@ -26,6 +26,18 @@ if [ "$1" = "stage0" ] ; then
     exit 0
 fi
 
+if [ "$1" = "stage3" ] ; then
+    # binutils m4 gmp mpfr mpc musl-dynamic perl texinfo bison flex patch gcc
+
+    ${GET} "https://ftp.gnu.org/gnu/m4/m4-1.4.17.tar.gz"
+    ${GET} "http://www.cpan.org/src/5.0/perl-5.24.0.tar.gz"
+    ${GET} "https://ftp.gnu.org/gnu/texinfo/texinfo-6.1.tar.gz"
+    ${GET} "https://ftp.gnu.org/gnu/bison/bison-3.0.4.tar.gz"
+    ${GET} "https://github.com/westes/flex/releases/download/v2.6.1/flex-2.6.1.tar.gz"
+    ${GET} "https://ftp.gnu.org/gnu/patch/patch-2.7.5.tar.gz"
+    exit 0
+fi
+
 #stage 1:
 ${GET} "https://famkaufmann.info/~staticdistro/distfiles/sbase-0.0.20161118.tar.gz"
 ${GET} "http://sv0.famkaufmann.info/~staticdistro/distfiles/mksh-R52c.tgz" || \
@@ -40,11 +52,6 @@ if [ "$1" = "stage1" ] ; then
 fi
 
 #stage 3:
-${GET} "https://ftp.gnu.org/gnu/m4/m4-1.4.17.tar.gz"
-${GET} "http://www.cpan.org/src/5.0/perl-5.24.0.tar.gz"
-${GET} "https://ftp.gnu.org/gnu/texinfo/texinfo-6.1.tar.gz"
-${GET} "https://ftp.gnu.org/gnu/bison/bison-3.0.4.tar.gz"
-${GET} "https://github.com/westes/flex/releases/download/v2.6.1/flex-2.6.1.tar.gz"
 ${GET} "http://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.39.tar.gz"
 ${GET} "http://zlib.net/zlib-1.2.8.tar.gz"
 ${GET} "http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.5.0.tar.gz"
@@ -59,5 +66,4 @@ ${GET} "http://skarnet.org/software/s6/s6-2.4.0.0.tar.gz"
 ${GET} "http://skarnet.org/software/s6-rc/s6-rc-0.1.0.0.tar.gz"
 ${GET} "https://famkaufmann.info/~staticdistro/distfiles/ubase-0.0.20160925.tar.gz"
 ${GET} "http://mirrors.sonic.net/pub/OpenBSD/OpenSSH/portable/openssh-7.3p1.tar.gz"
-${GET} "https://ftp.gnu.org/gnu/patch/patch-2.7.5.tar.gz"
 ${GET} "http://dist.schmorp.de/libev/libev-4.24.tar.gz"

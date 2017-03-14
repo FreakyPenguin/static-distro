@@ -64,6 +64,25 @@ build_stage2() {
         "cd public_html && mv travis_stage2_packages.tar.gz.tmp travis_stage2_packages.tar.gz"
 }
 
+build_stage3() {
+    echo "Fetching stage3 files"
+    cd distfiles && ./fetch.sh stage3 && cd ..
+    echo "Testing Stage3 build"
+    cd bootstrap/
+
+    wget https://famkaufmann.info/~staticdistro/travis_stage2_packages.tar.gz
+    tar xf travis_stage2_packages.tar.gz
+
+    ./stage3.sh || exit 1
+
+    tar czf travis_stage3_packages.tar.gz stage3_packages
+    scp travis_stage3_packages.tar.gz \
+        staticdistro@famkaufmann.info:public_html/travis_stage3_packages.tar.gz.tmp
+    ssh staticdistro@famkaufmann.info \
+        "cd public_html && mv travis_stage3_packages.tar.gz.tmp travis_stage3_packages.tar.gz"
+}
+
+
 mkdir -p ~/.ssh/
 mv .travis_id_rsa.pub ~/.ssh/id_rsa.pub
 mv .travis_id_rsa ~/.ssh/id_rsa
@@ -87,6 +106,9 @@ git show -s | grep -e '\[test.*\]' | \
                 ;;
             stage2)
                 build_stage2
+                ;;
+            stage3)
+                build_stage3
                 ;;
             *)
                 >&2 echo "Unknown test: $l"
