@@ -9,7 +9,8 @@ if [ "$1" = "stage2" ] ; then
     ${GET} "https://ftp.gnu.org/gnu/gzip/gzip-1.8.tar.gz"
     ${GET} "http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz"
     ${GET} "http://download.savannah.gnu.org/releases/lzip/lzip-1.18.tar.gz"
-    ${GET} "http://tukaani.org/xz/xz-5.2.2.tar.gz"
+    ${GET} "http://sv0.famkaufmann.info/~staticdistro/distfiles/xz-5.2.2.tar.gz" || \
+      ${GET} "http://tukaani.org/xz/xz-5.2.2.tar.gz"
     exit 0
 fi
 
