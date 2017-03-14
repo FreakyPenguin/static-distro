@@ -52,8 +52,8 @@ build_stage2() {
     echo "Testing Stage2 build"
     cd bootstrap/
 
-    wget https://famkaufmann.info/~staticdistro/travis_stage1_prefix.tar.gz
-    tar xf travis_stage1_prefix.tar.gz
+    wget https://famkaufmann.info/~staticdistro/travis_stage1_packages.tar.gz
+    tar xf travis_stage1_packages.tar.gz
 
     ./stage2.sh || exit 1
 
