@@ -1,5 +1,9 @@
-Package: s6-rc
+Source: s6-rc
 Version: 0.1.0.0
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	mksh
 	sbase
@@ -16,3 +20,5 @@ Depends-Run:
 	s6
 Sources:
 	s6-rc-0.1.0.0.tar.gz
+
+Package: s6-rc

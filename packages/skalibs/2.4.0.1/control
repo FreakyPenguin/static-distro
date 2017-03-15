@@ -1,5 +1,9 @@
-Package: skalibs
+Source: skalibs
 Version: 2.4.0.1
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	mksh
 	sbase
@@ -10,3 +14,5 @@ Depends-Build:
 	make
 Sources:
 	skalibs-2.4.0.1.tar.gz
+
+Package: skalibs

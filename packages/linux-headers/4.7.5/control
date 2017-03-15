@@ -1,5 +1,9 @@
-Package: linux
+Source: linux-headers
 Version: 4.7.5
+Depends-Unpack:
+	mksh
+	tar
+	xz
 Depends-Build:
 	mksh
 	sbase
@@ -11,3 +15,5 @@ Depends-Build:
 	musl
 Sources:
 	linux-4.7.5.tar.xz
+
+Package: linux-headers

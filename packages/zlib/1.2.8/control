@@ -1,5 +1,9 @@
-Package: zlib
+Source: zlib
 Version: 1.2.8
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	mksh
 	sbase
@@ -9,3 +13,5 @@ Depends-Build:
 	make
 Sources:
 	zlib-1.2.8.tar.gz
+
+Package: zlib

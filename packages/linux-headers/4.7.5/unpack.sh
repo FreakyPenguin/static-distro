@@ -1,2 +1,2 @@
 #!/bin/sh
-tar xf linux-*.tar.*
+tar xof linux-*.tar.*

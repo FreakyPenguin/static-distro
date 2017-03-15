@@ -1,5 +1,10 @@
-Package: opensmtpd
+Source: opensmtpd
 Version: 6.0.0p1
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+	patch
 Depends-Build:
 	mksh
 	sbase
@@ -17,3 +22,5 @@ Depends-Build:
 	bison
 Sources:
 	opensmtpd-6.0.0p1.tar.gz
+
+Package: opensmtpd

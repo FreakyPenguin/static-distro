@@ -1,5 +1,9 @@
-Package: execline
+Source: execline
 Version: 2.2.0.0
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	mksh
 	sbase
@@ -11,3 +15,5 @@ Depends-Build:
 	skalibs
 Sources:
 	execline-2.2.0.0.tar.gz
+
+Package: execline

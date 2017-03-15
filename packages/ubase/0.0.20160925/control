@@ -1,5 +1,9 @@
-Package: ubase
+Source: ubase
 Version: 0.0.20160925
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	mksh
 	sbase
@@ -12,3 +16,5 @@ Depends-Build:
 	make
 Sources:
 	ubase-0.0.20160925.tar.gz
+
+Package: ubase

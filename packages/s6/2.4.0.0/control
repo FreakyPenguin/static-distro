@@ -1,5 +1,9 @@
-Package: s6
+Source: s6
 Version: 2.4.0.0
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	mksh
 	sbase
@@ -14,3 +18,5 @@ Depends-Run:
 	execline
 Sources:
 	s6-2.4.0.0.tar.gz
+
+Package: s6

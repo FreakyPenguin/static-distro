@@ -1,5 +1,9 @@
-Package: libressl
+Source: libressl
 Version: 2.5.0
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	mksh
 	sbase
@@ -12,3 +16,5 @@ Depends-Build:
 	linux-headers
 Sources:
 	libressl-2.5.0.tar.gz
+
+Package: libressl

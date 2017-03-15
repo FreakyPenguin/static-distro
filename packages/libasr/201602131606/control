@@ -1,5 +1,9 @@
-Package: libasr
+Source: libasr
 Version: 201602131606
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	mksh
 	sbase
@@ -12,3 +16,5 @@ Depends-Build:
 	libressl
 Sources:
 	libasr-201602131606.tar.gz
+
+Package: libasr

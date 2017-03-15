@@ -1,5 +1,9 @@
-Package: dovecot
+Source: dovecot
 Version: 2.2.26.0
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	mksh
 	sbase
@@ -12,3 +16,5 @@ Depends-Build:
 	libressl
 Sources:
 	dovecot-2.2.26.0.tar.gz
+
+Package: dovecot

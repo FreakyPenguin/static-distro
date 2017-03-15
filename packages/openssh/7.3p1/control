@@ -1,5 +1,9 @@
-Package: openssh
+Source: openssh
 Version: 7.3p1
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	mksh
 	sbase
@@ -13,3 +17,5 @@ Depends-Build:
 	zlib
 Sources:
 	openssh-7.3p1.tar.gz
+
+Package: openssh

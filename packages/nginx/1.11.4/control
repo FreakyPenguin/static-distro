@@ -1,5 +1,9 @@
-Package: nginx
+Source: nginx
 Version: 1.11.4
+Depends-Unpack:
+	mksh
+	tar
+	gzip
 Depends-Build:
 	mksh
 	sbase
@@ -13,3 +17,5 @@ Depends-Build:
 	zlib
 Sources:
 	nginx-1.11.4.tar.gz
+
+Package: nginx
