@@ -18,7 +18,7 @@ mkdir -p $outdir $buildparentdir
 
 failed() {
     echo "---------------------------------------------------------------------"
-    echo "$1 $(pwd) failed"
+    echo "$1 $build_dir failed"
     head -n 2000 "$build_dir/build.log"
     echo "---------------------------------------------------------------------"
     tail -n 2000 "$build_dir/build.log"
