@@ -4,7 +4,7 @@ mkdir build && cd build
 ../musl-*/configure --prefix="${PKG_DIR}" \
     --syslibdir="${PKG_DIR}/lib" --disable-static --enable-shared \
     --enable-optimize
-make -j8 lib/libc.so
+make $MAKE_JOBS lib/libc.so
 mkdir -p "${PKG_INSTDIR}/${PKG_DIR}/lib"
 cp lib/libc.so "${PKG_INSTDIR}/${PKG_DIR}/lib"
 ln -s "${PKG_DIR}/lib/libc.so" \

@@ -2,14 +2,12 @@
 #set -x
 set -e
 
+. ./common.sh
+
 s0_prefix="`pwd`/stage0_prefix"
-distfiles="`pwd`/../distfiles"
-packages="`pwd`/../packages"
-toolsdir="`pwd`/../tools"
 buildparentdir="`pwd`/stage0_build"
 
 export ARCH_BUILD="`gcc -dumpmachine`"
-export ARCH_TARGET=x86_64-linux-musl
 export PATH="$s0_prefix/bin:$toolsdir:$PATH"
 
 # prepare prefix dir
@@ -27,7 +25,7 @@ mkdir -p $buildparentdir
 
 failed() {
     echo "---------------------------------------------------------------------"
-    echo "$1 $(pwd) failed"
+    echo "$1 `pwd` failed"
     head -n 2000 build.log
     echo "---------------------------------------------------------------------"
     tail -n 2000 build.log

@@ -1,7 +1,8 @@
 #!/bin/sh
 set -e
 
-rootdir="`pwd`/.."
+. ./common.sh
+
 s2_pkgs="`pwd`/stage2_packages"
 export PATH="$rootdir/tools:$PATH"
 

@@ -5,5 +5,5 @@ mkdir build && cd build
 ../${PKG_NAME}-*/configure --prefix="${PKG_DIR}" \
     --build=$ARCH_HOST --host=$ARCH_TARGET --target=$ARCH_TARGET \
     --disable-werror CC=${ARCH_TARGET}-gcc
-make -j8
-make install DESTDIR="${PKG_INSTDIR}"
+make $MAKE_JOBS
+make $MAKE_JOBS install DESTDIR="${PKG_INSTDIR}"

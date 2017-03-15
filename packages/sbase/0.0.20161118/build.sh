@@ -4,12 +4,12 @@ cd ${PKG_NAME}-*/
 
 case $PKG_VERSION in
     *stage1)
-        make -j8 all install PREFIX="${PKG_DIR}" MANPREFIX="${PKG_DIR}/man" \
+        make $MAKE_JOBS all install PREFIX="${PKG_DIR}" MANPREFIX="${PKG_DIR}/man" \
             CC=${ARCH_TARGET}-gcc AR=${ARCH_TARGET}-ar RALIB=${ARCH_TARGET}-ranlib \
             LDFLAGS="-s -static" DESTDIR="${PKG_INSTDIR}"
         ;;
     *)
-        make -j8 all install PREFIX="${PKG_DIR}" MANPREFIX="${PKG_DIR}/man" \
+        make $MAKE_JOBS all install PREFIX="${PKG_DIR}" MANPREFIX="${PKG_DIR}/man" \
             CC=gcc LDFLAGS="-s -static" DESTDIR="${PKG_INSTDIR}"
         ;;
 esac

@@ -2,15 +2,11 @@
 #set -x
 set -e
 
+. ./common.sh
+
 s2_pkgs="`pwd`/stage2_packages"
-distfiles="`pwd`/../distfiles"
-packages="`pwd`/../packages"
 outdir="`pwd`/stage3_packages"
 buildparentdir="`pwd`/stage3_build"
-
-export ARCH=x86_64-linux-musl
-export ARCH_BUILD=$ARCH
-export ARCH_TARGET=$ARCH
 
 # create stage3_packages folder, copy stage2 packages
 if [ ! -d "$outdir" ] ; then

@@ -6,5 +6,5 @@ cd ${PKG_NAME}-*/
     --infodir=${PKG_DIR}/info --localedir=${PKG_DIR}/locale \
     --mandir=${PKG_DIR}/man --docdir=${PKG_DIR}/doc --sbindir=${PKG_DIR}/bin \
     --enable-static --disable-shared LDFLAGS=-static
-make -j8
+make $MAKE_JOBS
 make install DESTDIR="${PKG_INSTDIR}"

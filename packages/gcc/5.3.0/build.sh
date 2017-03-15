@@ -12,6 +12,6 @@ mkdir build && cd build
     --disable-lto \
     LDFLAGS=-static
 
-make -j8
-make install-no-fixedincludes DESTDIR="${PKG_INSTDIR}"
+make $MAKE_JOBS
+make $MAKE_JOBS install-no-fixedincludes DESTDIR="${PKG_INSTDIR}"
 rm -f ${PKG_INSTDIR}/${PKG_DIR}/info/dir ${PKG_INSTDIR}/${PKG_DIR}/lib/charset.alias

@@ -2,16 +2,12 @@
 #set -x
 set -e
 
+. ./common.sh
+
 s1_pkgs="`pwd`/stage1_packages"
-distfiles="`pwd`/../distfiles"
-packages="`pwd`/../packages"
-toolsdir="`pwd`/../tools"
 outdir="`pwd`/stage2_packages"
 buildparentdir="`pwd`/stage2_build"
 
-export ARCH=x86_64-linux-musl
-export ARCH_BUILD=$ARCH
-export ARCH_TARGET=$ARCH
 export PATH="$toolsdir:$PATH"
 
 # create stage2_packages folder, copy stage1 packages
@@ -24,7 +20,7 @@ mkdir -p $buildparentdir
 
 failed() {
     echo "---------------------------------------------------------------------"
-    echo "$1 $(pwd) failed"
+    echo "$1 $build_dir failed"
     head -n 2000 "$build_dir/build.log"
     echo "---------------------------------------------------------------------"
     tail -n 2000 "$build_dir/build.log"

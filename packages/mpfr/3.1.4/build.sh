@@ -5,6 +5,6 @@ mkdir build && cd build
     --oldincludedir=${PKG_DIR}/include --infodir=${PKG_DIR}/info \
     --localedir=${PKG_DIR}/locale --mandir=${PKG_DIR}/man --docdir=${PKG_DIR}/doc \
     --disable-werror --disable-shared
-make -j8
-make install DESTDIR="${PKG_INSTDIR}"
+make $MAKE_JOBS
+make $MAKE_JOBS install DESTDIR="${PKG_INSTDIR}"
 rm -f ${PKG_INSTDIR}/${PKG_DIR}/info/dir ${PKG_INSTDIR}/${PKG_DIR}/lib/charset.alias

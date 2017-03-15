@@ -2,15 +2,13 @@
 #set -x
 set -e
 
+. ./common.sh
+
 s0_prefix="`pwd`/stage0_prefix"
-distfiles="`pwd`/../distfiles"
-packages="`pwd`/../packages"
-toolsdir="`pwd`/../tools"
 outdir="`pwd`/stage1_packages"
 buildparentdir="`pwd`/stage1_build"
 
 export ARCH_BUILD="`gcc -dumpmachine`"
-export ARCH_TARGET=x86_64-linux-musl
 export PATH="$s0_prefix/bin:$toolsdir:$PATH"
 
 # prepare directories

@@ -9,6 +9,6 @@ mkdir build && cd build
     --disable-libatomic --disable-werror  --disable-libsanitizer \
     --disable-multilib --with-multilib-list=
 
-make -j8
-make install DESTDIR="${PKG_INSTDIR}"
+make $MAKE_JOBS
+make $MAKE_JOBS install DESTDIR="${PKG_INSTDIR}"
 rm -f ${PKG_INSTDIR}/${PKG_DIR}/info/dir ${PKG_INSTDIR}/${PKG_DIR}/lib/charset.alias

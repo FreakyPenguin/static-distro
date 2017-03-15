@@ -31,7 +31,7 @@ sh Configure \
     -Duseperlio \
     -des
 
-make -j8
+make $MAKE_JOBS
 
-make install.perl DESTDIR="${PKG_INSTDIR}"
+make $MAKE_JOBS install.perl DESTDIR="${PKG_INSTDIR}"
 rm -f ${PKG_INSTDIR}/${PKG_DIR}/info/dir ${PKG_INSTDIR}/${PKG_DIR}/lib/charset.alias
