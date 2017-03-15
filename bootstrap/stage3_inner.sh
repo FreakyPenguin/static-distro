@@ -58,8 +58,8 @@ build_s3_pkg() {
     cd "${buildparentdir}"
 }
 
-stage3_packages="binutils m4 gmp mpfr mpc musl-dynamic perl texinfo bison flex \
-    patch gcc"
+stage3_packages="musl musl-dynamic binutils m4 gmp mpfr mpc perl texinfo bison\
+    flex patch gcc"
 for p in $stage3_packages ; do
     build_s3_pkg $p
 done
