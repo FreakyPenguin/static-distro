@@ -17,7 +17,7 @@ fi
 #stage 0:
 ${GET} "https://ftp.gnu.org/gnu/binutils/binutils-2.28.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/gcc/gcc-6.3.0/gcc-6.3.0.tar.gz"
-${GET} "https://www.musl-libc.org/releases/musl-1.1.14.tar.gz"
+${GET} "https://www.musl-libc.org/releases/musl-1.1.16.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/gmp/gmp-6.1.1.tar.lz"
 ${GET} "https://ftp.gnu.org/gnu/mpfr/mpfr-3.1.4.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/mpc/mpc-1.0.3.tar.gz"
@@ -71,3 +71,4 @@ ${GET} "http://dist.schmorp.de/libev/libev-4.24.tar.gz"
 # old versions
 ${GET} "https://ftp.gnu.org/gnu/binutils/binutils-2.26.1.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/gcc/gcc-5.3.0/gcc-5.3.0.tar.gz"
+${GET} "https://www.musl-libc.org/releases/musl-1.1.14.tar.gz"

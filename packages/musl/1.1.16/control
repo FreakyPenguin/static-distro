@@ -1,0 +1,16 @@
+Source: musl
+Version: 1.1.16
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+Depends-Build:
+	sbase
+	mksh
+	gcc
+	sed
+	make
+Sources:
+	musl-1.1.16.tar.gz
+
+Package: musl
