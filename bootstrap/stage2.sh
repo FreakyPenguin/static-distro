@@ -61,7 +61,7 @@ build_s2_pkg() {
       >>"$build_dir/build.log" 2>&1 || failed build
 
     for binpkg in `srccontrol -p "$control"`; do
-        cp -r "${build_dir}/root/packages/${binpkg}" "$outdir/"
+        cp -ar "${build_dir}/root/packages/${binpkg}" "$outdir/"
     done
     cd "${buildparentdir}"
 }
