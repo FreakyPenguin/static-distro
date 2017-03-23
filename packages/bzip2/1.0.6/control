@@ -15,3 +15,7 @@ Sources:
 	bzip2-1.0.6.tar.gz
 
 Package: bzip2
+
+Package: bzip2-dev
+
+Package: bzip2-doc
