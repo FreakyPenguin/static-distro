@@ -17,3 +17,5 @@ Sources:
 	tar-1.29.tar.gz
 
 Package: tar
+
+Package: tar-doc
