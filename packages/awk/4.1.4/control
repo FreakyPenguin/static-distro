@@ -18,3 +18,5 @@ Sources:
 	gawk-4.1.4.tar.gz
 
 Package: awk
+
+Package: awk-doc
