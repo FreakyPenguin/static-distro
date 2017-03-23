@@ -18,3 +18,5 @@ Sources:
 	sed-4.4.tar.xz
 
 Package: sed
+
+Package: sed-doc
