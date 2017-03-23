@@ -17,3 +17,7 @@ Sources:
 	binutils-2.28.tar.gz
 
 Package: binutils
+
+Package: binutils-dev
+
+Package: binutils-doc
