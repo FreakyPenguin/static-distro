@@ -40,8 +40,8 @@ fi
 
 #stage 1:
 ${GET} "https://famkaufmann.info/~staticdistro/distfiles/sbase-0.0.20170323.tar.gz"
-${GET} "http://sv0.famkaufmann.info/~staticdistro/distfiles/mksh-R52c.tgz" || \
-    ${GET} "https://www.mirbsd.org/MirOS/dist/mir/mksh/mksh-R52c.tgz"
+${GET} "http://sv0.famkaufmann.info/~staticdistro/distfiles/mksh-R54.tgz" || \
+    ${GET} "https://www.mirbsd.org/MirOS/dist/mir/mksh/mksh-R54.tgz"
 ${GET} "https://ftp.gnu.org/gnu/make/make-4.2.1.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/sed/sed-4.2.2.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/grep/grep-2.25.tar.xz"
@@ -73,3 +73,5 @@ ${GET} "https://ftp.gnu.org/gnu/binutils/binutils-2.26.1.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/gcc/gcc-5.3.0/gcc-5.3.0.tar.gz"
 ${GET} "https://www.musl-libc.org/releases/musl-1.1.14.tar.gz"
 ${GET} "https://famkaufmann.info/~staticdistro/distfiles/sbase-0.0.20161118.tar.gz"
+${GET} "http://sv0.famkaufmann.info/~staticdistro/distfiles/mksh-R52c.tgz" || \
+    ${GET} "https://www.mirbsd.org/MirOS/dist/mir/mksh/mksh-R52c.tgz"
