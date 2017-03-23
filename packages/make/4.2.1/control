@@ -18,3 +18,5 @@ Sources:
 	make-4.2.1.tar.gz
 
 Package: make
+
+Package: make-doc
