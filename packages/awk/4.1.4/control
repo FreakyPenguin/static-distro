@@ -1,0 +1,20 @@
+Source: awk
+Version: 4.1.4
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+Depends-Build:
+	mksh
+	sbase
+	grep
+	sed
+	awk
+	musl
+	gcc
+	binutils
+	make
+Sources:
+	gawk-4.1.4.tar.gz
+
+Package: awk
