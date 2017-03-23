@@ -17,3 +17,5 @@ Sources:
 	xz-5.2.2.tar.gz
 
 Package: xz
+
+Package: xz-dev
