@@ -1,0 +1,19 @@
+Source: sbase
+Version: 0.0.20170323
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+Depends-Build:
+	mksh
+	sbase
+	grep
+	sed
+	awk
+	musl
+	gcc
+	make
+Sources:
+	sbase-0.0.20170323.tar.gz
+
+Package: sbase
