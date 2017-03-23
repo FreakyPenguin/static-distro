@@ -51,7 +51,9 @@ build_s1_pkg() {
     pkgbuild -w "$build_dir" -o root -d "$distfiles" "$control" -V '-~~stage1' \
       >"$build_dir/build.log" 2>&1 || failed build
 
-    cp -r "${build_dir}/root/packages/${pkg}" "$outdir/"
+    for binpkg in `srccontrol -p "$control"`; do
+        cp -r "${build_dir}/root/packages/${binpkg}" "$outdir/"
+    done
     cd "${buildparentdir}"
 }
 
