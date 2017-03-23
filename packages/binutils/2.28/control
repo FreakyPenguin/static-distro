@@ -1,0 +1,19 @@
+Source: binutils
+Version: 2.28
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+Depends-Build:
+	sbase
+	mksh
+	awk
+	grep
+	sed
+	make
+	gcc
+	musl
+Sources:
+	binutils-2.28.tar.gz
+
+Package: binutils
