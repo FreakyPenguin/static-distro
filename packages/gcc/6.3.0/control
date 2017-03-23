@@ -23,3 +23,5 @@ Sources:
 	gcc-6.3.0.tar.gz
 
 Package: gcc
+
+Package: gcc-doc
