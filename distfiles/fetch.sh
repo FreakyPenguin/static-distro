@@ -44,7 +44,7 @@ ${GET} "http://sv0.famkaufmann.info/~staticdistro/distfiles/mksh-R54.tgz" || \
     ${GET} "https://www.mirbsd.org/MirOS/dist/mir/mksh/mksh-R54.tgz"
 ${GET} "https://ftp.gnu.org/gnu/make/make-4.2.1.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/sed/sed-4.4.tar.xz"
-${GET} "https://ftp.gnu.org/gnu/grep/grep-2.25.tar.xz"
+${GET} "https://ftp.gnu.org/gnu/grep/grep-3.0.tar.xz"
 ${GET} "https://ftp.gnu.org/gnu/gawk/gawk-4.1.3.tar.gz"
 
 if [ "$1" = "stage1" ] ; then
@@ -76,3 +76,4 @@ ${GET} "https://famkaufmann.info/~staticdistro/distfiles/sbase-0.0.20161118.tar.
 ${GET} "http://sv0.famkaufmann.info/~staticdistro/distfiles/mksh-R52c.tgz" || \
     ${GET} "https://www.mirbsd.org/MirOS/dist/mir/mksh/mksh-R52c.tgz"
 ${GET} "https://ftp.gnu.org/gnu/sed/sed-4.2.2.tar.gz"
+${GET} "https://ftp.gnu.org/gnu/grep/grep-2.25.tar.xz"
