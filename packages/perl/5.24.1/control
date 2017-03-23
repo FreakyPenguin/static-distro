@@ -1,0 +1,19 @@
+Source: perl
+Version: 5.24.1
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+Depends-Build:
+	mksh
+	sbase
+	grep
+	sed
+	awk
+	musl
+	gcc
+	make
+Sources:
+	perl-5.24.1.tar.gz
+
+Package: perl

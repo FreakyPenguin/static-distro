@@ -30,7 +30,7 @@ if [ "$1" = "stage3" ] ; then
     # binutils m4 gmp mpfr mpc musl-dynamic perl texinfo bison flex patch gcc
 
     ${GET} "https://ftp.gnu.org/gnu/m4/m4-1.4.17.tar.gz"
-    ${GET} "http://www.cpan.org/src/5.0/perl-5.24.0.tar.gz"
+    ${GET} "http://www.cpan.org/src/5.0/perl-5.24.1.tar.gz"
     ${GET} "https://ftp.gnu.org/gnu/texinfo/texinfo-6.1.tar.gz"
     ${GET} "https://ftp.gnu.org/gnu/bison/bison-3.0.4.tar.gz"
     ${GET} "https://github.com/westes/flex/releases/download/v2.6.1/flex-2.6.1.tar.gz"
@@ -80,3 +80,4 @@ ${GET} "https://ftp.gnu.org/gnu/grep/grep-2.25.tar.xz"
 ${GET} "https://ftp.gnu.org/gnu/gawk/gawk-4.1.3.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/gmp/gmp-6.1.1.tar.lz"
 ${GET} "https://ftp.gnu.org/gnu/mpfr/mpfr-3.1.4.tar.gz"
+${GET} "http://www.cpan.org/src/5.0/perl-5.24.0.tar.gz"
