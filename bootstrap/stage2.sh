@@ -53,11 +53,11 @@ build_s2_pkg() {
     mkdir -p "$out_dir"
 
     # Unpack package
-    pkgbuild -B -C -w "$build_dir" -d "$distfiles" -V '~~stage2' "$control" \
+    pkgbuild -B -C -w "$build_dir" -d "$distfiles" -V '-~~stage2' "$control" \
       >"$build_dir/build.log" 2>&1 || failed unpack
 
     # Build package
-    pkgbuild -U -p "$outdir" -w "$build_dir" -o root -V '~~stage2' "$control" \
+    pkgbuild -U -p "$outdir" -w "$build_dir" -o root -V '-~~stage2' "$control" \
       >>"$build_dir/build.log" 2>&1 || failed build
 
     cp -r "${build_dir}/root/packages/${pkg}" "$outdir/"
