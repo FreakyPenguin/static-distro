@@ -17,3 +17,5 @@ Sources:
 	gzip-1.8.tar.gz
 
 Package: gzip
+
+Package: gzip-doc
