@@ -18,3 +18,5 @@ Sources:
 	mksh-R54.tgz
 
 Package: mksh
+
+Package: mksh-doc
