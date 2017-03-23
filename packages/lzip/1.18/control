@@ -15,3 +15,5 @@ Sources:
 	lzip-1.18.tar.gz
 
 Package: lzip
+
+Package: lzip-doc
