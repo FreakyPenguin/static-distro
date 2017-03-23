@@ -1,0 +1,25 @@
+Source: gcc
+Version: 6.3.0
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+Depends-Build:
+	sbase
+	mksh
+	make
+	awk
+	sed
+	grep
+	tar
+	gcc
+	musl
+	gmp
+	mpfr
+	mpc
+Depends-Run:
+	binutils
+Sources:
+	gcc-6.3.0.tar.gz
+
+Package: gcc
