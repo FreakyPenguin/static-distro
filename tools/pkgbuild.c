@@ -289,7 +289,8 @@ static int gencontrol(struct source_control *c)
 {
     struct source_control_bin *sb;
     char *out_control;
-    char *argv[] = { "gencontrol", "-o", NULL, control_path, NULL, NULL, };
+    char *argv[] = { "gencontrol", "-v", version, "-o", NULL, control_path,
+        NULL, NULL, };
 
     if (out_dir == NULL) {
         fprintf(stderr, "gencontrol: out dir must be set\n");
@@ -304,8 +305,8 @@ static int gencontrol(struct source_control *c)
             return -1;
         }
 
-        argv[4] = sb->package;
-        argv[2] = out_control;
+        argv[6] = sb->package;
+        argv[4] = out_control;
 
         if (run_exec(argv) != 0) {
             fprintf(stderr, "gencontrol: running for %s failed\n", sb->package);
