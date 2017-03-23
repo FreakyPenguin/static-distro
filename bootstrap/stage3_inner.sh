@@ -54,7 +54,9 @@ build_s3_pkg() {
     pkgbuild -p "$outdir" -w "$build_dir" -d "$distfiles" -o root -V '~~stage3'\
       "$control" >>"$build_dir/build.log" 2>&1 || failed build
 
-    cp -ar "${build_dir}/root/packages/${pkg}" "$outdir/"
+    for binpkg in `srccontrol -p "$control"`; do
+        cp -ar "${build_dir}/root/packages/${binpkg}" "$outdir/"
+    done
     cd "${buildparentdir}"
 }
 
