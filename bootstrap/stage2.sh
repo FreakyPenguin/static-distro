@@ -60,7 +60,9 @@ build_s2_pkg() {
     pkgbuild -U -p "$outdir" -w "$build_dir" -o root -V '-~~stage2' "$control" \
       >>"$build_dir/build.log" 2>&1 || failed build
 
-    cp -r "${build_dir}/root/packages/${pkg}" "$outdir/"
+    for binpkg in `srccontrol -p "$control"`; do
+        cp -r "${build_dir}/root/packages/${binpkg}" "$outdir/"
+    done
     cd "${buildparentdir}"
 }
 
