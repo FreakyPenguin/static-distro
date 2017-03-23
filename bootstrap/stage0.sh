@@ -45,9 +45,10 @@ build_s0_pkg() {
     fi
 
     # figure out version
-    phys_path="`cd ${packages}/${pkg}/*-\~\~${pass} && pwd -P`"
+    versions="`cd ${packages}/${pkg}/ && echo *-\~\~${pass}`"
+    ver="`pkgvercmp -M -- $versions`"
+    phys_path="${packages}/${pkg}/${ver}"
     control="$phys_path/control"
-    ver="`basename $phys_path`"
 
     echo "stage0: Building $pkg pass $pass"
 
