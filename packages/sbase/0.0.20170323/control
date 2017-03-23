@@ -17,3 +17,13 @@ Sources:
 	sbase-0.0.20170323.tar.gz
 
 Package: sbase
+
+Package: sbase-doc
+
+Package: sbase-strings
+
+Package: sbase-grep
+
+Package: sbase-sed
+
+Package: sbase-tar
