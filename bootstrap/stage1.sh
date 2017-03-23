@@ -29,17 +29,17 @@ build_s1_pkg() {
     build_dir="${buildparentdir}/build-${pkg}"
     root_dir="${build_dir}/root"
 
+    # figure out version
+    versions="`cd ${packages}/${pkg}/ && echo *-\~\~stage1`"
+    ver="`pkgvercmp -M -- $versions`"
+    phys_path="${packages}/${pkg}/${ver}"
+    control="$phys_path/control"
 
     # make sure it's not completed yet
-    if [ -d "${outdir}/${pkg}" ] ; then
+    if [ -d "${outdir}/${pkg}/${ver}" ] ; then
         echo "stage1: Skipping $pkg"
         return
     fi
-
-    # figure out version
-    phys_path="`cd ${packages}/${pkg}/*-\~\~stage1 && pwd -P`"
-    control="$phys_path/control"
-    ver="`basename $phys_path`"
 
     echo "stage1: Building $pkg $ver"
 
@@ -48,7 +48,7 @@ build_s1_pkg() {
     cp -Lr "$phys_path/" "$build_dir"
     mkdir -p "$root_dir"
 
-    pkgbuild -w "$build_dir" -o root -d "$distfiles" "$control" -V '~~stage1' \
+    pkgbuild -w "$build_dir" -o root -d "$distfiles" "$control" -V '-~~stage1' \
       >"$build_dir/build.log" 2>&1 || failed build
 
     cp -r "${build_dir}/root/packages/${pkg}" "$outdir/"
@@ -69,7 +69,7 @@ build_sdtools_pkg() {
     # figure out version
     phys_path="`cd ${toolsdir} && pwd -P`"
     control="$phys_path/control"
-    ver="0.0.`date +'%Y%m%d%H%M'`~~stage1"
+    ver="0.0.`date +'%Y%m%d%H%M'`-~~stage1"
 
     echo "stage1: Building $pkg $ver"
 
