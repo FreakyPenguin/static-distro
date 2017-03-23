@@ -18,3 +18,5 @@ Sources:
 	grep-3.0.tar.xz
 
 Package: grep
+
+Package: grep-doc
