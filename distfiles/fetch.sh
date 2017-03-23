@@ -18,7 +18,7 @@ fi
 ${GET} "https://ftp.gnu.org/gnu/binutils/binutils-2.28.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/gcc/gcc-6.3.0/gcc-6.3.0.tar.gz"
 ${GET} "https://www.musl-libc.org/releases/musl-1.1.16.tar.gz"
-${GET} "https://ftp.gnu.org/gnu/gmp/gmp-6.1.1.tar.lz"
+${GET} "https://ftp.gnu.org/gnu/gmp/gmp-6.1.2.tar.lz"
 ${GET} "https://ftp.gnu.org/gnu/mpfr/mpfr-3.1.4.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/mpc/mpc-1.0.3.tar.gz"
 
@@ -78,3 +78,4 @@ ${GET} "http://sv0.famkaufmann.info/~staticdistro/distfiles/mksh-R52c.tgz" || \
 ${GET} "https://ftp.gnu.org/gnu/sed/sed-4.2.2.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/grep/grep-2.25.tar.xz"
 ${GET} "https://ftp.gnu.org/gnu/gawk/gawk-4.1.3.tar.gz"
+${GET} "https://ftp.gnu.org/gnu/gmp/gmp-6.1.1.tar.lz"
