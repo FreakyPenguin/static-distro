@@ -1,0 +1,20 @@
+Source: sed
+Version: 4.4
+Depends-Unpack:
+	mksh
+	tar
+	xz
+Depends-Build:
+	mksh
+	sbase
+	grep
+	sed
+	awk
+	musl
+	gcc
+	binutils
+	make
+Sources:
+	sed-4.4.tar.xz
+
+Package: sed
