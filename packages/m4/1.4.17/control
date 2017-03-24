@@ -18,3 +18,5 @@ Sources:
 	m4-1.4.17.tar.gz
 
 Package: m4
+
+Package: m4-doc
