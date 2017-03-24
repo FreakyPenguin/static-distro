@@ -18,3 +18,5 @@ Sources:
 	mpfr-3.1.5.tar.gz
 
 Package: mpfr
+
+Package: mpfr-doc
