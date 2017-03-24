@@ -19,3 +19,5 @@ Sources:
 	gmp-6.1.2.tar.lz
 
 Package: gmp
+
+Package: gmp-doc
