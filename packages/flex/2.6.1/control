@@ -15,7 +15,12 @@ Depends-Build:
 	musl
 	m4
 	bison
+	bison-dev
 Sources:
 	flex-2.6.1.tar.gz
 
 Package: flex
+
+Package: flex-dev
+
+Package: flex-doc
