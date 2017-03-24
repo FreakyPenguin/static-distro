@@ -21,3 +21,7 @@ Sources:
 	bison-3.0.4.tar.gz
 
 Package: bison
+
+Package: bison-dev
+
+Package: bison-doc
