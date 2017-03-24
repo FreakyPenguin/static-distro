@@ -20,3 +20,5 @@ Sources:
 	texinfo-6.1.tar.gz
 
 Package: texinfo
+
+Package: texinfo-doc
