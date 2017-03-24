@@ -14,7 +14,7 @@ sh Configure \
     -Uuseshrplib \
     -Uinstallusrbinperl \
     -Dcc="gcc" \
-    -Dldflags="" \
+    -Dldflags="-s -static" \
     -Dlibs="-lm -lcrypt" \
     -Dprefix="$PKG_DIR" \
     -Dbin="$PKG_DIR/bin" \

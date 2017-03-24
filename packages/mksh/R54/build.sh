@@ -2,7 +2,7 @@
 set -e
 docprefix=/packages/${PKG_NAME}-doc/${PKG_VERSION}
 cd ${PKG_NAME}
-CC=${ARCH_TARGET}-gcc LDSTATIC=-static HAVE_STRLCPY=0 sh Build.sh -r -c lto
+CC=${ARCH_TARGET}-gcc LDSTATIC="-static -s" HAVE_STRLCPY=0 sh Build.sh -r -c lto
 mkdir -p ${PKG_INSTDIR}/${PKG_DIR}/bin
 mkdir -p ${PKG_INSTDIR}/${docprefix}/doc/examples
 mkdir -p ${PKG_INSTDIR}/${docprefix}/man/man1

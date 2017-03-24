@@ -7,7 +7,7 @@ mkdir build && cd build
     --infodir=${docprefix}/info --mandir=${docprefix}/man \
     --docdir=${docprefix}/doc \
     --build=$ARCH_BUILD --target=$ARCH_TARGET --host=$ARCH_TARGET \
-    --disable-shared LDFLAGS=-static
+    --disable-shared LDFLAGS="-static -s"
 make $MAKE_JOBS
 make $MAKE_JOBS install DESTDIR="${PKG_INSTDIR}"
 rm -rf ${PKG_INSTDIR}/${docprefix}/info/dir ${PKG_INSTDIR}/${PKG_DIR}/lib

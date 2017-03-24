@@ -12,9 +12,9 @@ mkdir build && cd build
     --disable-libsanitizer --disable-werror --disable-multilib \
     --enable-static --disable-shared --disable-host-shared \
     --disable-lto \
-    --with-stage1-ldflags="-static-libstdc++ -static-libgcc -static" \
-    --with-boot-ldflags="-static-libstdc++ -static-libgcc -static" \
-    LDFLAGS=-static
+    --with-stage1-ldflags="-static-libstdc++ -static-libgcc -static -s" \
+    --with-boot-ldflags="-static-libstdc++ -static-libgcc -static -s" \
+    LDFLAGS="-static -s"
 
 make $MAKE_JOBS
 make $MAKE_JOBS install DESTDIR="${PKG_INSTDIR}"

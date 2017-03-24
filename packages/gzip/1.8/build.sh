@@ -6,6 +6,6 @@ mkdir build && cd build
     --oldincludedir=${PKG_DIR}/include --infodir=${docprefix}/info \
     --localedir=${PKG_DIR}/locale --mandir=${docprefix}/man \
     --docdir=${docprefix}/doc \
-    --disable-shared LDFLAGS=-static
+    --disable-shared LDFLAGS="-static -s"
 make $MAKE_JOBS
 make $MAKE_JOBS install DESTDIR="${PKG_INSTDIR}"

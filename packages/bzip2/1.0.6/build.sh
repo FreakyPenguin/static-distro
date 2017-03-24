@@ -3,7 +3,8 @@ set -e
 docprefix=/packages/${PKG_NAME}-doc/${PKG_VERSION}
 devprefix=/packages/${PKG_NAME}-dev/${PKG_VERSION}
 cd ${PKG_NAME}-*/
-make $MAKE_JOBS install DESTDIR="${PKG_INSTDIR}" PREFIX="${PKG_DIR}"
+make $MAKE_JOBS install DESTDIR="${PKG_INSTDIR}" PREFIX="${PKG_DIR}" \
+    LDFLAGS="-static -s"
 
 # prepare doc package
 mkdir -p ${PKG_INSTDIR}/${docprefix}

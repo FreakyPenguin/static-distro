@@ -10,7 +10,7 @@ mkdir build && cd build
     --disable-libsanitizer --disable-werror --disable-multilib \
     --enable-static --disable-shared --disable-host-shared \
     --disable-lto \
-    LDFLAGS=-static
+    LDFLAGS="-static -s"
 
 make $MAKE_JOBS
 make $MAKE_JOBS install-no-fixedincludes DESTDIR="${PKG_INSTDIR}"
