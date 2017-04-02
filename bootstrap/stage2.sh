@@ -40,7 +40,7 @@ build_s2_pkg() {
     control="$phys_path/control"
     #
     # make sure it's not completed yet
-    if [ -d "${outdir}/${pkg}/${ver}~~stage2" ] ; then
+    if [ -d "${outdir}/${pkg}/${ver}-~~stage2" ] ; then
         echo "stage2: Skipping $pkg/${ver}"
         return
     fi
