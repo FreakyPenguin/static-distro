@@ -4,6 +4,7 @@ Depends-Unpack:
 	mksh
 	tar
 	gzip
+	patch
 Depends-Build:
 	mksh
 	sbase
