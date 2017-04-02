@@ -25,11 +25,14 @@ case $PKG_VERSION in
             --includedir=${devprefix}/include \
             --localedir=${PKG_DIR}/locale --mandir=${docprefix}/man \
             --docdir=${docprefix}/doc --infodir=${docprefix}/info \
+            --build=$ARCH_BUILD --target=$ARCH_TARGET --host=$ARCH_TARGET \
             --disable-werror --disable-shared \
             --disable-nls LDFLAGS="-static -s"
         make $MAKE_JOBS
         make $MAKE_JOBS install DESTDIR="${PKG_INSTDIR}"
         ;;
 esac
+rm -rf ${PKG_INSTDIR}/${PKG_DIR}/${ARCH_TARGET}/bin
+ln -s ${PKG_DIR}/bin ${PKG_INSTDIR}/${PKG_DIR}/${ARCH_TARGET}/bin
 rm -f ${PKG_INSTDIR}/${docprefix}/info/dir \
     ${PKG_INSTDIR}/${devprefix}/lib/charset.alias
