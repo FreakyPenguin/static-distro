@@ -18,6 +18,13 @@ struct package {
     struct package *next;
 };
 
+struct mount {
+    const char *name;
+    const char *hostdir;
+    int ro;
+    struct mount *next;
+};
+
 /* Path to temporary directory used for the root mount */
 static char *root_path;
 
@@ -31,9 +38,12 @@ static const char *packagedir = "/packages";
 static const char *new_cwdir = NULL;
 /* List of packages to be added to environment */
 static struct package *packages = NULL;
+/* List of mounts to be added to environment */
+static struct mount *mounts = NULL;
 
 static int parse_opts(int argc, char *argv[]);
 static int run_child(void);
+static int bind_mounts(void);
 static int bind_packages(void);
 static int link_packages(void);
 static int link_package_tree(struct package *p, const char *tree, int dst_fd);
@@ -56,6 +66,7 @@ int main(int argc, char *argv[])
                 "\n");
         fprintf(stderr, "    -c DIR: Chdir to DIR before running CMD\n");
         fprintf(stderr, "    -p PKT,VER: Add version of package to env\n");
+        fprintf(stderr, "    -m NAME:DIR[:ro]: Mount host DIR under /mnt/NAME\n");
         return EXIT_FAILURE;
     }
 
@@ -72,11 +83,12 @@ int main(int argc, char *argv[])
 /* Parse command line options into global variables */
 static int parse_opts(int argc, char *argv[])
 {
-    int c;
+    int c, ro;
     struct package *p;
-    char *ver;
+    struct mount *m;
+    char *ver, *dir, *perm;
 
-    while ((c = getopt(argc, argv, "+d:w:p:c:")) != -1) {
+    while ((c = getopt(argc, argv, "+d:w:p:c:m:")) != -1) {
         switch (c) {
             case 'd':
                 packagedir = optarg;
@@ -102,6 +114,38 @@ static int parse_opts(int argc, char *argv[])
                 p->version = ver + 1;
                 p->next = packages;
                 packages = p;
+                break;
+            case 'm':
+                ro = 0;
+                if ((dir = strchr(optarg, ':')) == NULL) {
+                    fprintf(stderr, "Mount option requires host directory to "
+                            "be specified separated with a colon.\n");
+                    return -1;
+                }
+                *dir++ = 0;
+
+                if ((perm = strchr(dir, ':')) != NULL) {
+                    *perm++ = 0;
+                    if (strcmp(perm, "ro") == 0) {
+                        ro = 1;
+                    } else if (strcmp(perm, "rw") == 0) {
+                        ro = 0;
+                    } else {
+                        fprintf(stderr, "Mount permissions '%s' not recognized "
+                                "only 'rw' and 'ro' are supported\n", perm);
+                        return -1;
+                    }
+                }
+
+                if ((m = malloc(sizeof(*m))) == NULL) {
+                    fprintf(stderr, "malloc mount struct failed\n");
+                    return -1;
+                }
+                m->name = optarg;
+                m->hostdir = dir;
+                m->ro = ro;
+                m->next = mounts;
+                mounts = m;
                 break;
             case '?':
                 fprintf(stderr, "Unknown option: %c\n", optopt);
@@ -141,11 +185,13 @@ int run_child(void)
     const char *root_proc[] = { root_path, "proc", NULL };
     const char *root_sys[] = { root_path, "sys", NULL };
     const char *root_tmp[] = { root_path, "tmp", NULL };
+    const char *root_mnt[] = { root_path, "mnt", NULL };
     const char *root_packages[] = { root_path, "packages", NULL };
     if (mkdir_parts(root_dev, 0555) != 0 ||
             mkdir_parts(root_proc, 0555) != 0 ||
             mkdir_parts(root_sys, 0555) != 0 ||
             mkdir_parts(root_tmp, 0777) != 0 ||
+            mkdir_parts(root_mnt, 0555) != 0 ||
             mkdir_parts(root_packages, 0755) != 0)
     {
         perror("creating directory in root failed");
@@ -175,6 +221,11 @@ int run_child(void)
             perror("mounting work dir failed");
             goto error_rootmkdir;
         }
+    }
+
+    /* mount bind in mounts from host */
+    if (bind_mounts() != 0) {
+        goto error_bindmounts;
     }
 
     /* mount bind in packages */
@@ -233,11 +284,42 @@ error_execv:
     return EXIT_FAILURE;
 error_chroot:
 error_installpackages:
+error_bindmounts:
 error_rootmkdir:
 error_mountroot:
     /* cleanup is easy, when we die, the mounts are garbage collected and the
      * parent removes our root directory in /tmp */
     return EXIT_FAILURE;
+}
+
+/* mount bind specified mount directories from host */
+static int bind_mounts(void)
+{
+    struct mount *m;
+    const char *parts[] = { root_path, "mnt", NULL, NULL };
+    const char *host_parts[] = { NULL, NULL };
+
+    for (m = mounts; m != NULL; m = m->next) {
+        parts[2] = m->name;
+        host_parts[0] = m->hostdir;
+
+        /* create /mnt/name */
+        if (mkdir_parts(parts, 0555) != 0) {
+            perror("mkdir failed");
+            fprintf(stderr, "Creating /mount/%s failed\n", m->name);
+            return -1;
+        }
+
+        /* do the mount bind */
+        if (mountbind_parts(host_parts, parts, m->ro) != 0) {
+            perror("mount failed");
+            fprintf(stderr, "Mounting %s -> /mnt/%s failed\n", m->hostdir,
+                    m->name);
+            return -1;
+        }
+    }
+
+    return 0;
 }
 
 /* mount bind package directories from host */
