@@ -1,0 +1,23 @@
+Source: libxml2
+Version: 2.9.4
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+Depends-Build:
+	mksh
+	sbase
+	awk
+	sed
+	grep
+	musl
+	gcc
+	make
+Sources:
+	libxml2-2.9.4.tar.gz
+
+Package: libxml2
+
+Package: libxml2-bin
+
+Package: libxml2-doc

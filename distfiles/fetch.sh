@@ -69,6 +69,7 @@ ${GET} "http://skarnet.org/software/s6-rc/s6-rc-0.1.0.0.tar.gz"
 ${GET} "https://famkaufmann.info/~staticdistro/distfiles/ubase-0.0.20160925.tar.gz"
 ${GET} "http://mirrors.sonic.net/pub/OpenBSD/OpenSSH/portable/openssh-7.3p1.tar.gz"
 ${GET} "http://dist.schmorp.de/libev/libev-4.24.tar.gz"
+${GET} "http://xmlsoft.org/sources/libxml2-2.9.4.tar.gz"
 
 # old versions
 ${GET} "https://ftp.gnu.org/gnu/binutils/binutils-2.26.1.tar.gz"
