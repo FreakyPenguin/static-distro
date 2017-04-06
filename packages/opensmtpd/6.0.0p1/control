@@ -24,3 +24,5 @@ Sources:
 	opensmtpd-6.0.0p1.tar.gz
 
 Package: opensmtpd
+
+Package: opensmtpd-doc
