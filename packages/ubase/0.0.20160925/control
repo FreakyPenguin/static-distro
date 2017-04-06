@@ -18,3 +18,5 @@ Sources:
 	ubase-0.0.20160925.tar.gz
 
 Package: ubase
+
+Package: ubase-doc
