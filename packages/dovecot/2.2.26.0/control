@@ -18,3 +18,7 @@ Sources:
 	dovecot-2.2.26.0.tar.gz
 
 Package: dovecot
+
+Package: dovecot-doc
+
+Package: dovecot-dev
