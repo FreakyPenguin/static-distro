@@ -18,3 +18,7 @@ Sources:
 	libressl-2.5.0.tar.gz
 
 Package: libressl
+
+Package: libressl-doc
+
+Package: libressl-bin
