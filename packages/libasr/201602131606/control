@@ -18,3 +18,5 @@ Sources:
 	libasr-201602131606.tar.gz
 
 Package: libasr
+
+Package: libasr-doc
