@@ -73,6 +73,7 @@ ${GET} "https://curl.haxx.se/download/curl-7.53.1.tar.lzma"
 ${GET} "http://www.libarchive.org/downloads/libarchive-3.3.1.tar.gz"
 ${GET} "http://sv0.famkaufmann.info/~staticdistro/distfiles/expat-2.2.0.tar.bz2"
 ${GET} "http://sv0.famkaufmann.info/~staticdistro/distfiles/libuv-v1.9.1.tar.gz"
+${GET} "http://www.cmake.org/files/v3.7/cmake-3.7.2.tar.gz"
 ${GET} "http://xmlsoft.org/sources/libxml2-2.9.4.tar.gz"
 
 # old versions

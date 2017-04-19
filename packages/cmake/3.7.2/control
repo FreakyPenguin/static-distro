@@ -1,0 +1,28 @@
+Source: cmake
+Version: 3.7.2
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+	patch
+Depends-Build:
+	mksh
+	sbase
+	sed
+	grep
+	awk
+	musl
+	gcc
+	make
+	zlib
+	curl-dev
+	bzip2-dev
+	xz-dev
+	libarchive
+	expat
+	libuv
+	libressl
+Sources:
+	cmake-3.7.2.tar.gz
+
+Package: cmake

@@ -1,0 +1,21 @@
+diff -ur cmake-3.7.2.orig/CMakeLists.txt cmake-3.7.2/CMakeLists.txt
+--- cmake-3.7.2.orig/CMakeLists.txt	2017-04-08 22:44:29.324844088 +0000
++++ cmake-3.7.2/CMakeLists.txt	2017-04-09 01:42:12.134890978 +0000
+@@ -328,7 +328,7 @@
+         "CMAKE_USE_SYSTEM_CURL is ON but a curl is not found!")
+     endif()
+     set(CMAKE_CURL_INCLUDES ${CURL_INCLUDE_DIRS})
+-    set(CMAKE_CURL_LIBRARIES ${CURL_LIBRARIES})
++    set(CMAKE_CURL_LIBRARIES ${CURL_LIBRARIES} -lssl -lcrypto)
+   else()
+     set(CURL_SPECIAL_ZLIB_H ${CMAKE_ZLIB_HEADER})
+     set(CURL_SPECIAL_LIBZ_INCLUDES ${CMAKE_ZLIB_INCLUDES})
+@@ -342,7 +342,7 @@
+     set(_CMAKE_USE_OPENSSL_DEFAULT OFF)
+     if(NOT DEFINED CMAKE_USE_OPENSSL AND NOT WIN32 AND NOT APPLE
+         AND CMAKE_SYSTEM_NAME MATCHES "(Linux|FreeBSD)")
+-      find_package(OpenSSL QUIET)
++      find_package(OpenSSL)
+       if(OPENSSL_FOUND)
+         set(_CMAKE_USE_OPENSSL_DEFAULT ON)
+       endif()
