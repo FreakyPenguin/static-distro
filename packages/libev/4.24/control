@@ -1,0 +1,21 @@
+Source: libev
+Version: 4.24
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+Depends-Build:
+	mksh
+	sbase
+	awk
+	grep
+	sed
+	musl
+	gcc
+	make
+Sources:
+	libev-4.24.tar.gz
+
+Package: libev
+
+Package: libev-doc
