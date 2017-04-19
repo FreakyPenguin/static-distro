@@ -1,0 +1,21 @@
+Source: acme-client
+Version: 0.1.16
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+	patch
+Depends-Build:
+	mksh
+	sbase
+	sbase-grep
+	musl
+	gcc
+	make
+	libressl
+Sources:
+	acme-client-portable-0.1.16.tgz
+
+Package: acme-client
+
+Package: acme-client-doc

@@ -75,6 +75,7 @@ ${GET} "http://sv0.famkaufmann.info/~staticdistro/distfiles/expat-2.2.0.tar.bz2"
 ${GET} "http://sv0.famkaufmann.info/~staticdistro/distfiles/libuv-v1.9.1.tar.gz"
 ${GET} "http://www.cmake.org/files/v3.7/cmake-3.7.2.tar.gz"
 ${GET} "http://xmlsoft.org/sources/libxml2-2.9.4.tar.gz"
+${GET} "https://kristaps.bsd.lv/acme-client/snapshots/acme-client-portable-0.1.16.tgz"
 
 # old versions
 ${GET} "https://ftp.gnu.org/gnu/binutils/binutils-2.26.1.tar.gz"

@@ -1,0 +1,12 @@
+diff -ur acme-client-portable-0.1.16.orig/GNUmakefile acme-client-portable-0.1.16/GNUmakefile
+--- acme-client-portable-0.1.16.orig/GNUmakefile	2017-03-30 11:01:45.145198752 -0700
++++ acme-client-portable-0.1.16/GNUmakefile	2017-03-30 11:02:12.180520844 -0700
+@@ -35,7 +35,7 @@
+ # Start by checking whether we're on a musl libc system, which provides
+ # the functions other systems require from libbsd.
+ 
+-ifeq ($(shell ldd --version 2>&1 | grep 'musl libc'),)
++ifeq ($(shell ldd --version 2>&1 | grep 'musl libc')$(FORCE_MUSL),)
+ LIBADD	+= $(shell pkg-config --libs libbsd)
+ CFLAGS	+= $(shell pkg-config --cflags libbsd)
+ else
