@@ -1,0 +1,707 @@
+diff -ur dovecot-2.2.26.0.orig/configure dovecot-2.2.26.0/configure
+--- dovecot-2.2.26.0.orig/configure	2017-04-06 21:14:29.056367363 +0000
++++ dovecot-2.2.26.0/configure	2017-04-06 21:15:39.588934040 +0000
+@@ -11770,7 +11770,7 @@
+     # here allows them to be overridden if necessary.
+     runpath_var=LD_RUN_PATH
+     hardcode_libdir_flag_spec='$wl-rpath $wl$libdir'
+-    export_dynamic_flag_spec='$wl--export-dynamic'
++    export_dynamic_flag_spec=''
+     # ancient GNU ld didn't support --whole-archive et. al.
+     if $LD --help 2>&1 | $GREP 'no-whole-archive' > /dev/null; then
+       whole_archive_flag_spec=$wlarc'--whole-archive$convenience '$wlarc'--no-whole-archive'
+@@ -15166,7 +15166,7 @@
+         archive_expsym_cmds_CXX='$CC $pic_flag -shared -nostdlib $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags $wl-soname $wl$soname $wl-retain-symbols-file $wl$export_symbols -o $lib'
+ 
+         hardcode_libdir_flag_spec_CXX='$wl-rpath $wl$libdir'
+-        export_dynamic_flag_spec_CXX='$wl--export-dynamic'
++        export_dynamic_flag_spec_CXX=''
+ 
+         # If archive_cmds runs LD, not CC, wlarc should be empty
+         # XXX I think wlarc can be eliminated in ltcf-cxx, but I need to
+@@ -15840,7 +15840,7 @@
+ 	    output_verbose_link_cmd='templist=`$CC $CFLAGS -v conftest.$objext -o libconftest$shared_ext 2>&1 | $GREP "ld"`; rm -f libconftest$shared_ext; list= ; for z in $templist; do case $z in conftest.$objext) list="$list $z";; *.$objext);; *) list="$list $z";;esac; done; func_echo_all "$list"'
+ 
+ 	    hardcode_libdir_flag_spec_CXX='$wl-rpath,$libdir'
+-	    export_dynamic_flag_spec_CXX='$wl--export-dynamic'
++	    export_dynamic_flag_spec_CXX=''
+ 
+ 	    # Archives containing C++ object files must be created using
+ 	    # "CC -Bstatic", where "CC" is the KAI C++ compiler.
+@@ -15868,7 +15868,7 @@
+ 	    esac
+ 	    archive_cmds_need_lc_CXX=no
+ 	    hardcode_libdir_flag_spec_CXX='$wl-rpath,$libdir'
+-	    export_dynamic_flag_spec_CXX='$wl--export-dynamic'
++	    export_dynamic_flag_spec_CXX=''
+ 	    whole_archive_flag_spec_CXX='$wl--whole-archive$convenience $wl--no-whole-archive'
+ 	    ;;
+           pgCC* | pgcpp*)
+@@ -15900,7 +15900,7 @@
+ 	    esac
+ 
+ 	    hardcode_libdir_flag_spec_CXX='$wl--rpath $wl$libdir'
+-	    export_dynamic_flag_spec_CXX='$wl--export-dynamic'
++	    export_dynamic_flag_spec_CXX=''
+ 	    whole_archive_flag_spec_CXX='$wl--whole-archive`for conv in $convenience\"\"; do test  -n \"$conv\" && new_convenience=\"$new_convenience,$conv\"; done; func_echo_all \"$new_convenience\"` $wl--no-whole-archive'
+             ;;
+ 	  cxx*)
+@@ -15925,7 +15925,7 @@
+ 	  xl* | mpixl* | bgxl*)
+ 	    # IBM XL 8.0 on PPC, with GNU ld
+ 	    hardcode_libdir_flag_spec_CXX='$wl-rpath $wl$libdir'
+-	    export_dynamic_flag_spec_CXX='$wl--export-dynamic'
++	    export_dynamic_flag_spec_CXX=''
+ 	    archive_cmds_CXX='$CC -qmkshrobj $libobjs $deplibs $compiler_flags $wl-soname $wl$soname -o $lib'
+ 	    if test yes = "$supports_anon_versioning"; then
+ 	      archive_expsym_cmds_CXX='echo "{ global:" > $output_objdir/$libname.ver~
+@@ -22508,7 +22508,7 @@
+ if test "x$ac_cv_func_dlopen" = xyes; then :
+ 
+   have_modules=yes
+-  MODULE_LIBS="-export-dynamic"
++  MODULE_LIBS=""
+ 
+ else
+ 
+@@ -22551,7 +22551,7 @@
+ if test "x$ac_cv_lib_dl_dlopen" = xyes; then :
+ 
+     have_modules=yes
+-    MODULE_LIBS="-export-dynamic -ldl"
++    MODULE_LIBS=" -ldl"
+     DLLIB=-ldl
+ 
+ fi
+diff -ur dovecot-2.2.26.0.orig/configure.ac dovecot-2.2.26.0/configure.ac
+--- dovecot-2.2.26.0.orig/configure.ac	2017-04-06 21:14:29.060367396 +0000
++++ dovecot-2.2.26.0/configure.ac	2017-04-06 21:15:39.592934072 +0000
+@@ -1633,11 +1633,11 @@
+ have_modules=no
+ AC_CHECK_FUNC(dlopen, [
+   have_modules=yes
+-  MODULE_LIBS="-export-dynamic"
++  MODULE_LIBS=""
+ ], [
+   AC_CHECK_LIB(dl, dlopen, [
+     have_modules=yes
+-    MODULE_LIBS="-export-dynamic -ldl"
++    MODULE_LIBS=" -ldl"
+     DLLIB=-ldl
+   ])
+ ])
+diff -ur dovecot-2.2.26.0.orig/m4/libtool.m4 dovecot-2.2.26.0/m4/libtool.m4
+--- dovecot-2.2.26.0.orig/m4/libtool.m4	2017-04-06 21:14:29.080367555 +0000
++++ dovecot-2.2.26.0/m4/libtool.m4	2017-04-06 21:15:18.028760605 +0000
+@@ -5054,7 +5054,7 @@
+     # here allows them to be overridden if necessary.
+     runpath_var=LD_RUN_PATH
+     _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='$wl-rpath $wl$libdir'
+-    _LT_TAGVAR(export_dynamic_flag_spec, $1)='$wl--export-dynamic'
++    _LT_TAGVAR(export_dynamic_flag_spec, $1)=''
+     # ancient GNU ld didn't support --whole-archive et. al.
+     if $LD --help 2>&1 | $GREP 'no-whole-archive' > /dev/null; then
+       _LT_TAGVAR(whole_archive_flag_spec, $1)=$wlarc'--whole-archive$convenience '$wlarc'--no-whole-archive'
+@@ -6410,7 +6410,7 @@
+         _LT_TAGVAR(archive_expsym_cmds, $1)='$CC $pic_flag -shared -nostdlib $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags $wl-soname $wl$soname $wl-retain-symbols-file $wl$export_symbols -o $lib'
+ 
+         _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='$wl-rpath $wl$libdir'
+-        _LT_TAGVAR(export_dynamic_flag_spec, $1)='$wl--export-dynamic'
++        _LT_TAGVAR(export_dynamic_flag_spec, $1)=''
+ 
+         # If archive_cmds runs LD, not CC, wlarc should be empty
+         # XXX I think wlarc can be eliminated in ltcf-cxx, but I need to
+@@ -6967,7 +6967,7 @@
+ 	    output_verbose_link_cmd='templist=`$CC $CFLAGS -v conftest.$objext -o libconftest$shared_ext 2>&1 | $GREP "ld"`; rm -f libconftest$shared_ext; list= ; for z in $templist; do case $z in conftest.$objext) list="$list $z";; *.$objext);; *) list="$list $z";;esac; done; func_echo_all "$list"'
+ 
+ 	    _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='$wl-rpath,$libdir'
+-	    _LT_TAGVAR(export_dynamic_flag_spec, $1)='$wl--export-dynamic'
++	    _LT_TAGVAR(export_dynamic_flag_spec, $1)=''
+ 
+ 	    # Archives containing C++ object files must be created using
+ 	    # "CC -Bstatic", where "CC" is the KAI C++ compiler.
+@@ -6995,7 +6995,7 @@
+ 	    esac
+ 	    _LT_TAGVAR(archive_cmds_need_lc, $1)=no
+ 	    _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='$wl-rpath,$libdir'
+-	    _LT_TAGVAR(export_dynamic_flag_spec, $1)='$wl--export-dynamic'
++	    _LT_TAGVAR(export_dynamic_flag_spec, $1)=''
+ 	    _LT_TAGVAR(whole_archive_flag_spec, $1)='$wl--whole-archive$convenience $wl--no-whole-archive'
+ 	    ;;
+           pgCC* | pgcpp*)
+@@ -7027,7 +7027,7 @@
+ 	    esac
+ 
+ 	    _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='$wl--rpath $wl$libdir'
+-	    _LT_TAGVAR(export_dynamic_flag_spec, $1)='$wl--export-dynamic'
++	    _LT_TAGVAR(export_dynamic_flag_spec, $1)=''
+ 	    _LT_TAGVAR(whole_archive_flag_spec, $1)='$wl--whole-archive`for conv in $convenience\"\"; do test  -n \"$conv\" && new_convenience=\"$new_convenience,$conv\"; done; func_echo_all \"$new_convenience\"` $wl--no-whole-archive'
+             ;;
+ 	  cxx*)
+@@ -7052,7 +7052,7 @@
+ 	  xl* | mpixl* | bgxl*)
+ 	    # IBM XL 8.0 on PPC, with GNU ld
+ 	    _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='$wl-rpath $wl$libdir'
+-	    _LT_TAGVAR(export_dynamic_flag_spec, $1)='$wl--export-dynamic'
++	    _LT_TAGVAR(export_dynamic_flag_spec, $1)=''
+ 	    _LT_TAGVAR(archive_cmds, $1)='$CC -qmkshrobj $libobjs $deplibs $compiler_flags $wl-soname $wl$soname -o $lib'
+ 	    if test yes = "$supports_anon_versioning"; then
+ 	      _LT_TAGVAR(archive_expsym_cmds, $1)='echo "{ global:" > $output_objdir/$libname.ver~
+diff -ur dovecot-2.2.26.0.orig/src/auth/Makefile.am dovecot-2.2.26.0/src/auth/Makefile.am
+--- dovecot-2.2.26.0.orig/src/auth/Makefile.am	2017-04-06 21:14:29.108367780 +0000
++++ dovecot-2.2.26.0/src/auth/Makefile.am	2017-04-06 21:15:39.600934137 +0000
+@@ -39,7 +39,7 @@
+ 	-DPKG_RUNDIR=\""$(rundir)"\" \
+ 	$(AUTH_CFLAGS)
+ 
+-auth_LDFLAGS = -export-dynamic
++auth_LDFLAGS = 
+ 
+ libpassword_a_SOURCES = \
+ 	mycrypt.c \
+diff -ur dovecot-2.2.26.0.orig/src/auth/Makefile.in dovecot-2.2.26.0/src/auth/Makefile.in
+--- dovecot-2.2.26.0.orig/src/auth/Makefile.in	2017-04-06 21:14:29.108367780 +0000
++++ dovecot-2.2.26.0/src/auth/Makefile.in	2017-04-06 21:15:39.600934137 +0000
+@@ -549,7 +549,7 @@
+ 	-DPKG_RUNDIR=\""$(rundir)"\" \
+ 	$(AUTH_CFLAGS)
+ 
+-auth_LDFLAGS = -export-dynamic
++auth_LDFLAGS = 
+ libpassword_a_SOURCES = \
+ 	mycrypt.c \
+ 	password-scheme.c \
+diff -ur dovecot-2.2.26.0.orig/src/dict/Makefile.am dovecot-2.2.26.0/src/dict/Makefile.am
+--- dovecot-2.2.26.0.orig/src/dict/Makefile.am	2017-04-06 21:14:29.132367973 +0000
++++ dovecot-2.2.26.0/src/dict/Makefile.am	2017-04-06 21:15:39.596934104 +0000
+@@ -11,7 +11,7 @@
+ 	-DDICT_MODULE_DIR=\""$(moduledir)/dict"\" \
+ 	-DPKG_RUNDIR=\""$(rundir)"\"
+ 
+-dict_LDFLAGS = -export-dynamic
++dict_LDFLAGS = 
+ 
+ libs = \
+ 	../lib-dict/libdict_backend.a \
+diff -ur dovecot-2.2.26.0.orig/src/dict/Makefile.in dovecot-2.2.26.0/src/dict/Makefile.in
+--- dovecot-2.2.26.0.orig/src/dict/Makefile.in	2017-04-06 21:14:29.132367973 +0000
++++ dovecot-2.2.26.0/src/dict/Makefile.in	2017-04-06 21:15:39.600934137 +0000
+@@ -383,7 +383,7 @@
+ 	-DDICT_MODULE_DIR=\""$(moduledir)/dict"\" \
+ 	-DPKG_RUNDIR=\""$(rundir)"\"
+ 
+-dict_LDFLAGS = -export-dynamic
++dict_LDFLAGS = 
+ libs = \
+ 	../lib-dict/libdict_backend.a \
+ 	$(LIBDOVECOT_SQL)
+diff -ur dovecot-2.2.26.0.orig/src/doveadm/dsync/Makefile.am dovecot-2.2.26.0/src/doveadm/dsync/Makefile.am
+--- dovecot-2.2.26.0.orig/src/doveadm/dsync/Makefile.am	2017-04-06 21:14:29.116367845 +0000
++++ dovecot-2.2.26.0/src/doveadm/dsync/Makefile.am	2017-04-06 21:15:39.596934104 +0000
+@@ -36,7 +36,7 @@
+ libdovecot_dsync_la_SOURCES =
+ libdovecot_dsync_la_LIBADD = libdsync.la ../../lib-storage/libdovecot-storage.la ../../lib-dovecot/libdovecot.la
+ libdovecot_dsync_la_DEPENDENCIES = libdsync.la
+-libdovecot_dsync_la_LDFLAGS = -export-dynamic
++libdovecot_dsync_la_LDFLAGS = 
+ 
+ pkginc_libdir = $(pkgincludedir)
+ pkginc_lib_HEADERS = \
+diff -ur dovecot-2.2.26.0.orig/src/doveadm/dsync/Makefile.in dovecot-2.2.26.0/src/doveadm/dsync/Makefile.in
+--- dovecot-2.2.26.0.orig/src/doveadm/dsync/Makefile.in	2017-04-06 21:14:29.116367845 +0000
++++ dovecot-2.2.26.0/src/doveadm/dsync/Makefile.in	2017-04-06 21:15:39.596934104 +0000
+@@ -456,7 +456,7 @@
+ libdovecot_dsync_la_SOURCES = 
+ libdovecot_dsync_la_LIBADD = libdsync.la ../../lib-storage/libdovecot-storage.la ../../lib-dovecot/libdovecot.la
+ libdovecot_dsync_la_DEPENDENCIES = libdsync.la
+-libdovecot_dsync_la_LDFLAGS = -export-dynamic
++libdovecot_dsync_la_LDFLAGS = 
+ pkginc_libdir = $(pkgincludedir)
+ pkginc_lib_HEADERS = \
+ 	dsync-brain.h \
+diff -ur dovecot-2.2.26.0.orig/src/imap/Makefile.am dovecot-2.2.26.0/src/imap/Makefile.am
+--- dovecot-2.2.26.0.orig/src/imap/Makefile.am	2017-04-06 21:14:29.132367973 +0000
++++ dovecot-2.2.26.0/src/imap/Makefile.am	2017-04-06 21:15:39.600934137 +0000
+@@ -15,7 +15,7 @@
+ 	-I$(top_srcdir)/src/lib-index \
+ 	-I$(top_srcdir)/src/lib-storage
+ 
+-imap_LDFLAGS = -export-dynamic
++imap_LDFLAGS = 
+ 
+ imap_LDADD = \
+ 	../lib-imap-urlauth/libimap-urlauth.la \
+diff -ur dovecot-2.2.26.0.orig/src/imap/Makefile.in dovecot-2.2.26.0/src/imap/Makefile.in
+--- dovecot-2.2.26.0.orig/src/imap/Makefile.in	2017-04-06 21:14:29.132367973 +0000
++++ dovecot-2.2.26.0/src/imap/Makefile.in	2017-04-06 21:15:39.600934137 +0000
+@@ -437,7 +437,7 @@
+ 	-I$(top_srcdir)/src/lib-index \
+ 	-I$(top_srcdir)/src/lib-storage
+ 
+-imap_LDFLAGS = -export-dynamic
++imap_LDFLAGS = 
+ imap_LDADD = \
+ 	../lib-imap-urlauth/libimap-urlauth.la \
+ 	$(LIBDOVECOT_LDA) \
+diff -ur dovecot-2.2.26.0.orig/src/imap-urlauth/Makefile.am dovecot-2.2.26.0/src/imap-urlauth/Makefile.am
+--- dovecot-2.2.26.0.orig/src/imap-urlauth/Makefile.am	2017-04-06 21:14:29.132367973 +0000
++++ dovecot-2.2.26.0/src/imap-urlauth/Makefile.am	2017-04-06 21:15:39.600934137 +0000
+@@ -34,7 +34,7 @@
+ 	-I$(top_srcdir)/src/lib-dict \
+ 	-DPKG_RUNDIR=\""$(rundir)"\"
+ 
+-imap_urlauth_LDFLAGS = -export-dynamic
++imap_urlauth_LDFLAGS = 
+ 
+ imap_urlauth_LDADD = $(LIBDOVECOT)
+ imap_urlauth_DEPENDENCIES = $(LIBDOVECOT_DEPS)
+@@ -60,7 +60,7 @@
+ 	-I$(top_srcdir)/src/lib-storage \
+ 	-I$(top_srcdir)/src/login-common
+ 
+-imap_urlauth_worker_LDFLAGS = -export-dynamic
++imap_urlauth_worker_LDFLAGS = 
+ 
+ urlauth_libs = \
+ 	$(top_builddir)/src/lib-imap-urlauth/libimap-urlauth.la
+diff -ur dovecot-2.2.26.0.orig/src/imap-urlauth/Makefile.in dovecot-2.2.26.0/src/imap-urlauth/Makefile.in
+--- dovecot-2.2.26.0.orig/src/imap-urlauth/Makefile.in	2017-04-06 21:14:29.132367973 +0000
++++ dovecot-2.2.26.0/src/imap-urlauth/Makefile.in	2017-04-06 21:15:39.600934137 +0000
+@@ -420,7 +420,7 @@
+ 	-I$(top_srcdir)/src/lib-dict \
+ 	-DPKG_RUNDIR=\""$(rundir)"\"
+ 
+-imap_urlauth_LDFLAGS = -export-dynamic
++imap_urlauth_LDFLAGS = 
+ imap_urlauth_LDADD = $(LIBDOVECOT)
+ imap_urlauth_DEPENDENCIES = $(LIBDOVECOT_DEPS)
+ imap_urlauth_SOURCES = \
+@@ -444,7 +444,7 @@
+ 	-I$(top_srcdir)/src/lib-storage \
+ 	-I$(top_srcdir)/src/login-common
+ 
+-imap_urlauth_worker_LDFLAGS = -export-dynamic
++imap_urlauth_worker_LDFLAGS = 
+ urlauth_libs = \
+ 	$(top_builddir)/src/lib-imap-urlauth/libimap-urlauth.la
+ 
+diff -ur dovecot-2.2.26.0.orig/src/lda/Makefile.am dovecot-2.2.26.0/src/lda/Makefile.am
+--- dovecot-2.2.26.0.orig/src/lda/Makefile.am	2017-04-06 21:14:29.108367780 +0000
++++ dovecot-2.2.26.0/src/lda/Makefile.am	2017-04-06 21:15:39.600934137 +0000
+@@ -14,7 +14,7 @@
+ 	-I$(top_srcdir)/src/lib-storage/index \
+ 	-I$(top_srcdir)/src/lib-storage/index/raw
+ 
+-dovecot_lda_LDFLAGS = -export-dynamic
++dovecot_lda_LDFLAGS = 
+ 
+ dovecot_lda_LDADD = \
+ 	$(LIBDOVECOT_LDA) \
+diff -ur dovecot-2.2.26.0.orig/src/lda/Makefile.in dovecot-2.2.26.0/src/lda/Makefile.in
+--- dovecot-2.2.26.0.orig/src/lda/Makefile.in	2017-04-06 21:14:29.108367780 +0000
++++ dovecot-2.2.26.0/src/lda/Makefile.in	2017-04-06 21:15:39.600934137 +0000
+@@ -380,7 +380,7 @@
+ 	-I$(top_srcdir)/src/lib-storage/index \
+ 	-I$(top_srcdir)/src/lib-storage/index/raw
+ 
+-dovecot_lda_LDFLAGS = -export-dynamic
++dovecot_lda_LDFLAGS = 
+ dovecot_lda_LDADD = \
+ 	$(LIBDOVECOT_LDA) \
+ 	$(LIBDOVECOT_STORAGE) \
+diff -ur dovecot-2.2.26.0.orig/src/lib-compression/Makefile.am dovecot-2.2.26.0/src/lib-compression/Makefile.am
+--- dovecot-2.2.26.0.orig/src/lib-compression/Makefile.am	2017-04-06 21:14:29.112367812 +0000
++++ dovecot-2.2.26.0/src/lib-compression/Makefile.am	2017-04-06 21:15:39.592934072 +0000
+@@ -28,7 +28,7 @@
+ libdovecot_compression_la_SOURCES = 
+ libdovecot_compression_la_LIBADD = libcompression.la ../lib-dovecot/libdovecot.la $(COMPRESS_LIBS)
+ libdovecot_compression_la_DEPENDENCIES = libcompression.la ../lib-dovecot/libdovecot.la
+-libdovecot_compression_la_LDFLAGS = -export-dynamic
++libdovecot_compression_la_LDFLAGS = 
+ 
+ test_programs = \
+ 	test-compression
+diff -ur dovecot-2.2.26.0.orig/src/lib-compression/Makefile.in dovecot-2.2.26.0/src/lib-compression/Makefile.in
+--- dovecot-2.2.26.0.orig/src/lib-compression/Makefile.in	2017-04-06 21:14:29.112367812 +0000
++++ dovecot-2.2.26.0/src/lib-compression/Makefile.in	2017-04-06 21:15:39.596934104 +0000
+@@ -446,7 +446,7 @@
+ libdovecot_compression_la_SOURCES = 
+ libdovecot_compression_la_LIBADD = libcompression.la ../lib-dovecot/libdovecot.la $(COMPRESS_LIBS)
+ libdovecot_compression_la_DEPENDENCIES = libcompression.la ../lib-dovecot/libdovecot.la
+-libdovecot_compression_la_LDFLAGS = -export-dynamic
++libdovecot_compression_la_LDFLAGS = 
+ test_programs = \
+ 	test-compression
+ 
+diff -ur dovecot-2.2.26.0.orig/src/lib-dcrypt/Makefile.am dovecot-2.2.26.0/src/lib-dcrypt/Makefile.am
+--- dovecot-2.2.26.0.orig/src/lib-dcrypt/Makefile.am	2017-04-06 21:14:29.116367845 +0000
++++ dovecot-2.2.26.0/src/lib-dcrypt/Makefile.am	2017-04-06 21:15:39.596934104 +0000
+@@ -16,7 +16,7 @@
+ libdcrypt_la_CFLAGS = $(AM_CPPFLAGS) \
+ 	-DDCRYPT_MODULE_DIR=\"$(pkglibdir)\"
+ 
+-libdcrypt_la_LDFLAGS = -export-dynamic
++libdcrypt_la_LDFLAGS = 
+ 
+ if BUILD_DCRYPT_OPENSSL
+ pkglib_LTLIBRARIES += libdcrypt_openssl.la
+diff -ur dovecot-2.2.26.0.orig/src/lib-dcrypt/Makefile.in dovecot-2.2.26.0/src/lib-dcrypt/Makefile.in
+--- dovecot-2.2.26.0.orig/src/lib-dcrypt/Makefile.in	2017-04-06 21:14:29.116367845 +0000
++++ dovecot-2.2.26.0/src/lib-dcrypt/Makefile.in	2017-04-06 21:15:39.596934104 +0000
+@@ -452,7 +452,7 @@
+ libdcrypt_la_CFLAGS = $(AM_CPPFLAGS) \
+ 	-DDCRYPT_MODULE_DIR=\"$(pkglibdir)\"
+ 
+-libdcrypt_la_LDFLAGS = -export-dynamic
++libdcrypt_la_LDFLAGS = 
+ @BUILD_DCRYPT_OPENSSL_TRUE@libdcrypt_openssl_la_SOURCES = dcrypt-openssl.c
+ @BUILD_DCRYPT_OPENSSL_TRUE@libdcrypt_openssl_la_LDFLAGS = -module -avoid-version -shared ../lib-ssl-iostream/libdovecot_openssl_common.la ../lib/liblib.la
+ @BUILD_DCRYPT_OPENSSL_TRUE@libdcrypt_openssl_la_LIBADD = $(SSL_LIBS)
+diff -ur dovecot-2.2.26.0.orig/src/lib-dovecot/Makefile.am dovecot-2.2.26.0/src/lib-dovecot/Makefile.am
+--- dovecot-2.2.26.0.orig/src/lib-dovecot/Makefile.am	2017-04-06 21:14:29.128367940 +0000
++++ dovecot-2.2.26.0/src/lib-dovecot/Makefile.am	2017-04-06 21:15:39.604934168 +0000
+@@ -7,4 +7,4 @@
+ 	$(MODULE_LIBS)
+ 
+ libdovecot_la_DEPENDENCIES = $(LIBDOVECOT_LA_LIBS)
+-libdovecot_la_LDFLAGS = -export-dynamic
++libdovecot_la_LDFLAGS = 
+diff -ur dovecot-2.2.26.0.orig/src/lib-dovecot/Makefile.in dovecot-2.2.26.0/src/lib-dovecot/Makefile.in
+--- dovecot-2.2.26.0.orig/src/lib-dovecot/Makefile.in	2017-04-06 21:14:29.128367940 +0000
++++ dovecot-2.2.26.0/src/lib-dovecot/Makefile.in	2017-04-06 21:15:39.604934168 +0000
+@@ -380,7 +380,7 @@
+ 	$(MODULE_LIBS)
+ 
+ libdovecot_la_DEPENDENCIES = $(LIBDOVECOT_LA_LIBS)
+-libdovecot_la_LDFLAGS = -export-dynamic
++libdovecot_la_LDFLAGS = 
+ all: all-am
+ 
+ .SUFFIXES:
+diff -ur dovecot-2.2.26.0.orig/src/lib-fts/Makefile.am dovecot-2.2.26.0/src/lib-fts/Makefile.am
+--- dovecot-2.2.26.0.orig/src/lib-fts/Makefile.am	2017-04-06 21:14:29.108367780 +0000
++++ dovecot-2.2.26.0/src/lib-fts/Makefile.am	2017-04-06 21:15:39.600934137 +0000
+@@ -114,7 +114,7 @@
+ libdovecot_fts_la_SOURCES = 
+ libdovecot_fts_la_LIBADD = libfts.la $(deps)
+ libdovecot_fts_la_DEPENDENCIES = libfts.la $(deps)
+-libdovecot_fts_la_LDFLAGS = -export-dynamic
++libdovecot_fts_la_LDFLAGS = 
+ 
+ test_programs = \
+ 	$(ICU_TESTS) \
+diff -ur dovecot-2.2.26.0.orig/src/lib-fts/Makefile.in dovecot-2.2.26.0/src/lib-fts/Makefile.in
+--- dovecot-2.2.26.0.orig/src/lib-fts/Makefile.in	2017-04-06 21:14:29.112367812 +0000
++++ dovecot-2.2.26.0/src/lib-fts/Makefile.in	2017-04-06 21:15:39.600934137 +0000
+@@ -533,7 +533,7 @@
+ libdovecot_fts_la_SOURCES = 
+ libdovecot_fts_la_LIBADD = libfts.la $(deps)
+ libdovecot_fts_la_DEPENDENCIES = libfts.la $(deps)
+-libdovecot_fts_la_LDFLAGS = -export-dynamic
++libdovecot_fts_la_LDFLAGS = 
+ test_programs = \
+ 	$(ICU_TESTS) \
+ 	$(TEST_FTS_LANGUAGE) \
+diff -ur dovecot-2.2.26.0.orig/src/lib-http/Makefile.am dovecot-2.2.26.0/src/lib-http/Makefile.am
+--- dovecot-2.2.26.0.orig/src/lib-http/Makefile.am	2017-04-06 21:14:29.112367812 +0000
++++ dovecot-2.2.26.0/src/lib-http/Makefile.am	2017-04-06 21:15:39.592934072 +0000
+@@ -149,14 +149,14 @@
+ 	$(test_deps)
+ 
+ test_http_payload_SOURCES = test-http-payload.c
+-test_http_payload_LDFLAGS = -export-dynamic
++test_http_payload_LDFLAGS = 
+ test_http_payload_LDADD = \
+ 	$(test_http_libs)
+ test_http_payload_DEPENDENCIES = \
+ 	$(test_http_deps)
+ 
+ test_http_client_SOURCES = test-http-client.c
+-test_http_client_LDFLAGS = -export-dynamic
++test_http_client_LDFLAGS = 
+ test_http_client_LDADD = \
+ 	$(test_http_libs) \
+ 	../lib-ssl-iostream/libssl_iostream_openssl.la
+@@ -164,21 +164,21 @@
+ 	$(test_http_deps)
+ 
+ test_http_client_errors_SOURCES = test-http-client-errors.c
+-test_http_client_errors_LDFLAGS = -export-dynamic
++test_http_client_errors_LDFLAGS = 
+ test_http_client_errors_LDADD = \
+ 	$(test_http_libs)
+ test_http_client_errors_DEPENDENCIES = \
+ 	$(test_http_deps)
+ 
+ test_http_server_SOURCES = test-http-server.c
+-test_http_server_LDFLAGS = -export-dynamic
++test_http_server_LDFLAGS = 
+ test_http_server_LDADD = \
+ 	$(test_http_libs)
+ test_http_server_DEPENDENCIES = \
+ 	$(test_http_deps)
+ 
+ test_http_server_errors_SOURCES = test-http-server-errors.c
+-test_http_server_errors_LDFLAGS = -export-dynamic
++test_http_server_errors_LDFLAGS = 
+ test_http_server_errors_LDADD = \
+ 	$(test_http_libs)
+ test_http_server_errors_DEPENDENCIES = \
+diff -ur dovecot-2.2.26.0.orig/src/lib-http/Makefile.in dovecot-2.2.26.0/src/lib-http/Makefile.in
+--- dovecot-2.2.26.0.orig/src/lib-http/Makefile.in	2017-04-06 21:14:29.112367812 +0000
++++ dovecot-2.2.26.0/src/lib-http/Makefile.in	2017-04-06 21:15:39.592934072 +0000
+@@ -632,7 +632,7 @@
+ 	$(test_deps)
+ 
+ test_http_payload_SOURCES = test-http-payload.c
+-test_http_payload_LDFLAGS = -export-dynamic
++test_http_payload_LDFLAGS = 
+ test_http_payload_LDADD = \
+ 	$(test_http_libs)
+ 
+@@ -640,7 +640,7 @@
+ 	$(test_http_deps)
+ 
+ test_http_client_SOURCES = test-http-client.c
+-test_http_client_LDFLAGS = -export-dynamic
++test_http_client_LDFLAGS = 
+ test_http_client_LDADD = \
+ 	$(test_http_libs) \
+ 	../lib-ssl-iostream/libssl_iostream_openssl.la
+@@ -649,7 +649,7 @@
+ 	$(test_http_deps)
+ 
+ test_http_client_errors_SOURCES = test-http-client-errors.c
+-test_http_client_errors_LDFLAGS = -export-dynamic
++test_http_client_errors_LDFLAGS = 
+ test_http_client_errors_LDADD = \
+ 	$(test_http_libs)
+ 
+@@ -657,7 +657,7 @@
+ 	$(test_http_deps)
+ 
+ test_http_server_SOURCES = test-http-server.c
+-test_http_server_LDFLAGS = -export-dynamic
++test_http_server_LDFLAGS = 
+ test_http_server_LDADD = \
+ 	$(test_http_libs)
+ 
+@@ -665,7 +665,7 @@
+ 	$(test_http_deps)
+ 
+ test_http_server_errors_SOURCES = test-http-server-errors.c
+-test_http_server_errors_LDFLAGS = -export-dynamic
++test_http_server_errors_LDFLAGS = 
+ test_http_server_errors_LDADD = \
+ 	$(test_http_libs)
+ 
+diff -ur dovecot-2.2.26.0.orig/src/lib-lda/Makefile.am dovecot-2.2.26.0/src/lib-lda/Makefile.am
+--- dovecot-2.2.26.0.orig/src/lib-lda/Makefile.am	2017-04-06 21:14:29.124367909 +0000
++++ dovecot-2.2.26.0/src/lib-lda/Makefile.am	2017-04-06 21:15:39.596934104 +0000
+@@ -34,4 +34,4 @@
+ libdovecot_lda_la_SOURCES = 
+ libdovecot_lda_la_LIBADD = liblda.la $(deps)
+ libdovecot_lda_la_DEPENDENCIES = liblda.la $(deps)
+-libdovecot_lda_la_LDFLAGS = -export-dynamic
++libdovecot_lda_la_LDFLAGS = 
+diff -ur dovecot-2.2.26.0.orig/src/lib-lda/Makefile.in dovecot-2.2.26.0/src/lib-lda/Makefile.in
+--- dovecot-2.2.26.0.orig/src/lib-lda/Makefile.in	2017-04-06 21:14:29.124367909 +0000
++++ dovecot-2.2.26.0/src/lib-lda/Makefile.in	2017-04-06 21:15:39.596934104 +0000
+@@ -435,7 +435,7 @@
+ libdovecot_lda_la_SOURCES = 
+ libdovecot_lda_la_LIBADD = liblda.la $(deps)
+ libdovecot_lda_la_DEPENDENCIES = liblda.la $(deps)
+-libdovecot_lda_la_LDFLAGS = -export-dynamic
++libdovecot_lda_la_LDFLAGS = 
+ all: all-am
+ 
+ .SUFFIXES:
+diff -ur dovecot-2.2.26.0.orig/src/lib-ldap/Makefile.am dovecot-2.2.26.0/src/lib-ldap/Makefile.am
+--- dovecot-2.2.26.0.orig/src/lib-ldap/Makefile.am	2017-04-06 21:14:29.124367909 +0000
++++ dovecot-2.2.26.0/src/lib-ldap/Makefile.am	2017-04-06 21:15:39.596934104 +0000
+@@ -18,7 +18,7 @@
+ 	ldap-entry.c
+ 
+ libdovecot_ldap_la_DEPENDENCIES = ../lib/liblib.la
+-libdovecot_ldap_la_LDFLAGS = -export-dynamic
++libdovecot_ldap_la_LDFLAGS = 
+ libdovecot_ldap_la_LIBADD = ../lib/liblib.la $(LDAP_LIBS)
+ 
+ headers = \
+diff -ur dovecot-2.2.26.0.orig/src/lib-ldap/Makefile.in dovecot-2.2.26.0/src/lib-ldap/Makefile.in
+--- dovecot-2.2.26.0.orig/src/lib-ldap/Makefile.in	2017-04-06 21:14:29.124367909 +0000
++++ dovecot-2.2.26.0/src/lib-ldap/Makefile.in	2017-04-06 21:15:39.596934104 +0000
+@@ -420,7 +420,7 @@
+ 	ldap-entry.c
+ 
+ libdovecot_ldap_la_DEPENDENCIES = ../lib/liblib.la
+-libdovecot_ldap_la_LDFLAGS = -export-dynamic
++libdovecot_ldap_la_LDFLAGS = 
+ libdovecot_ldap_la_LIBADD = ../lib/liblib.la $(LDAP_LIBS)
+ headers = \
+ 	ldap-client.h
+diff -ur dovecot-2.2.26.0.orig/src/lib-sql/Makefile.am dovecot-2.2.26.0/src/lib-sql/Makefile.am
+--- dovecot-2.2.26.0.orig/src/lib-sql/Makefile.am	2017-04-06 21:14:29.132367973 +0000
++++ dovecot-2.2.26.0/src/lib-sql/Makefile.am	2017-04-06 21:15:39.604934168 +0000
+@@ -94,7 +94,7 @@
+ libdovecot_sql_la_SOURCES = 
+ libdovecot_sql_la_LIBADD = libsql.la $(deplibs) $(sql_libs)
+ libdovecot_sql_la_DEPENDENCIES = libsql.la
+-libdovecot_sql_la_LDFLAGS = -export-dynamic
++libdovecot_sql_la_LDFLAGS = 
+ 
+ headers = \
+ 	sql-api.h \
+diff -ur dovecot-2.2.26.0.orig/src/lib-sql/Makefile.in dovecot-2.2.26.0/src/lib-sql/Makefile.in
+--- dovecot-2.2.26.0.orig/src/lib-sql/Makefile.in	2017-04-06 21:14:29.132367973 +0000
++++ dovecot-2.2.26.0/src/lib-sql/Makefile.in	2017-04-06 21:15:39.604934168 +0000
+@@ -544,7 +544,7 @@
+ libdovecot_sql_la_SOURCES = 
+ libdovecot_sql_la_LIBADD = libsql.la $(deplibs) $(sql_libs)
+ libdovecot_sql_la_DEPENDENCIES = libsql.la
+-libdovecot_sql_la_LDFLAGS = -export-dynamic
++libdovecot_sql_la_LDFLAGS = 
+ headers = \
+ 	sql-api.h \
+ 	sql-api-private.h \
+diff -ur dovecot-2.2.26.0.orig/src/lib-storage/Makefile.am dovecot-2.2.26.0/src/lib-storage/Makefile.am
+--- dovecot-2.2.26.0.orig/src/lib-storage/Makefile.am	2017-04-06 21:14:29.096367683 +0000
++++ dovecot-2.2.26.0/src/lib-storage/Makefile.am	2017-04-06 21:15:39.596934104 +0000
+@@ -112,7 +112,7 @@
+ 	libstorage.la \
+ 	../lib-dovecot/libdovecot.la \
+ 	$(LIBDOVECOT_DEPS)
+-libdovecot_storage_la_LDFLAGS = -export-dynamic
++libdovecot_storage_la_LDFLAGS = 
+ 
+ test_programs = \
+ 	test-mail-search-args-imap \
+diff -ur dovecot-2.2.26.0.orig/src/lib-storage/Makefile.in dovecot-2.2.26.0/src/lib-storage/Makefile.in
+--- dovecot-2.2.26.0.orig/src/lib-storage/Makefile.in	2017-04-06 21:14:29.100367716 +0000
++++ dovecot-2.2.26.0/src/lib-storage/Makefile.in	2017-04-06 21:15:39.596934104 +0000
+@@ -595,7 +595,7 @@
+ 	../lib-dovecot/libdovecot.la \
+ 	$(LIBDOVECOT_DEPS)
+ 
+-libdovecot_storage_la_LDFLAGS = -export-dynamic
++libdovecot_storage_la_LDFLAGS = 
+ test_programs = \
+ 	test-mail-search-args-imap \
+ 	test-mail-search-args-simplify \
+diff -ur dovecot-2.2.26.0.orig/src/lmtp/Makefile.am dovecot-2.2.26.0/src/lmtp/Makefile.am
+--- dovecot-2.2.26.0.orig/src/lmtp/Makefile.am	2017-04-06 21:14:29.112367812 +0000
++++ dovecot-2.2.26.0/src/lmtp/Makefile.am	2017-04-06 21:15:39.600934137 +0000
+@@ -16,7 +16,7 @@
+ 	-I$(top_srcdir)/src/lib-storage/index \
+ 	-I$(top_srcdir)/src/lib-storage/index/raw
+ 
+-lmtp_LDFLAGS = -export-dynamic
++lmtp_LDFLAGS = 
+ 
+ lmtp_LDADD = \
+ 	$(LIBDOVECOT_LDA) \
+diff -ur dovecot-2.2.26.0.orig/src/lmtp/Makefile.in dovecot-2.2.26.0/src/lmtp/Makefile.in
+--- dovecot-2.2.26.0.orig/src/lmtp/Makefile.in	2017-04-06 21:14:29.112367812 +0000
++++ dovecot-2.2.26.0/src/lmtp/Makefile.in	2017-04-06 21:15:39.604934168 +0000
+@@ -386,7 +386,7 @@
+ 	-I$(top_srcdir)/src/lib-storage/index \
+ 	-I$(top_srcdir)/src/lib-storage/index/raw
+ 
+-lmtp_LDFLAGS = -export-dynamic
++lmtp_LDFLAGS = 
+ lmtp_LDADD = \
+ 	$(LIBDOVECOT_LDA) \
+ 	$(LIBDOVECOT_STORAGE) \
+diff -ur dovecot-2.2.26.0.orig/src/login-common/Makefile.am dovecot-2.2.26.0/src/login-common/Makefile.am
+--- dovecot-2.2.26.0.orig/src/login-common/Makefile.am	2017-04-06 21:14:29.112367812 +0000
++++ dovecot-2.2.26.0/src/login-common/Makefile.am	2017-04-06 21:15:39.592934072 +0000
+@@ -49,4 +49,4 @@
+ libdovecot_login_la_SOURCES = 
+ libdovecot_login_la_LIBADD = liblogin.la ../lib-ssl-iostream/libssl_iostream.la ../lib-dovecot/libdovecot.la $(SSL_LIBS)
+ libdovecot_login_la_DEPENDENCIES = liblogin.la
+-libdovecot_login_la_LDFLAGS = -export-dynamic
++libdovecot_login_la_LDFLAGS = 
+diff -ur dovecot-2.2.26.0.orig/src/login-common/Makefile.in dovecot-2.2.26.0/src/login-common/Makefile.in
+--- dovecot-2.2.26.0.orig/src/login-common/Makefile.in	2017-04-06 21:14:29.112367812 +0000
++++ dovecot-2.2.26.0/src/login-common/Makefile.in	2017-04-06 21:15:39.592934072 +0000
+@@ -451,7 +451,7 @@
+ libdovecot_login_la_SOURCES = 
+ libdovecot_login_la_LIBADD = liblogin.la ../lib-ssl-iostream/libssl_iostream.la ../lib-dovecot/libdovecot.la $(SSL_LIBS)
+ libdovecot_login_la_DEPENDENCIES = liblogin.la
+-libdovecot_login_la_LDFLAGS = -export-dynamic
++libdovecot_login_la_LDFLAGS = 
+ all: all-am
+ 
+ .SUFFIXES:
+diff -ur dovecot-2.2.26.0.orig/src/pop3/Makefile.am dovecot-2.2.26.0/src/pop3/Makefile.am
+--- dovecot-2.2.26.0.orig/src/pop3/Makefile.am	2017-04-06 21:14:29.128367940 +0000
++++ dovecot-2.2.26.0/src/pop3/Makefile.am	2017-04-06 21:15:39.604934168 +0000
+@@ -10,7 +10,7 @@
+ 	-I$(top_srcdir)/src/lib-mail \
+ 	-I$(top_srcdir)/src/lib-storage
+ 
+-pop3_LDFLAGS = -export-dynamic
++pop3_LDFLAGS = 
+ 
+ pop3_LDADD = \
+ 	$(LIBDOVECOT_STORAGE) \
+diff -ur dovecot-2.2.26.0.orig/src/pop3/Makefile.in dovecot-2.2.26.0/src/pop3/Makefile.in
+--- dovecot-2.2.26.0.orig/src/pop3/Makefile.in	2017-04-06 21:14:29.128367940 +0000
++++ dovecot-2.2.26.0/src/pop3/Makefile.in	2017-04-06 21:15:39.604934168 +0000
+@@ -408,7 +408,7 @@
+ 	-I$(top_srcdir)/src/lib-mail \
+ 	-I$(top_srcdir)/src/lib-storage
+ 
+-pop3_LDFLAGS = -export-dynamic
++pop3_LDFLAGS = 
+ pop3_LDADD = \
+ 	$(LIBDOVECOT_STORAGE) \
+ 	$(LIBDOVECOT)
+diff -ur dovecot-2.2.26.0.orig/src/replication/aggregator/Makefile.am dovecot-2.2.26.0/src/replication/aggregator/Makefile.am
+--- dovecot-2.2.26.0.orig/src/replication/aggregator/Makefile.am	2017-04-06 21:14:29.080367555 +0000
++++ dovecot-2.2.26.0/src/replication/aggregator/Makefile.am	2017-04-06 21:15:39.592934072 +0000
+@@ -10,7 +10,7 @@
+ 	-I$(top_srcdir)/src/replication \
+ 	-DPKG_STATEDIR=\""$(statedir)"\"
+ 
+-aggregator_LDFLAGS = -export-dynamic
++aggregator_LDFLAGS = 
+ aggregator_LDADD = $(LIBDOVECOT)
+ aggregator_DEPENDENCIES = $(LIBDOVECOT_DEPS)
+ 
+diff -ur dovecot-2.2.26.0.orig/src/replication/aggregator/Makefile.in dovecot-2.2.26.0/src/replication/aggregator/Makefile.in
+--- dovecot-2.2.26.0.orig/src/replication/aggregator/Makefile.in	2017-04-06 21:14:29.080367555 +0000
++++ dovecot-2.2.26.0/src/replication/aggregator/Makefile.in	2017-04-06 21:15:39.592934072 +0000
+@@ -381,7 +381,7 @@
+ 	-I$(top_srcdir)/src/replication \
+ 	-DPKG_STATEDIR=\""$(statedir)"\"
+ 
+-aggregator_LDFLAGS = -export-dynamic
++aggregator_LDFLAGS = 
+ aggregator_LDADD = $(LIBDOVECOT)
+ aggregator_DEPENDENCIES = $(LIBDOVECOT_DEPS)
+ aggregator_SOURCES = \
+diff -ur dovecot-2.2.26.0.orig/src/replication/replicator/Makefile.am dovecot-2.2.26.0/src/replication/replicator/Makefile.am
+--- dovecot-2.2.26.0.orig/src/replication/replicator/Makefile.am	2017-04-06 21:14:29.080367555 +0000
++++ dovecot-2.2.26.0/src/replication/replicator/Makefile.am	2017-04-06 21:15:39.592934072 +0000
+@@ -10,7 +10,7 @@
+ 	-I$(top_srcdir)/src/replication \
+ 	-DPKG_STATEDIR=\""$(statedir)"\"
+ 
+-replicator_LDFLAGS = -export-dynamic
++replicator_LDFLAGS = 
+ replicator_LDADD = $(LIBDOVECOT)
+ replicator_DEPENDENCIES = $(LIBDOVECOT_DEPS)
+ 
+diff -ur dovecot-2.2.26.0.orig/src/replication/replicator/Makefile.in dovecot-2.2.26.0/src/replication/replicator/Makefile.in
+--- dovecot-2.2.26.0.orig/src/replication/replicator/Makefile.in	2017-04-06 21:14:29.080367555 +0000
++++ dovecot-2.2.26.0/src/replication/replicator/Makefile.in	2017-04-06 21:15:39.592934072 +0000
+@@ -383,7 +383,7 @@
+ 	-I$(top_srcdir)/src/replication \
+ 	-DPKG_STATEDIR=\""$(statedir)"\"
+ 
+-replicator_LDFLAGS = -export-dynamic
++replicator_LDFLAGS = 
+ replicator_LDADD = $(LIBDOVECOT)
+ replicator_DEPENDENCIES = $(LIBDOVECOT_DEPS)
+ replicator_SOURCES = \
