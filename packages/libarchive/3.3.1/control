@@ -1,0 +1,23 @@
+Source: libarchive
+Version: 3.3.1
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+Depends-Build:
+	mksh
+	sbase
+	sed
+	grep
+	awk
+	musl
+	gcc
+	make
+Sources:
+	libarchive-3.3.1.tar.gz
+
+Package: libarchive
+
+Package: libarchive-bin
+
+Package: libarchive-doc
