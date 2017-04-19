@@ -1,0 +1,18 @@
+Source: netbsd-curses
+Version: 0.2.1
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+Depends-Build:
+	mksh
+	sbase
+	sbase-sed
+	awk
+	musl
+	gcc
+	make
+Sources:
+	netbsd-curses-0.2.1.tar.gz
+
+Package: netbsd-curses

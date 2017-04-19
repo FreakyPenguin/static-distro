@@ -79,6 +79,7 @@ ${GET} "https://kristaps.bsd.lv/acme-client/snapshots/acme-client-portable-0.1.1
 ${GET} "http://dist.schmorp.de/libev/libev-4.24.tar.gz"
 ${GET} "https://hitch-tls.org/source/hitch-1.4.4.tar.gz"
 ${GET} "https://www.python.org/ftp/python/3.6.1/Python-3.6.1.tar.xz"
+${GET} "http://sv0.famkaufmann.info/~staticdistro/distfiles/netbsd-curses-0.2.1.tar.gz"
 
 # old versions
 ${GET} "https://ftp.gnu.org/gnu/binutils/binutils-2.26.1.tar.gz"
