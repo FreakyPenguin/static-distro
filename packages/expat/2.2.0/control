@@ -1,0 +1,23 @@
+Source: expat
+Version: 2.2.0
+Depends-Unpack:
+	mksh
+	tar
+	bzip2
+Depends-Build:
+	mksh
+	sbase
+	awk
+	sed
+	grep
+	musl
+	gcc
+	make
+Sources:
+	expat-2.2.0.tar.bz2
+
+Package: expat
+
+Package: expat-doc
+
+Package: expat-bin
