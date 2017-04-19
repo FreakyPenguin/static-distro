@@ -1,0 +1,24 @@
+Source: curl
+Version: 7.53.1
+Depends-Unpack:
+	mksh
+	tar
+	xz
+Depends-Build:
+	mksh
+	sbase
+	awk
+	sed
+	grep
+	musl
+	gcc
+	make
+	libressl
+Sources:
+	curl-7.53.1.tar.lzma
+
+Package: curl
+
+Package: curl-doc
+
+Package: curl-dev
