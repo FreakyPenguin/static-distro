@@ -1,0 +1,19 @@
+Source: libuv
+Version: 1.9.1
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+Depends-Build:
+	mksh
+	sbase
+	awk
+	sed
+	grep
+	musl
+	gcc
+	make
+Sources:
+	libuv-v1.9.1.tar.gz
+
+Package: libuv
