@@ -1,0 +1,22 @@
+Source: libedit
+Version: 3.1-20170329
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+Depends-Build:
+	mksh
+	sbase
+	awk
+	grep
+	sed
+	musl
+	gcc
+	make
+	netbsd-curses
+Sources:
+	libedit-20170329-3.1.tar.gz
+
+Package: libedit
+
+Package: libedit-doc
