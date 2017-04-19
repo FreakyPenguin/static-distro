@@ -78,6 +78,7 @@ ${GET} "http://xmlsoft.org/sources/libxml2-2.9.4.tar.gz"
 ${GET} "https://kristaps.bsd.lv/acme-client/snapshots/acme-client-portable-0.1.16.tgz"
 ${GET} "http://dist.schmorp.de/libev/libev-4.24.tar.gz"
 ${GET} "https://hitch-tls.org/source/hitch-1.4.4.tar.gz"
+${GET} "https://www.python.org/ftp/python/3.6.1/Python-3.6.1.tar.xz"
 
 # old versions
 ${GET} "https://ftp.gnu.org/gnu/binutils/binutils-2.26.1.tar.gz"

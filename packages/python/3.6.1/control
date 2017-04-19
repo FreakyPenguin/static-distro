@@ -1,0 +1,23 @@
+Source: python
+Version: 3.6.1
+Depends-Unpack:
+	mksh
+	tar
+	xz
+	patch
+Depends-Build:
+	mksh
+	sbase
+	grep
+	sed
+	awk
+	musl
+	gcc
+	make
+	zlib
+Sources:
+	Python-3.6.1.tar.xz
+
+Package: python
+
+Package: python-doc
