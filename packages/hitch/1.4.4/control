@@ -1,0 +1,25 @@
+Source: hitch
+Version: 1.4.4
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+	patch
+Depends-Build:
+	mksh
+	sbase
+	grep
+	sed
+	awk
+	musl
+	gcc
+	binutils
+	make
+	libev
+	libressl
+Sources:
+	hitch-1.4.4.tar.gz
+
+Package: hitch
+
+Package: hitch-doc
