@@ -17,17 +17,22 @@ container will also include binutils for instance.
 
 ## Bootstrap
 static-distro can be bootstrapped from any Linux distribution. For Ubuntu/Debian
-the following packages need to be installed:
+the following packages need to be installed for doing a full bootstrap starting
+with stage 0:
 
-    build-essential libgmp-dev libmpc-dev libmpfr-dev lzip
+    build-essential libgmp-dev libmpc-dev libmpfr-dev lzip m4
 
 Bootstrapping is divided into 3 stages:
  * `stage0`: Build a cross compiler and the `musl` libc (runs on host
         distribution).
- * `stage1`: Use cross compiler to transitional packages needed to build
-        stage2 packages inside a static-distro chroot.
- * `stage2`: Use only stage1 packages to build gcc and it's dependencies within
-        an insolated chroot.
+ * `stage1`: Use cross compiler to build transitional packages needed to *build*
+        stage2+ packages fully inside a static-distro chroot without depending
+        on the host system.
+ * `stage2`: Uses only stage1 packages necessary to build packages necessary for
+        *unpacking* and building further packages fully inside a static-distro
+        chroot. stage2 packages are still unpacked on the host.
+ * `stage3`: Use only stage1 and stage2 packages to *unpack and build*
+       additional packages fully inside an insolated chroot.
 
 ### Building
 
