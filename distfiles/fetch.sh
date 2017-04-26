@@ -82,6 +82,7 @@ ${GET} "https://www.python.org/ftp/python/3.6.1/Python-3.6.1.tar.xz"
 ${GET} "http://sv0.famkaufmann.info/~staticdistro/distfiles/netbsd-curses-0.2.1.tar.gz"
 ${GET} "http://thrysoee.dk/editline/libedit-20170329-3.1.tar.gz"
 ${GET} "https://www.nlnetlabs.nl/downloads/nsd/nsd-4.1.16.tar.gz"
+${GET} "http://unbound.net/downloads/unbound-1.6.2.tar.gz"
 
 # old versions
 ${GET} "https://ftp.gnu.org/gnu/binutils/binutils-2.26.1.tar.gz"

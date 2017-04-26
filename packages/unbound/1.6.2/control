@@ -1,0 +1,26 @@
+Source: unbound
+Version: 1.6.2
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+Depends-Build:
+	mksh
+	sbase
+	awk
+	sed
+	grep
+	musl
+	gcc
+	make
+	libevent
+	libressl
+	expat
+Sources:
+	unbound-1.6.2.tar.gz
+
+Package: unbound
+
+Package: unbound-doc
+
+Package: unbound-dev
