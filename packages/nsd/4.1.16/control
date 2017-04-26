@@ -1,0 +1,23 @@
+Source: nsd
+Version: 4.1.16
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+Depends-Build:
+	mksh
+	sbase
+	awk
+	sed
+	grep
+	musl
+	gcc
+	make
+	libevent
+	libressl
+Sources:
+	nsd-4.1.16.tar.gz
+
+Package: nsd
+
+Package: nsd-doc
