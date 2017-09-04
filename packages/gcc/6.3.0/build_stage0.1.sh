@@ -6,7 +6,7 @@ mkdir build && cd build
     --enable-languages=c --disable-libssp --disable-nls \
     --disable-libquadmath --disable-threads --disable-decimal-float \
     --disable-shared --disable-libmudflap --disable-libgomp \
-    --disable-libatomic --disable-werror \
+    --disable-libatomic --disable-libmpx --disable-werror \
     --disable-multilib --with-multilib-list=
 make $MAKE_JOBS
 make $MAKE_JOBS install DESTDIR="${PKG_INSTDIR}"
