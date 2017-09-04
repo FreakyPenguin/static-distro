@@ -1,0 +1,27 @@
+Source: gcc
+Version: 7.2.0
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+Depends-Build:
+	sbase
+	mksh
+	make
+	awk
+	sed
+	grep
+	tar
+	gcc
+	musl
+	gmp
+	mpfr
+	mpc
+Depends-Run:
+	binutils
+Sources:
+	gcc-7.2.0.tar.gz
+
+Package: gcc
+
+Package: gcc-doc
