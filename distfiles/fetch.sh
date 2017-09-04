@@ -15,7 +15,7 @@ if [ "$1" = "stage2" ] ; then
 fi
 
 #stage 0:
-${GET} "https://ftp.gnu.org/gnu/binutils/binutils-2.28.tar.gz"
+${GET} "https://ftp.gnu.org/gnu/binutils/binutils-2.29.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/gcc/gcc-6.3.0/gcc-6.3.0.tar.gz"
 ${GET} "https://www.musl-libc.org/releases/musl-1.1.16.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/gmp/gmp-6.1.2.tar.lz"
@@ -85,6 +85,7 @@ ${GET} "https://www.nlnetlabs.nl/downloads/nsd/nsd-4.1.16.tar.gz"
 ${GET} "http://unbound.net/downloads/unbound-1.6.2.tar.gz"
 
 # old versions
+${GET} "https://ftp.gnu.org/gnu/binutils/binutils-2.28.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/binutils/binutils-2.26.1.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/gcc/gcc-5.3.0/gcc-5.3.0.tar.gz"
 ${GET} "https://www.musl-libc.org/releases/musl-1.1.14.tar.gz"
