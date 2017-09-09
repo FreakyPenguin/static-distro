@@ -48,7 +48,7 @@ build_s1_pkg() {
     cp -Lr "$phys_path/" "$build_dir"
     mkdir -p "$root_dir"
 
-    pkgbuild -w "$build_dir" -o root -d "$distfiles" "$control" -V '-~~stage1' \
+    pkgbuild -w "$build_dir" -o root -d "$distfiles" -V '-~~stage1' "$control" \
       >"$build_dir/build.log" 2>&1 || failed build
 
     for binpkg in `srccontrol -p "$control"`; do
