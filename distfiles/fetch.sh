@@ -2,7 +2,7 @@
 
 set -e
 
-GET="wget -nc"
+GET="wget -nc -nv"
 
 if [ "$1" = "stage2" ] ; then
     ${GET} "https://ftp.gnu.org/gnu/tar/tar-1.29.tar.gz"
