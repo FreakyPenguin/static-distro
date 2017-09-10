@@ -1,0 +1,24 @@
+Source: libressl
+Version: 2.5.5
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+Depends-Build:
+	mksh
+	sbase
+	awk
+	sed
+	grep
+	musl
+	gcc
+	make
+	linux-headers
+Sources:
+	libressl-2.5.5.tar.gz
+
+Package: libressl
+
+Package: libressl-doc
+
+Package: libressl-bin
