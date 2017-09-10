@@ -1,0 +1,17 @@
+Source: zlib
+Version: 1.2.11
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+Depends-Build:
+	mksh
+	sbase
+	sed
+	musl
+	gcc
+	make
+Sources:
+	zlib-1.2.11.tar.gz
+
+Package: zlib
