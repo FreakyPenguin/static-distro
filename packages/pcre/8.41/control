@@ -1,0 +1,19 @@
+Source: pcre
+Version: 8.41
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+Depends-Build:
+	mksh
+	sbase
+	awk
+	sed
+	grep
+	musl
+	gcc
+	make
+Sources:
+	pcre-8.41.tar.gz
+
+Package: pcre

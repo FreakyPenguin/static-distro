@@ -52,7 +52,7 @@ if [ "$1" = "stage1" ] ; then
 fi
 
 #stage 3:
-${GET} "http://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.39.tar.gz"
+${GET} "http://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.41.tar.gz"
 ${GET} "http://zlib.net/zlib-1.2.11.tar.gz"
 ${GET} "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.5.2.tar.gz"
 ${GET} "https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.7.5.tar.xz"
@@ -101,3 +101,4 @@ ${GET} "https://ftp.gnu.org/gnu/mpfr/mpfr-3.1.4.tar.gz"
 ${GET} "http://www.cpan.org/src/5.0/perl-5.24.0.tar.gz"
 ${GET} "http://zlib.net/zlib-1.2.8.tar.gz"
 ${GET} "http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.5.0.tar.gz"
+${GET} "http://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.39.tar.gz"
