@@ -1,0 +1,21 @@
+Source: nginx-nossl
+Version: 1.12.1
+Depends-Unpack:
+	mksh
+	tar
+	gzip
+	patch
+Depends-Build:
+	mksh
+	sbase
+	sed
+	grep
+	musl
+	gcc
+	make
+	pcre
+	zlib
+Sources:
+	nginx-1.12.1.tar.gz
+
+Package: nginx-nossl
