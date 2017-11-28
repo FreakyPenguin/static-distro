@@ -74,6 +74,8 @@ int main(int argc, char *argv[])
             abort();
     }
 
+    fprintf(outf, "Source: %s %s\n", c->source, c->version);
+
     fprintf(outf, "Depends-Run:\n");
     for (cd = sb->run_depend; cd != NULL; cd = cd->next)
         fprintf(outf, "  %s\n", cd->package);
