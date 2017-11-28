@@ -11,6 +11,7 @@ enum field {
     FIELD_NAME,
     FIELD_VERSION,
     FIELD_DEP_RUN,
+    FIELD_BUILT_FROM,
     FIELD_SRCS,
 };
 
@@ -21,6 +22,7 @@ int main(int argc, char *argv[])
     int num;
     struct control *c;
     struct control_dependency *cd;
+    struct control_built_from *cbf;
     struct control_source *cs;
 
     if ((num = parse_params(argc, argv)) < 0) {
@@ -29,6 +31,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "    -n: Dump package name\n");
         fprintf(stderr, "    -v: Dump package version\n");
         fprintf(stderr, "    -r: Dump package runtime dependencies\n");
+        fprintf(stderr, "    -b: Dump package built froms\n");
         fprintf(stderr, "    -s: Dump package sources\n");
         return EXIT_FAILURE;
     }
@@ -49,6 +52,11 @@ int main(int argc, char *argv[])
             case FIELD_DEP_RUN:
                 for (cd = c->run_depend; cd != NULL; cd = cd->next) {
                     puts(cd->package);
+                }
+                break;
+            case FIELD_BUILT_FROM:
+                for (cbf = c->built_froms; cbf != NULL; cbf = cbf->next) {
+                    printf("%s,%s\n", cbf->package, cbf->version);
                 }
                 break;
             case FIELD_SRCS:
@@ -78,6 +86,9 @@ static int parse_params(int argc, char *argv[])
                 break;
             case 'r':
                 field = FIELD_DEP_RUN;
+                break;
+            case 'b':
+                field = FIELD_BUILT_FROM;
                 break;
             case 's':
                 field = FIELD_SRCS;
