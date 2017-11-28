@@ -14,6 +14,7 @@ static int parse_builtfromlist(struct controlparse_field *pf,
         struct control_built_from **bfs);
 static int parse_sourcelist(struct controlparse_field *pf,
         struct control_source **pcs);
+static int parse_source(struct controlparse_field *pf, char **pn, char **pv);
 static int parse_singleline(struct controlparse_field *pf, char **ps);
 
 int control_parse(const char *path, struct control **ctrl)
@@ -70,6 +71,9 @@ int control_parsefd(int fd, struct control **ctrl)
         } else if (!strcmp(pf->name, "Version")) {
             if (parse_singleline(pf, &c->version) != 0)
                 goto out_malloc;
+        } else if (!strcmp(pf->name, "Source")) {
+            if (parse_source(pf, &c->src_package, &c->src_version) != 0)
+                goto out_malloc;
         } else {
             fprintf(stderr, "control_parsefd: Unexpected field: '%s'\n",
                 pf->name);
@@ -108,6 +112,8 @@ void control_destroy(struct control *ctrl)
 
     free(ctrl->package);
     free(ctrl->version);
+    free(ctrl->src_package);
+    free(ctrl->src_version);
     free(ctrl);
 }
 
@@ -391,6 +397,41 @@ static int parse_sourcelist(struct controlparse_field *pf,
             for (css = *pcs; css->next != NULL; css = css->next);
             css->next = cs;
         }
+    }
+
+    return 0;
+}
+
+static int parse_source(struct controlparse_field *pf, char **pn, char **pv)
+{
+    char *l, *space;
+
+    if (*pn != NULL) {
+        fprintf(stderr, "parse_source: %s has already been set\n", pf->name);
+        return -1;
+    }
+
+    if (pf->line_first == NULL || pf->line_first->next != NULL ||
+            !*pf->line_first->line)
+    {
+        fprintf(stderr, "parse_source: %s needs to be "
+                "non-empty single line\n", pf->name);
+        return -1;
+    }
+
+    l = pf->line_first->line;
+    if ((space = strchr(l, ' ')) == NULL) {
+        perror("parse_source: expect space separated name and version");
+        return -1;
+    }
+    *space = 0;
+
+    if ((*pn = strdup(l)) == NULL ||
+        (*pv = strdup(space + 1)) == NULL)
+    {
+        free(*pn);
+        perror("parse_source: strdup failed");
+        return -1;
     }
 
     return 0;
