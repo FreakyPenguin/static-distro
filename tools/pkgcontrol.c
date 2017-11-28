@@ -11,7 +11,6 @@ enum field {
     FIELD_NAME,
     FIELD_VERSION,
     FIELD_DEP_RUN,
-    FIELD_DEP_BUILD,
     FIELD_SRCS,
 };
 
@@ -30,7 +29,6 @@ int main(int argc, char *argv[])
         fprintf(stderr, "    -n: Dump package name\n");
         fprintf(stderr, "    -v: Dump package version\n");
         fprintf(stderr, "    -r: Dump package runtime dependencies\n");
-        fprintf(stderr, "    -b: Dump package build dependencies\n");
         fprintf(stderr, "    -s: Dump package sources\n");
         return EXIT_FAILURE;
     }
@@ -50,11 +48,6 @@ int main(int argc, char *argv[])
                 break;
             case FIELD_DEP_RUN:
                 for (cd = c->run_depend; cd != NULL; cd = cd->next) {
-                    puts(cd->package);
-                }
-                break;
-            case FIELD_DEP_BUILD:
-                for (cd = c->build_depend; cd != NULL; cd = cd->next) {
                     puts(cd->package);
                 }
                 break;
@@ -85,9 +78,6 @@ static int parse_params(int argc, char *argv[])
                 break;
             case 'r':
                 field = FIELD_DEP_RUN;
-                break;
-            case 'b':
-                field = FIELD_DEP_BUILD;
                 break;
             case 's':
                 field = FIELD_SRCS;

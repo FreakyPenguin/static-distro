@@ -30,7 +30,6 @@ int control_parse(const char *path, struct control **ctrl)
 
 int control_parsefd(int fd, struct control **ctrl)
 {
-    int dep_run, dep_build;
     struct control *c;
     struct control_dependency **first_cd;
     struct controlparse cp;
@@ -56,12 +55,9 @@ int control_parsefd(int fd, struct control **ctrl)
     }
 
     for (pf = pp->field_first; pf != NULL; pf = pf->next) {
-        dep_run = !strcmp(pf->name, "Depends-Run");
-        dep_build = !strcmp(pf->name, "Depends-Build");
-        if (dep_run || dep_build) {
+        if (!strcmp(pf->name, "Depends-Run")) {
             /* parse run-time and build-time dependencies */
-            first_cd = (dep_run ? &c->run_depend : &c->build_depend);
-            if (parse_deplist(pf, first_cd) != 0)
+            if (parse_deplist(pf, &c->run_depend) != 0)
                 goto out_malloc;
         } else if (!strcmp(pf->name, "Sources")) {
             if (parse_sourcelist(pf, &c->sources) != 0)
@@ -94,12 +90,6 @@ void control_destroy(struct control *ctrl)
     struct control_dependency *cd, *cdd;
     struct control_source *cs, *css;
 
-    for (cd = ctrl->build_depend; cd != NULL; ) {
-        cdd = cd;
-        cd = cd->next;
-        free(cdd->package);
-        free(cdd);
-    }
     for (cd = ctrl->run_depend; cd != NULL; ) {
         cdd = cd;
         cd = cd->next;

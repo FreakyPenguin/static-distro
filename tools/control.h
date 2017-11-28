@@ -8,7 +8,6 @@ struct source_control_bin;
 struct control {
     char *package;
     char *version;
-    struct control_dependency *build_depend;
     struct control_dependency *run_depend;
     struct control_source *sources;
 };
