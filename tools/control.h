@@ -9,7 +9,6 @@ struct control {
     char *package;
     char *version;
     struct control_dependency *run_depend;
-    struct control_source *sources;
     struct control_built_from *built_froms;
 };
 

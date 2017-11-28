@@ -64,9 +64,6 @@ int control_parsefd(int fd, struct control **ctrl)
             /* parse built-from list */
             if (parse_builtfromlist(pf, &c->built_froms) != 0)
                 goto out_malloc;
-        } else if (!strcmp(pf->name, "Sources")) {
-            if (parse_sourcelist(pf, &c->sources) != 0)
-                goto out_malloc;
         } else if (!strcmp(pf->name, "Package")) {
             if (parse_singleline(pf, &c->package) != 0)
                 goto out_malloc;
@@ -94,7 +91,6 @@ void control_destroy(struct control *ctrl)
 {
     struct control_dependency *cd, *cdd;
     struct control_built_from *cbf, *cbff;
-    struct control_source *cs, *css;
 
     for (cd = ctrl->run_depend; cd != NULL; ) {
         cdd = cd;
@@ -108,12 +104,6 @@ void control_destroy(struct control *ctrl)
         free(cbff->package);
         free(cbff->version);
         free(cbff);
-    }
-    for (cs = ctrl->sources; cs != NULL; ) {
-        css = cs;
-        cs = cs->next;
-        free(css->source);
-        free(css);
     }
 
     free(ctrl->package);

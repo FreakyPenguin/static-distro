@@ -12,7 +12,6 @@ enum field {
     FIELD_VERSION,
     FIELD_DEP_RUN,
     FIELD_BUILT_FROM,
-    FIELD_SRCS,
 };
 
 static enum field field = FIELD_UNSPECIFIED;
@@ -23,7 +22,6 @@ int main(int argc, char *argv[])
     struct control *c;
     struct control_dependency *cd;
     struct control_built_from *cbf;
-    struct control_source *cs;
 
     if ((num = parse_params(argc, argv)) < 0) {
         fprintf(stderr, "Usage: pkgcontrol [COMMAND] FILES...\n");
@@ -32,7 +30,6 @@ int main(int argc, char *argv[])
         fprintf(stderr, "    -v: Dump package version\n");
         fprintf(stderr, "    -r: Dump package runtime dependencies\n");
         fprintf(stderr, "    -b: Dump package built froms\n");
-        fprintf(stderr, "    -s: Dump package sources\n");
         return EXIT_FAILURE;
     }
 
@@ -59,11 +56,6 @@ int main(int argc, char *argv[])
                     printf("%s,%s\n", cbf->package, cbf->version);
                 }
                 break;
-            case FIELD_SRCS:
-                for (cs = c->sources; cs != NULL; cs = cs->next) {
-                    puts(cs->source);
-                }
-                break;
 
             default:
                 break;
@@ -76,7 +68,7 @@ int main(int argc, char *argv[])
 static int parse_params(int argc, char *argv[])
 {
     int c;
-    while ((c = getopt(argc, argv, "nvrbs")) != -1) {
+    while ((c = getopt(argc, argv, "nvrb")) != -1) {
         switch (c) {
             case 'n':
                 field = FIELD_NAME;
@@ -89,9 +81,6 @@ static int parse_params(int argc, char *argv[])
                 break;
             case 'b':
                 field = FIELD_BUILT_FROM;
-                break;
-            case 's':
-                field = FIELD_SRCS;
                 break;
             case '?':
                 fprintf(stderr, "Unknown option: %c\n", optopt);
