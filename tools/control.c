@@ -10,6 +10,8 @@
 
 static int parse_deplist(struct controlparse_field *pf,
         struct control_dependency **pcd);
+static int parse_builtfromlist(struct controlparse_field *pf,
+        struct control_built_from **bfs);
 static int parse_sourcelist(struct controlparse_field *pf,
         struct control_source **pcs);
 static int parse_singleline(struct controlparse_field *pf, char **ps);
@@ -31,7 +33,6 @@ int control_parse(const char *path, struct control **ctrl)
 int control_parsefd(int fd, struct control **ctrl)
 {
     struct control *c;
-    struct control_dependency **first_cd;
     struct controlparse cp;
     struct controlparse_para *pp;
     struct controlparse_field *pf;
@@ -56,8 +57,12 @@ int control_parsefd(int fd, struct control **ctrl)
 
     for (pf = pp->field_first; pf != NULL; pf = pf->next) {
         if (!strcmp(pf->name, "Depends-Run")) {
-            /* parse run-time and build-time dependencies */
+            /* parse run-time dependencies */
             if (parse_deplist(pf, &c->run_depend) != 0)
+                goto out_malloc;
+        } else if (!strcmp(pf->name, "Built-From")) {
+            /* parse built-from list */
+            if (parse_builtfromlist(pf, &c->built_froms) != 0)
                 goto out_malloc;
         } else if (!strcmp(pf->name, "Sources")) {
             if (parse_sourcelist(pf, &c->sources) != 0)
@@ -88,6 +93,7 @@ out_err:
 void control_destroy(struct control *ctrl)
 {
     struct control_dependency *cd, *cdd;
+    struct control_built_from *cbf, *cbff;
     struct control_source *cs, *css;
 
     for (cd = ctrl->run_depend; cd != NULL; ) {
@@ -95,6 +101,13 @@ void control_destroy(struct control *ctrl)
         cd = cd->next;
         free(cdd->package);
         free(cdd);
+    }
+    for (cbf = ctrl->built_froms; cbf != NULL; ) {
+        cbff = cbf;
+        cbf = cbf->next;
+        free(cbff->package);
+        free(cbff->version);
+        free(cbff);
     }
     for (cs = ctrl->sources; cs != NULL; ) {
         css = cs;
@@ -296,6 +309,60 @@ static int parse_deplist(struct controlparse_field *pf,
         } else {
             for (cdd = *pcd; cdd->next != NULL; cdd = cdd->next);
             cdd->next = cd;
+        }
+    }
+
+    return 0;
+}
+
+static int parse_builtfromlist(struct controlparse_field *pf,
+        struct control_built_from **pbf)
+{
+    struct control_built_from *bf, *bff;
+    struct controlparse_line *pl;
+    char *space;
+
+    if (*pbf != NULL) {
+        fprintf(stderr, "parse_builtfromlist: %s set repeatedly\n", pf->name);
+        return -1;
+    }
+
+    /* parse run-time and build-time dependencies */
+    for (pl = pf->line_first; pl != NULL; pl = pl->next) {
+        if (!*pl->line)
+            continue;
+
+        /* locate space separating name and version */
+        if ((space = strchr(pl->line, ' ')) == NULL) {
+            perror("parse_builtfromlist: space separating name and version not"
+                " found");
+            return -1;
+        }
+        *space = 0;
+
+        /* allocate dependency struct */
+        if ((bf = calloc(1, sizeof(*bf))) == NULL) {
+            perror("parse_builtfromlist: malloc struct failed");
+            return -1;
+        }
+
+        /* allocate package name and version */
+        if ((bf->package = strdup(pl->line)) == NULL ||
+            (bf->version = strdup(space + 1)) == NULL)
+        {
+            free(bf->package);
+            free(bf);
+            perror("parse_builtfromlist: strdup fields failed");
+            return -1;
+        }
+
+        /* add to deps linked list */
+        bf->next = NULL;
+        if (*pbf == NULL) {
+            *pbf = bf;
+        } else {
+            for (bff = *pbf; bff->next != NULL; bff = bff->next);
+            bff->next = bf;
         }
     }
 

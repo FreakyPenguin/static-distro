@@ -10,6 +10,7 @@ struct control {
     char *version;
     struct control_dependency *run_depend;
     struct control_source *sources;
+    struct control_built_from *built_froms;
 };
 
 struct source_control {
@@ -35,6 +36,12 @@ struct control_dependency {
 struct control_source {
     char *source;
     struct control_source *next;
+};
+
+struct control_built_from {
+    char *package;
+    char *version;
+    struct control_built_from *next;
 };
 
 int control_parse(const char *path, struct control **ctrl);
