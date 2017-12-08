@@ -1,0 +1,34 @@
+Index: nginx-1.11.4/auto/cc/conf
+===================================================================
+--- nginx-1.11.4.orig/auto/cc/conf
++++ nginx-1.11.4/auto/cc/conf
+@@ -164,18 +164,18 @@ if [ "$NGX_PLATFORM" != win32 ]; then
+     fi
+ 
+ 
+-    ngx_feature="-Wl,-E switch"
+-    ngx_feature_name=
+-    ngx_feature_run=no
+-    ngx_feature_incs=
+-    ngx_feature_path=
+-    ngx_feature_libs=-Wl,-E
+-    ngx_feature_test=
+-    . auto/feature
++    #ngx_feature="-Wl,-E switch"
++    #ngx_feature_name=
++    #ngx_feature_run=no
++    #ngx_feature_incs=
++    #ngx_feature_path=
++    #ngx_feature_libs=-Wl,-E
++    #ngx_feature_test=
++    #. auto/feature
+ 
+-    if [ $ngx_found = yes ]; then
+-        MAIN_LINK="-Wl,-E"
+-    fi
++    #if [ $ngx_found = yes ]; then
++    #    MAIN_LINK="-Wl,-E"
++    #fi
+ 
+ 
+     ngx_feature="gcc builtin atomic operations"
