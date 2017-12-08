@@ -84,6 +84,8 @@ ${GET} "http://thrysoee.dk/editline/libedit-20170329-3.1.tar.gz"
 ${GET} "https://www.nlnetlabs.nl/downloads/nsd/nsd-4.1.16.tar.gz"
 ${GET} "http://unbound.net/downloads/unbound-1.6.2.tar.gz"
 
+exit 0
+
 # old versions
 ${GET} "https://ftp.gnu.org/gnu/gcc/gcc-6.3.0/gcc-6.3.0.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/binutils/binutils-2.28.tar.gz"
