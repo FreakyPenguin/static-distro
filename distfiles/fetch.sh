@@ -17,7 +17,7 @@ fi
 #stage 0:
 ${GET} "https://ftp.gnu.org/gnu/binutils/binutils-2.29.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/gcc/gcc-7.2.0/gcc-7.2.0.tar.gz"
-${GET} "https://www.musl-libc.org/releases/musl-1.1.16.tar.gz"
+${GET} "https://www.musl-libc.org/releases/musl-1.1.18.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/gmp/gmp-6.1.2.tar.lz"
 ${GET} "https://ftp.gnu.org/gnu/mpfr/mpfr-3.1.5.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/mpc/mpc-1.0.3.tar.gz"
@@ -91,6 +91,7 @@ ${GET} "https://ftp.gnu.org/gnu/gcc/gcc-6.3.0/gcc-6.3.0.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/binutils/binutils-2.28.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/binutils/binutils-2.26.1.tar.gz"
 ${GET} "https://ftp.gnu.org/gnu/gcc/gcc-5.3.0/gcc-5.3.0.tar.gz"
+${GET} "https://www.musl-libc.org/releases/musl-1.1.16.tar.gz"
 ${GET} "https://www.musl-libc.org/releases/musl-1.1.14.tar.gz"
 ${GET} "http://staticdistro.famkaufmann.info/distfiles/sbase-0.0.20161118.tar.gz"
 ${GET} "http://staticdistro.famkaufmann.info/distfiles/mksh-R52c.tgz" || \
