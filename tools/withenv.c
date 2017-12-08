@@ -169,8 +169,6 @@ static int parse_opts(int argc, char *argv[])
 /* Main functionality in forked child (runs in unshared namespaces) */
 int run_child(void)
 {
-    int ret;
-
     /* make sure no permissions are masked */
     umask(0);
 
@@ -277,7 +275,7 @@ int run_child(void)
         goto error_execv;
     }
 
-    return ret;
+    return EXIT_FAILURE;
 
 error_execv:
     /* here we're in the chroot */
