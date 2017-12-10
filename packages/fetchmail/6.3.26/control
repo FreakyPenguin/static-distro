@@ -1,0 +1,23 @@
+Source: fetchmail
+Version: 6.3.26
+Depends-Unpack:
+	mksh
+	tar
+	xz
+	patch
+Depends-Build:
+	mksh
+	sbase
+	sed
+	grep
+	awk
+	musl
+	gcc
+	make
+	libressl
+Sources:
+	fetchmail-6.3.26.tar.xz
+
+Package: fetchmail
+
+Package: fetchmail-doc

@@ -83,6 +83,7 @@ ${GET} "http://staticdistro.famkaufmann.info/distfiles/netbsd-curses-0.2.1.tar.g
 ${GET} "http://thrysoee.dk/editline/libedit-20170329-3.1.tar.gz"
 ${GET} "https://www.nlnetlabs.nl/downloads/nsd/nsd-4.1.16.tar.gz"
 ${GET} "http://unbound.net/downloads/unbound-1.6.2.tar.gz"
+${GET} "http://staticdistro.famkaufmann.info/distfiles/fetchmail-6.3.26.tar.xz"
 
 exit 0
 
